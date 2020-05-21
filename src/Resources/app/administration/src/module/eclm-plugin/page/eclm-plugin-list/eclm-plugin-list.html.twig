@@ -1,0 +1,16 @@
+{% block eclm_plugin_list %}
+    <sw-page class="eclm-bundle-list">
+        <template slot="content">
+            {% block eclm_plugin_list_content %}
+                <sw-entity-listing
+                    v-if="candies"
+                    :items="candies"
+                    :repository="repository"
+                    :showSelection="false"
+                    :columns="columns"
+                    detailRoute="eclm.plugin.detail">
+                </sw-entity-listing>
+            {% endblock %}
+        </template>
+    </sw-page>
+{% endblock %}
