@@ -5,11 +5,11 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "EventCandyLabelMe\\": "src/"
+      "EventCandy\\LabelMe\\": "src/"
     }
   },
   "extra": {
-    "shopware-plugin-class": "EventCandyLabelMe\\EventCandyLabelMe",
+    "shopware-plugin-class": "EventCandy\\LabelMe\\EventCandyLabelMe",
     "label": {
       "de-DE": "LabelMe plugin",
       "en-GB": "LabelMe plugin"

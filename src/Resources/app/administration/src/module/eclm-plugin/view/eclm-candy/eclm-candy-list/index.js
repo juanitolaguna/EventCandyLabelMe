@@ -1,18 +1,13 @@
-import template from './eclm-plugin-list.html.twig';
+import template from './eclm-candy-list.html.twig';
+const { Component } = Shopware;
 const { Criteria } = Shopware.Data;
 
-Shopware.Component.register('eclm-plugin-list', {
-    template: template,
+Component.register('eclm-candy-list', {
+    template,
 
     inject: [
         'repositoryFactory'
     ],
-
-    metaInfo() {
-        return {
-            title: this.$createTitle()
-        };
-    },
 
     data() {
         return {
@@ -21,16 +16,10 @@ Shopware.Component.register('eclm-plugin-list', {
         };
     },
 
-
-
-    created() {
-        this.repository = this.repositoryFactory.create('eclm_candy');
-
-        this.repository
-            .search(new Criteria(), Shopware.Context.api)
-            .then((result) => {
-                this.candies = result;
-            })
+    metaInfo() {
+        return {
+            title: this.$createTitle()
+        };
     },
 
     computed: {
@@ -39,7 +28,7 @@ Shopware.Component.register('eclm-plugin-list', {
                 property: 'name',
                 dataIndex: 'name',
                 label: 'Name',
-                routerLink: 'eclm.plugin.detail',
+                //routerLink: 'eclm.plugin.detail',
                 inlineEdit: 'string',
                 allowResize: true,
                 primary: true
@@ -51,8 +40,18 @@ Shopware.Component.register('eclm-plugin-list', {
                 allowResize: true
             }]
         }
+    },
+
+
+
+    created() {
+        this.repository = this.repositoryFactory.create('eclm_candy');
+
+        this.repository
+            .search(new Criteria(), Shopware.Context.api)
+            .then((result) => {
+                console.log(result.first());
+                this.candies = result;
+            })
     }
-
-
-
 });

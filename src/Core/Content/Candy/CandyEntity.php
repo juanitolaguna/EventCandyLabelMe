@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace EventCandyLabelMe\Model\Candy;
+namespace EventCandy\LabelMe\Core\Content\Candy;
 
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
