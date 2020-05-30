@@ -1,3 +1,22 @@
 {% block eclm_event_list %}
-    <h1>Event List</h1>
+    <sw-container columns="1fr 1fr 1fr">
+        <div class="eclm-center"><h1>Multi Select Example Reference:</h1></div>
+        <div>
+            <sw-button @click="alertSelection">Action</sw-button>
+            <br><br>
+            <sw-multi-select
+                label="Multi Select"
+                :options="options"
+                :value="value"
+{#                @change="setValue"#}
+                @input="setValue"
+            >
+            </sw-multi-select>
+        </div>
+        <div></div>
+
+    </sw-container>
+
+
+
 {% endblock %}

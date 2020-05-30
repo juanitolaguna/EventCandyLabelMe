@@ -21,7 +21,7 @@ class Migration1589228524 extends MigrationStep {
             `updated_at` DATETIME(3) NULL,
             PRIMARY KEY (`id`),
             KEY `fk.candy.media_id` (`media_id`),
-            CONSTRAINT `fk.candy.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+            CONSTRAINT `fk.candy.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;' );
 
     }

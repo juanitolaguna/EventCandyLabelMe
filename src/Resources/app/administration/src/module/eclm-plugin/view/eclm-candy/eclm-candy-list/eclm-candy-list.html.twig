@@ -1,5 +1,16 @@
-<sw-page>
-    <template slot="content">
-        <h1>Test</h1>
+<sw-card :large="false">
+
+    <template #grid>
+        <sw-entity-listing
+            v-if="candies"
+            :items="candies"
+            :repository="repository"
+            :showSelection="false"
+            :columns="columns"
+            :fullPage="false"
+            :compactMode="true"
+        >
+        </sw-entity-listing>
+
     </template>
-</sw-page>
+</sw-card>
