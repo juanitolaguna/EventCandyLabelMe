@@ -1,6 +1,8 @@
 import './page/eclm-index';
 import './view/eclm-candy/eclm-candy-list';
+import './view/eclm-candy/eclm-candy-detail';
 import './view/eclm-event/eclm-event-list';
+
 
 
 Shopware.Module.register('eclm-plugin', {
@@ -8,31 +10,31 @@ Shopware.Module.register('eclm-plugin', {
     name: 'eclm-plugin',
     color: '#982aff',
     icon: 'default-object-puzzle-piece',
-    title: 'Event Candy Label Me',
-    description: 'Manage plugin here.',
+    title: 'eclm.general.mainMenuItemGeneral',
+    description: 'eclm.general.descriptionTextModule',
 
     routes: {
         index: {
             component: 'eclm-index',
             path: 'index',
-            // redirect: {
-            //     name: 'eclm.plugin.index.list'
-            // },
             children: {
                 candy: {
                     component: 'eclm-candy-list',
                     path: 'candy',
-                    meta: {
-                        parentPath: 'eclm.plugin.index'
-                    }
                 },
                 event: {
                     component: 'eclm-event-list',
                     path: 'event',
                 }
             }
-
-        }
+        },
+        candyDetail: {
+            component: 'eclm-candy-detail',
+            path: 'candy-detail/',
+            meta: {
+                parentPath: 'eclm.plugin.index.candy'
+            }
+        },
 
 
         // list: {
@@ -55,7 +57,7 @@ Shopware.Module.register('eclm-plugin', {
         // }
     },
     navigation: [{
-        label: 'Event Candy Label Me',
+        label: 'eclm.general.mainMenuItemGeneral',
         color: '#982AFF',
         path: 'eclm.plugin.index',
         icon: 'default-object-puzzle-piece',

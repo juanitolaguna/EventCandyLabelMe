@@ -1,12 +1,20 @@
 import template from './eclm-event-list.html.twig';
 import './eclm-event-list.scss';
 
+const { Criteria } = Shopware.Data;
+
 Shopware.Component.register('eclm-event-list', {
     template: template,
 
+    inject: [
+        'repositoryFactory'
+    ],
+
     data() {
         return {
-            value: []
+            value: [],
+            mediaItem: {id: '1'},
+            candies: {}
         }
     },
 
@@ -36,6 +44,17 @@ Shopware.Component.register('eclm-event-list', {
         testAlert(input) {
             alert(input);
         }
+    },
+
+    created() {
+        this.repository = this.repositoryFactory.create('eclm_candy');
+
+        this.repository
+            .search(new Criteria(), Shopware.Context.api)
+            .then((result) => {
+                console.log(result.first());
+                this.candies = result;
+            })
     }
 
 

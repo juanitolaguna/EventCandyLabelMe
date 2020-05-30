@@ -8,12 +8,14 @@
                 label="Multi Select"
                 :options="options"
                 :value="value"
-{#                @change="setValue"#}
+                {#                @change="setValue"#}
                 @input="setValue"
             >
             </sw-multi-select>
         </div>
-        <div></div>
+        <div>
+            <sw-media-field v-model="candies.mediaId"></sw-media-field>
+        </div>
 
     </sw-container>
 

@@ -29,7 +29,7 @@ Component.register('eclm-candy-list', {
                 property: 'name',
                 dataIndex: 'name',
                 label: 'Name',
-                //routerLink: 'eclm.plugin.detail',
+                routerLink: 'eclm.plugin.candyDetail',
                 inlineEdit: 'string',
                 allowResize: true,
                 primary: true
@@ -42,6 +42,7 @@ Component.register('eclm-candy-list', {
             }, {
                 property: 'mediaId',
                 dataIndex: 'mediaId',
+                inlineEdit: 'string',
                 label: 'Candy Image'
             }]
         }

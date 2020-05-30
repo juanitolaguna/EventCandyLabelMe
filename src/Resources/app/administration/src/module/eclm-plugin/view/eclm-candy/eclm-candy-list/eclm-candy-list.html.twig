@@ -1,5 +1,9 @@
 <sw-card :large="false">
 
+    <template #toolbar>
+        <sw-button >Add Candy</sw-button>
+    </template>
+
     <template #grid>
         <sw-entity-listing
             v-if="candies"
@@ -14,3 +18,4 @@
 
     </template>
 </sw-card>
+
