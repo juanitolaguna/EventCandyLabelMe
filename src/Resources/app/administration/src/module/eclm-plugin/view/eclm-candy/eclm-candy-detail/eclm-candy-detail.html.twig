@@ -2,12 +2,49 @@
     <template #smart-bar-header>
         <h2>Candy Details</h2>
     </template>
+    <template #smart-bar-actions>
+        <sw-button-process
+            variant="primary"
+            @click="onClickSave"
+            @process-finish="saveFinish"
+            :isLoading="isLoading"
+            :processSuccess="processSuccess">
+            Save
+        </sw-button-process>
+        <sw-button :routerLink="{ name: 'eclm.plugin.index.candy' }">
+            Cancel
+        </sw-button>
+    </template>
     <template #content>
         <sw-card-view>
-            <sw-card v-if="candy"  :large="false">
+            <sw-card v-if="candy" :large="false">
+                <sw-field :label="$t('eclm.candyDetail.name')" v-model="candy.name"></sw-field>
+                <sw-field :label="$t('eclm.candyDetail.eurProMl')" v-model="candy.eurProMl" type="number"></sw-field>
+                <eclm-media-field
+                    v-model="candy.mediaId"
+                    :showUploadField="false"
+                    :showControls="false"
+                    @media-id-change="onMediaSelect"
+                    :mediaFolderName="'Event Candy'"
+                >
 
+                </eclm-media-field>
             </sw-card>
+
         </sw-card-view>
     </template>
+
+    <template #sidebar>
+        <sw-sidebar>
+            <sw-sidebar-item ref="eclmSidebar" title="Image" icon="default-object-image">
+                    <div class="candy-image-container">
+                        <img class="candy-image" :src="imageUrl"/>
+                    </div>
+            </sw-sidebar-item>
+        </sw-sidebar>
+
+    </template>
+
+
 </sw-page>
 

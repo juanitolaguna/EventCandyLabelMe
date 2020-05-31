@@ -3,6 +3,10 @@
         "general": {
             "mainMenuItemGeneral": "Event Candy Label Me",
             "descriptionTextModule": "Configure the Plugin Here"
+        },
+        "candyDetail": {
+            "name": "Candy Name",
+            "eurProMl": "Euro Pro 100 ML"
         }
     }
 }

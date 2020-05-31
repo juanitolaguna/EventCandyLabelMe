@@ -39,11 +39,6 @@ Component.register('eclm-candy-list', {
                 label: '€/100ml',
                 inlineEdit: 'number',
                 allowResize: true
-            }, {
-                property: 'mediaId',
-                dataIndex: 'mediaId',
-                inlineEdit: 'string',
-                label: 'Candy Image'
             }]
         }
     },

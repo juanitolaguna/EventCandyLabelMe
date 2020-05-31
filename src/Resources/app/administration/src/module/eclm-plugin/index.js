@@ -1,8 +1,12 @@
 import './page/eclm-index';
 import './view/eclm-candy/eclm-candy-list';
 import './view/eclm-candy/eclm-candy-detail';
-import './view/eclm-event/eclm-event-list';
+import './view/eclm-candy/eclm-candy-create';
+import './components/eclm-media-field';
 
+import './view/eclm-event/eclm-event-list';
+import deDE from '../snippet/de-DE.json';
+import enGB from  '../snippet/en-GB.json';
 
 
 Shopware.Module.register('eclm-plugin', {
@@ -12,6 +16,11 @@ Shopware.Module.register('eclm-plugin', {
     icon: 'default-object-puzzle-piece',
     title: 'eclm.general.mainMenuItemGeneral',
     description: 'eclm.general.descriptionTextModule',
+
+    snippets: {
+        'de-DE': deDE,
+        'en-GB': enGB
+    },
 
     routes: {
         index: {
@@ -28,13 +37,21 @@ Shopware.Module.register('eclm-plugin', {
                 }
             }
         },
+
         candyDetail: {
             component: 'eclm-candy-detail',
-            path: 'candy-detail/',
+            path: 'candy-detail/:id',
             meta: {
                 parentPath: 'eclm.plugin.index.candy'
             }
         },
+        candyCreate: {
+            component: 'eclm-candy-create',
+            path: 'candy-create',
+            meta: {
+                parentPath: 'eclm.plugin.index.candy'
+            }
+        }
 
 
         // list: {

@@ -1,0 +1,9 @@
+.sw-media-field {
+    .sw-media-field__expanded-content {
+        z-index: 999;
+
+        &::before {
+            z-index: 999;
+        }
+    }
+}
