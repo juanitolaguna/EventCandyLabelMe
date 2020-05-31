@@ -37,20 +37,16 @@ Component.register('eclm-candy-detail', {
         this.$refs.eclmSidebar.openContent();
     },
 
-    computed: {
-    },
-
     methods: {
-        onMediaSelect(payload) {
-            this.getImage(payload);
-        },
 
         getImage(mediaId) {
             this.mediaRepository = this.repositoryFactory.create('media');
             let criteria = new Criteria();
             criteria.setIds([mediaId]);
-            //criteria.addFilter(Criteria.equals('id', this.candy.mediaId));
-            this.mediaRepository.search(criteria, Shopware.Context.api).then((entity) => {
+
+            this.mediaRepository
+                .search(criteria, Shopware.Context.api)
+                .then((entity) => {
                 this.imageUrl = entity[0].url;
             });
 
@@ -63,6 +59,10 @@ Component.register('eclm-candy-detail', {
                     this.candy = entity;
                     this.getImage(this.candy.mediaId);
                 });
+        },
+
+        onMediaSelect(payload) {
+            this.getImage(payload);
         },
 
         onClickSave() {

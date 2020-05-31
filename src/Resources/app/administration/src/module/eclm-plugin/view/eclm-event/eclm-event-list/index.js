@@ -1,7 +1,7 @@
 import template from './eclm-event-list.html.twig';
 import './eclm-event-list.scss';
 
-const { Criteria } = Shopware.Data;
+const {Criteria} = Shopware.Data;
 
 Shopware.Component.register('eclm-event-list', {
     template: template,
@@ -21,14 +21,13 @@ Shopware.Component.register('eclm-event-list', {
     computed: {
         options() {
             return [
-                { value:'uuid1', label:'Portia Jobson' },
-                { value:'uuid2', label:'Baxy Eardley' },
-                { value:'uuid3', label:'Arturo Staker' },
-                { value:'uuid4', label:'Dalston Top' },
-                { value:'uuid5', label:'Neddy Jensen' }
+                {value: 'uuid1', label: 'Portia Jobson'},
+                {value: 'uuid2', label: 'Baxy Eardley'},
+                {value: 'uuid3', label: 'Arturo Staker'},
+                {value: 'uuid4', label: 'Dalston Top'},
+                {value: 'uuid5', label: 'Neddy Jensen'}
             ]
         }
-
     },
 
     methods: {

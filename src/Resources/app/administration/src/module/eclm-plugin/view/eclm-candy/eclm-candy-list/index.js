@@ -1,6 +1,7 @@
 import template from './eclm-candy-list.html.twig';
-const { Component } = Shopware;
-const { Criteria } = Shopware.Data;
+
+const {Component} = Shopware;
+const {Criteria} = Shopware.Data;
 
 Component.register('eclm-candy-list', {
     template,
@@ -42,7 +43,6 @@ Component.register('eclm-candy-list', {
             }]
         }
     },
-
 
 
     created() {

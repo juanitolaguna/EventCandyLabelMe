@@ -1,24 +1,22 @@
 {% block eclm_event_list %}
     <sw-container columns="1fr 1fr 1fr">
+
         <div class="eclm-center"><h1>Multi Select Example Reference:</h1></div>
+
         <div>
-            <sw-button @click="alertSelection">Action</sw-button>
+            <sw-button @click="alertSelection">Test Action</sw-button>
             <br><br>
             <sw-multi-select
                 label="Multi Select"
                 :options="options"
                 :value="value"
-                {#                @change="setValue"#}
                 @input="setValue"
-            >
-            </sw-multi-select>
+            ></sw-multi-select>
         </div>
+
         <div>
             <sw-media-field v-model="candies.mediaId"></sw-media-field>
         </div>
 
     </sw-container>
-
-
-
 {% endblock %}
