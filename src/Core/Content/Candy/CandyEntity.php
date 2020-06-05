@@ -2,9 +2,10 @@
 
 namespace EventCandy\LabelMe\Core\Content\Candy;
 
+use EventCandy\LabelMe\Core\Content\Package\PackageCollection;
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
+use Shopware\Core\Framework\DataAbstractionFLayer\EntityIdTrait;
 
 class CandyEntity extends Entity {
     use EntityIdTrait;
@@ -24,6 +25,26 @@ class CandyEntity extends Entity {
      */
     protected $media;
 
+    /**
+     * @var PackageCollection|null
+     */
+    protected $packages;
+
+    /**
+     * @return PackageCollection|null
+     */
+    public function getPackages(): ?PackageCollection
+    {
+        return $this->packages;
+    }
+
+    /**
+     * @param PackageCollection|null $packages
+     */
+    public function setPackages(?PackageCollection $packages): void
+    {
+        $this->packages = $packages;
+    }
     /**
      * @return string
      */

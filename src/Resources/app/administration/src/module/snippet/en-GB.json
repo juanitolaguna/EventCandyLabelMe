@@ -7,6 +7,14 @@
         "candyDetail": {
             "name": "Candy Name",
             "eurProMl": "Euro Pro 100 ML"
+        },
+        "eventDetail": {
+            "name": "Event Name",
+            "active": "Active"
+        },
+        "labelDetail": {
+            "name": "Label Name",
+            "active": "Active"
         }
     }
 }

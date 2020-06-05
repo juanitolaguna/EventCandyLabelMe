@@ -5,12 +5,14 @@ namespace EventCandy\LabelMe\Migration;
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Migration\MigrationStep;
 
-class Migration1589228524 extends MigrationStep {
+class Migration1591185483CreateCandyEntity extends MigrationStep {
     public function getCreationTimestamp(): int {
-        return 1589228524;
+        return 1591185483;
     }
 
     public function update( Connection $connection ): void {
+
+        file_put_contents('log.txt', 'Create Candy Entity', FILE_APPEND );
 
         $connection->exec( 'CREATE TABLE IF NOT EXISTS `eclm_candy` (
             `id` BINARY(16) NOT NULL,
@@ -21,7 +23,7 @@ class Migration1589228524 extends MigrationStep {
             `updated_at` DATETIME(3) NULL,
             PRIMARY KEY (`id`),
             KEY `fk.candy.media_id` (`media_id`),
-            CONSTRAINT `fk.candy.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+            CONSTRAINT `fk.candy.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;' );
 
     }

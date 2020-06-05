@@ -6,7 +6,23 @@
 
     <services>
         <service id="EventCandy\LabelMe\Core\Content\Candy\CandyDefinition">
-            <tag name="shopware.entity.definition" entity="shop_finder" />
+            <tag name="shopware.entity.definition" entity="eclm_candy" />
+        </service>
+
+        <service id="EventCandy\LabelMe\Core\Content\Event\EventDefinition">
+            <tag name="shopware.entity.definition" entity="eclm_event" />
+        </service>
+
+        <service id="EventCandy\LabelMe\Core\Content\Label\LabelDefinition">
+            <tag name="shopware.entity.definition" entity="eclm_label" />
+        </service>
+
+        <service id="EventCandy\LabelMe\Core\Content\Package\PackageDefinition">
+            <tag name="shopware.entity.definition" entity="eclm_package" />
+        </service>
+
+        <service id="EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageDefinition">
+            <tag name="shopware.entity.definition" entity="eclm_candy_package" />
         </service>
     </services>
 </container>

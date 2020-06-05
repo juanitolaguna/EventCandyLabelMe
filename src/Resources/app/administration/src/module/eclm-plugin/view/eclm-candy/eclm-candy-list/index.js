@@ -33,7 +33,8 @@ Component.register('eclm-candy-list', {
                 routerLink: 'eclm.plugin.candyDetail',
                 inlineEdit: 'string',
                 allowResize: true,
-                primary: true
+                primary: true,
+                required: true
             }, {
                 property: 'eurProMl',
                 dataIndex: 'eurProMl',

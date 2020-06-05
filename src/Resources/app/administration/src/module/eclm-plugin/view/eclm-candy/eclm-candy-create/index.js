@@ -21,7 +21,7 @@ Component.extend('eclm-candy-create', 'eclm-candy-detail', {
                 this.isLoading = false;
 
                 this.createNotificationError({
-                    title: 'Failed to create a Candy entity!',
+                    title: 'Failed to create a Candy entity! Ensure that all fields are filled properly!',
                     message: exception
                 });
             });

@@ -1,7 +1,14 @@
+.sw-desktop__content {
+    overflow: auto;
+}
+
 .eclm-container {
     background-color: #ffffff;
+    min-height: 100vh;
 }
 
 .eclm-container .sw-tabs__custom-content {
     //display: none;
 }
+
+

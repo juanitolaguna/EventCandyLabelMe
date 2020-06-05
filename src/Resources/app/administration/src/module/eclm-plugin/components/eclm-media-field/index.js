@@ -1,8 +1,8 @@
 import template from './eclm-media-field.html.twig';
 import './eclm-media-field.scss';
 
-const { Component, Context, Utils } = Shopware;
-const { Criteria } = Shopware.Data;
+const {Component, Context, Utils} = Shopware;
+const {Criteria} = Shopware.Data;
 
 /**
  * @status ready
@@ -91,18 +91,13 @@ Component.register('eclm-media-field', {
         },
 
         getDefaultFolderByName() {
-
-            console.log('getDefaultFolderByName');
             let folderRepository = this.repositoryFactory.create('media_folder');
-
             const mediaFolderCriteria = new Criteria();
-
             const folderName = this.mediaFolderName ? this.mediaFolderName : 'Product Media'
+
             mediaFolderCriteria.addFilter(Criteria.equals('name', folderName));
 
             folderRepository.search(mediaFolderCriteria, Context.api).then((entity) => {
-                console.log("fetched Folder");
-                console.log(entity[0].id);
                 this.mediaFolderId = entity[0].id;
             })
         },
@@ -179,7 +174,7 @@ Component.register('eclm-media-field', {
             this.showUploadField = !this.showUploadField;
         },
 
-        exposeNewId({ targetId }) {
+        exposeNewId({targetId}) {
             this.$emit('media-id-change', targetId);
             this.showUploadField = false;
             this.showPicker = false;

@@ -1,12 +1,25 @@
 import './page/eclm-index';
+
+
+//Event
+import './view/eclm-event/eclm-event-list';
+import './view/eclm-event/eclm-event-detail';
+import './view/eclm-event/eclm-event-create';
+
+//Candy
 import './view/eclm-candy/eclm-candy-list';
 import './view/eclm-candy/eclm-candy-detail';
 import './view/eclm-candy/eclm-candy-create';
+
+//Label
+import './view/eclm-label/eclm-label-detail';
+import './view/eclm-label/eclm-label-create';
+
+//Components
 import './components/eclm-media-field';
 
-import './view/eclm-event/eclm-event-list';
 import deDE from '../snippet/de-DE.json';
-import enGB from  '../snippet/en-GB.json';
+import enGB from '../snippet/en-GB.json';
 
 
 Shopware.Module.register('eclm-plugin', {
@@ -26,6 +39,9 @@ Shopware.Module.register('eclm-plugin', {
         index: {
             component: 'eclm-index',
             path: 'index',
+            redirect: {
+                name: 'eclm.plugin.index.event'
+            },
             children: {
                 candy: {
                     component: 'eclm-candy-list',
@@ -38,6 +54,7 @@ Shopware.Module.register('eclm-plugin', {
             }
         },
 
+        // Candy
         candyDetail: {
             component: 'eclm-candy-detail',
             path: 'candy-detail/:id',
@@ -51,49 +68,41 @@ Shopware.Module.register('eclm-plugin', {
             meta: {
                 parentPath: 'eclm.plugin.index.candy'
             }
-        }
+        },
 
+        // Event
+        eventDetail: {
+            component: 'eclm-event-detail',
+            path: 'event-detail/:id',
+            meta: {
+                parentPath: 'eclm.plugin.index.event'
+            }
+        },
+        eventCreate: {
+            component: 'eclm-event-create',
+            path: 'event-create',
+            meta: {
+                parentPath: 'eclm.plugin.index.event'
+            }
+        },
 
-        // list: {
-        //     component: 'eclm-plugin-list',
-        //     path: 'list'
-        // },
-        // detail: {
-        //     component: 'eclm-plugin-detail',
-        //     path: 'detail/:id',
-        //     meta: {
-        //         parentPath: 'eclm.plugin.list'
-        //     }
-        // },
-        // create: {
-        //     component: 'eclm-plugin-create',
-        //     path: 'create',
-        //     meta: {
-        //         parentPath: 'eclm.plugin.list'
-        //     }
-        // }
+        // Label
+        labelDetail: {
+            component: 'eclm-label-detail',
+            path: 'label-detail/:id',
+        },
+        labelCreate: {
+            component: 'eclm-label-create',
+            path: 'label-create/:eventId'
+        },
     },
+
+    // nav entry
     navigation: [{
         label: 'eclm.general.mainMenuItemGeneral',
         color: '#982AFF',
         path: 'eclm.plugin.index',
         icon: 'default-object-puzzle-piece',
         position: 100
-    }],
-
-    // routeMiddleware(next, currentRoute) {
-    //     if (currentRoute.name === 'eclm.plugin.index') {
-    //         console.log(currentRoute);
-    //
-    //         currentRoute.children.push({
-    //             name: 'eclm.plugin.index.list',
-    //             path: '/eclm/plugin/index/list',
-    //             component: 'eclm-plugin-list',
-    //             meta: {
-    //                 parentPath: "eclm.plugin.index"
-    //             }
-    //         });
-    //     }
-    //     next(currentRoute);
-    // }
+    }]
 });

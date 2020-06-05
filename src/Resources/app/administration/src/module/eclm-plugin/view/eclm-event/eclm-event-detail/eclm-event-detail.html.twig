@@ -1,0 +1,79 @@
+<sw-page class="event-detail-page" :showSearchBar="false">
+    <template #smart-bar-header>
+        <h2>Event Details</h2>
+    </template>
+
+    <template #smart-bar-actions>
+        <sw-button-process
+            variant="primary"
+            @click="onClickSave"
+            @process-finish="saveFinish"
+            :isLoading="isLoading"
+            :processSuccess="processSuccess">
+            Save
+        </sw-button-process>
+        <sw-button :routerLink="{ name: 'eclm.plugin.index.event' }">
+            Cancel
+        </sw-button>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <sw-card v-if="event" :large="false">
+                <sw-text-field :label="$t('eclm.eventDetail.name')" v-model="event.name"></sw-text-field>
+                <sw-checkbox-field :label="$t('eclm.eventDetail.active')" v-model="event.active"></sw-checkbox-field>
+                <eclm-media-field
+                    v-model="event.mediaId"
+                    @media-id-change="onMediaSelect"
+                    :mediaFolderName="'Event Candy'">
+                </eclm-media-field>
+            </sw-card>
+
+            <sw-card :large=false>
+
+                <template #title>
+                    <h2>
+                        Labels
+                    </h2>
+                </template>
+
+                <template #toolbar>
+                    <sw-button
+                        v-if="event"
+                        variant="primary"
+                        :routerLink="{name: 'eclm.plugin.labelCreate', params: { eventId: event.id }}"
+                    >
+                        Add Label
+                    </sw-button>
+                </template>
+
+                <template #grid>
+                    <sw-entity-listing
+                        v-if="labels"
+                        :items="labels"
+                        :repository="labelRepository"
+                        :showSelection="false"
+                        :columns="labelColumns"
+                        :fullPage="false"
+                        :compactMode="true"
+                        detailRoute="eclm.plugin.labelDetail"
+                    ></sw-entity-listing>
+                </template>
+
+            </sw-card>
+        </sw-card-view>
+    </template>
+
+    <template #sidebar>
+        <sw-sidebar>
+            <sw-sidebar-item ref="eclmEventSidebar" title="Image" icon="default-object-image">
+                <div class="event-image-container">
+                    <img v-if="imageUrl" class="event-image" :src="imageUrl"/>
+                </div>
+            </sw-sidebar-item>
+        </sw-sidebar>
+    </template>
+
+
+</sw-page>
+

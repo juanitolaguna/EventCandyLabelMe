@@ -1,22 +1,25 @@
-{% block eclm_event_list %}
-    <sw-container columns="1fr 1fr 1fr">
+<sw-card :large="false">
 
-        <div class="eclm-center"><h1>Multi Select Example Reference:</h1></div>
+    <template #toolbar>
+        <sw-button
+            variant="primary"
+            :routerLink="{ name: 'eclm.plugin.eventCreate' }"
+        >
+            Add Event
+        </sw-button>
+    </template>
 
-        <div>
-            <sw-button @click="alertSelection">Test Action</sw-button>
-            <br><br>
-            <sw-multi-select
-                label="Multi Select"
-                :options="options"
-                :value="value"
-                @input="setValue"
-            ></sw-multi-select>
-        </div>
+    <template #grid>
+        <sw-entity-listing
+            v-if="events"
+            :items="events"
+            :repository="repository"
+            :showSelection="false"
+            :columns="columns"
+            :fullPage="false"
+            :compactMode="true"
+            detailRoute="eclm.plugin.eventDetail"
+        ></sw-entity-listing>
 
-        <div>
-            <sw-media-field v-model="candies.mediaId"></sw-media-field>
-        </div>
-
-    </sw-container>
-{% endblock %}
+    </template>
+</sw-card>

@@ -1,10 +1,10 @@
-import template from './eclm-candy-detail.html.twig';
-import './eclm-candy-detail.scss';
+import template from './eclm-label-detail.html.twig';
+import './eclm-label-detail.scss';
 
 const {Component, Mixin } = Shopware;
 const {Criteria} = Shopware.Data;
 
-Component.register('eclm-candy-detail', {
+Component.register('eclm-label-detail', {
     template,
 
     mixins: [
@@ -17,7 +17,7 @@ Component.register('eclm-candy-detail', {
 
     data() {
         return {
-            candy: null,
+            label: null,
             imageUrl: null,
             isLoading: false,
             processSuccess: false,
@@ -28,13 +28,13 @@ Component.register('eclm-candy-detail', {
 
     metaInfo() {
         return {
-            title: 'Candy Details'
+            title: 'Label Details'
         };
     },
 
     created() {
-        this.repository = this.repositoryFactory.create('eclm_candy');
-        this.getCandy();
+        this.repository = this.repositoryFactory.create('eclm_label');
+        this.getLabel();
     },
 
     mounted() {
@@ -55,12 +55,12 @@ Component.register('eclm-candy-detail', {
             }
         },
 
-        getCandy() {
+        getLabel() {
             this.repository
                 .get(this.$route.params.id, Shopware.Context.api)
                 .then((entity) => {
-                    this.candy = entity;
-                    this.getImage(this.candy.mediaId);
+                    this.label = entity;
+                    this.getImage(this.label.mediaId);
                 });
         },
 
@@ -72,15 +72,15 @@ Component.register('eclm-candy-detail', {
             this.isLoading = true;
 
             this.repository
-                .save(this.candy, Shopware.Context.api)
+                .save(this.label, Shopware.Context.api)
                 .then(() => {
-                    this.getCandy();
+                    this.getLabel();
                     this.isLoading = false;
                     this.processSuccess = true;
                 }).catch((exception) => {
                 this.isLoading = false;
                 this.createNotificationError({
-                    title: 'Failed to create a Candy entity! Ensure that all fields are filled properly!',
+                    title: 'Failed to create a Label entity! Ensure that all fields are filled properly!',
                     message: exception
                 });
             });

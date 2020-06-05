@@ -20,8 +20,8 @@
     <template #content>
         <sw-card-view>
             <sw-card v-if="candy" :large="false">
-                <sw-field :label="$t('eclm.candyDetail.name')" v-model="candy.name"></sw-field>
-                <sw-field :label="$t('eclm.candyDetail.eurProMl')" v-model="candy.eurProMl" type="number"></sw-field>
+                <sw-text-field :label="$t('eclm.candyDetail.name')" v-model="candy.name"></sw-text-field>
+                <sw-number-field  numberType="float" :label="$t('eclm.candyDetail.eurProMl')" v-model="candy.eurProMl" validation="required"></sw-number-field>
                 <eclm-media-field
                     v-model="candy.mediaId"
                     :showUploadField="false"
@@ -37,7 +37,7 @@
         <sw-sidebar>
             <sw-sidebar-item ref="eclmSidebar" title="Image" icon="default-object-image">
                 <div class="candy-image-container">
-                    <img class="candy-image" :src="imageUrl"/>
+                    <img v-if="imageUrl" class="candy-image" :src="imageUrl"/>
                 </div>
             </sw-sidebar-item>
         </sw-sidebar>
