@@ -76,6 +76,7 @@ class CandyPackageEntity extends Entity
      */
     public function setMedia(?MediaEntity $media): void
     {
+        if ($media == null) return;
         $this->media = $media;
     }
 

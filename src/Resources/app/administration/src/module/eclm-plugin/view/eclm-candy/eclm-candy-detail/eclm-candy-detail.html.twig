@@ -21,7 +21,8 @@
         <sw-card-view>
             <sw-card v-if="candy" :large="false">
                 <sw-text-field :label="$t('eclm.candyDetail.name')" v-model="candy.name"></sw-text-field>
-                <sw-number-field  numberType="float" :label="$t('eclm.candyDetail.eurProMl')" v-model="candy.eurProMl" validation="required"></sw-number-field>
+                <sw-number-field numberType="float" :label="$t('eclm.candyDetail.eurProMl')" v-model="candy.eurProMl"
+                                 validation="required"></sw-number-field>
                 <eclm-media-field
                     v-model="candy.mediaId"
                     :showUploadField="false"
@@ -30,6 +31,22 @@
                     :mediaFolderName="'Event Candy'">
                 </eclm-media-field>
             </sw-card>
+
+            <sw-card v-if="candySaved && packageOptions" :large="false">
+                <sw-multi-select
+                    :label="'Packages'"
+                    :options="packageOptions"
+                    :value="packageValues"
+
+                    :isLoading="filterLoading"
+                    valueProperty="id"
+                    labelProperty="name"
+                    @item-add="onPackageAdd"
+                    @item-remove="onPackageRemove"
+                >
+                </sw-multi-select>
+            </sw-card>
+
         </sw-card-view>
     </template>
 
@@ -42,7 +59,6 @@
             </sw-sidebar-item>
         </sw-sidebar>
     </template>
-
 
 </sw-page>
 

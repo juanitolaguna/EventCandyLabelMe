@@ -1,0 +1,34 @@
+<sw-card :large="false">
+
+{#<template #title>#}
+{#    {{ candyPackageRelations }}#}
+{#</template>#}
+
+    <template #grid>
+        <sw-entity-listing
+            v-if="joinedCandyPackages"
+            :items="joinedCandyPackages"
+            :repository="joinedCandyPackageRepository"
+            :showSelection="false"
+            :columns="columns"
+            :fullPage="false"
+            :compactMode="true"
+            detailRoute="eclm.plugin.candyDetail"
+        ></sw-entity-listing>
+
+{#        <sw-entity-listing#}
+{#            v-if="events"#}
+{#            :items="events"#}
+{#            :repository="repository"#}
+{#            :showSelection="false"#}
+{#            :columns="columns"#}
+{#            :fullPage="false"#}
+{#            :compactMode="true"#}
+{#            detailRoute="eclm.plugin.eventDetail"#}
+{#        ></sw-entity-listing>#}
+
+    </template>
+
+
+</sw-card>
+

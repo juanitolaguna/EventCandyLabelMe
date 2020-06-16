@@ -5,7 +5,7 @@ namespace EventCandy\LabelMe\Core\Content\Candy;
 use EventCandy\LabelMe\Core\Content\Package\PackageCollection;
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
-use Shopware\Core\Framework\DataAbstractionFLayer\EntityIdTrait;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
 class CandyEntity extends Entity {
     use EntityIdTrait;
@@ -16,7 +16,7 @@ class CandyEntity extends Entity {
     protected $name;
 
     /**
-     * @var integer
+     * @var float
      */
     protected $eurProMl;
 
@@ -60,16 +60,16 @@ class CandyEntity extends Entity {
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getEurProMl(): int {
+    public function getEurProMl(): float {
         return $this->eurProMl;
     }
 
     /**
-     * @param int $eurProMl
+     * @param float $eurProMl
      */
-    public function setEurProMl( int $eurProMl ): void {
+    public function setEurProMl( float $eurProMl ): void {
         $this->eurProMl = $eurProMl;
     }
 

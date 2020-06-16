@@ -1,29 +1,25 @@
 {% block eclm_plugin_index %}
     <div class="eclm-container">
+
         <sw-tabs>
 
             <sw-tabs-item :route="{ name: 'eclm.plugin.index.event' }">
                 Event
             </sw-tabs-item>
 
-{#            <sw-tabs-item :route="{ name: 'eclm.plugin.index' }">#}
-{#                Label#}
-{#            </sw-tabs-item>#}
-
             <sw-tabs-item :route="{ name: 'eclm.plugin.index.candy' }">
                 Candy
             </sw-tabs-item>
 
             <sw-tabs-item
-{#                :route="{ name: 'eclm.plugin.index' }"#}
+                :route="{ name: 'eclm.plugin.index.package' }"
             >
                 Package
             </sw-tabs-item>
 
-{#            <sw-tabs-item :route="{ name: 'eclm.plugin.index' }">#}
-{#                Package + Candy Image#}
-{#            </sw-tabs-item>#}
-
+            <sw-tabs-item :route="{ name: 'eclm.plugin.index.candyPackages' }">
+                Candy & Package Images
+            </sw-tabs-item>
 
         </sw-tabs>
 

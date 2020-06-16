@@ -1,8 +1,9 @@
 import template from './eclm-candy-detail.html.twig';
 import './eclm-candy-detail.scss';
 
-const {Component, Mixin } = Shopware;
+const {Component, Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
+
 
 Component.register('eclm-candy-detail', {
     template,
@@ -18,12 +19,56 @@ Component.register('eclm-candy-detail', {
     data() {
         return {
             candy: null,
+            candySaved: true,
+            // displays image in sidebar
             imageUrl: null,
+
+            // strange error workaround, cannot set joinTableEntry without media_id.
+            noImage: null,
+
+            //onSave Candy Entity
             isLoading: false,
             processSuccess: false,
-            repository: null,
-            mediaRepository: null,
+
+            //Package Selection
+            packageOptions: [],
+            joinedCandyPackages: null,
+            //-> packageValues computed (multi-selection)
+            //   which are the currently selected packages that belongs
+            //   to the current candy entity
+
+            //on Package Select
+            filterLoading: true,
         }
+    },
+
+    computed: {
+        candyRepository() {
+            return this.repositoryFactory.create('eclm_candy');
+        },
+        imageRepository() {
+            return this.repositoryFactory.create('media');
+        },
+        packageRepository() {
+            return this.repositoryFactory.create('eclm_package');
+        },
+        joinedCandyPackageRepository() {
+            return this.repositoryFactory.create('eclm_candy_package');
+        },
+        joinedCandyPackageCriteria() {
+            const criteria = new Criteria();
+            criteria.addFilter(Criteria.equals('candyId', this.$route.params.id))
+            criteria.addAssociation('package');
+            return criteria;
+        },
+        packageValues() {
+            if (!this.joinedCandyPackages) {
+                return [];
+            }
+            return this.joinedCandyPackages.map((cp) => {
+                return cp.packageId;
+            });
+        },
     },
 
     metaInfo() {
@@ -33,8 +78,11 @@ Component.register('eclm-candy-detail', {
     },
 
     created() {
-        this.repository = this.repositoryFactory.create('eclm_candy');
-        this.getCandy();
+        this.componentCreated().catch((err) => {
+            console.error(err);
+        });
+
+
     },
 
     mounted() {
@@ -42,39 +90,36 @@ Component.register('eclm-candy-detail', {
     },
 
     methods: {
+        async componentCreated() {
+            await this.getCandy()
+                .then((candy) => {
+                    this.candy = candy;
+                });
+            await this.getImage(this.candy.mediaId);
 
-        getImage(mediaId) {
-            if (mediaId) {
-                this.mediaRepository = this.repositoryFactory.create('media');
+            // strange error workaround
+            this.getNoImage();
 
-                this.mediaRepository
-                    .get(mediaId, Shopware.Context.api)
-                    .then((entity) => {
-                        this.imageUrl = entity.url;
-                    });
-            }
+            // Create Package Selection
+            this.getPackageOptions();
+            this.getJoinedCandyPackageValues();
+
         },
+
 
         getCandy() {
-            this.repository
-                .get(this.$route.params.id, Shopware.Context.api)
-                .then((entity) => {
-                    this.candy = entity;
-                    this.getImage(this.candy.mediaId);
-                });
-        },
-
-        onMediaSelect(payload) {
-            this.getImage(payload);
+            return this.candyRepository
+                .get(this.$route.params.id, Shopware.Context.api);
         },
 
         onClickSave() {
             this.isLoading = true;
-
-            this.repository
+            this.candyRepository
                 .save(this.candy, Shopware.Context.api)
-                .then(() => {
-                    this.getCandy();
+                .then(() => this.getCandy())
+                .then((candy) => {
+                    this.candy = candy;
+                    this.getImage(candy.mediaId);
                     this.isLoading = false;
                     this.processSuccess = true;
                 }).catch((exception) => {
@@ -86,8 +131,80 @@ Component.register('eclm-candy-detail', {
             });
         },
 
+        onMediaSelect(payload) {
+            this.getImage(payload);
+        },
+
+        getImage(mediaId) {
+            if (mediaId) {
+                this.imageRepository
+                    .get(mediaId, Shopware.Context.api)
+                    .then((entity) => {
+                        this.imageUrl = entity.url;
+                    }).catch((err) => {
+                    console.error(err);
+                })
+            }
+        },
+
         saveFinish() {
             this.processSuccess = false;
+        },
+
+        getNoImage() {
+            let criteria = new Criteria();
+            criteria.addFilter(Criteria.equals('fileName', 'noimage'));
+            this.imageRepository.search(criteria, Shopware.Context.api).then((image) => {
+                this.noImage = image[0];
+            }).catch((err) => {
+                console.error(err);
+            })
+        },
+
+
+        //Package Selection
+        getPackageOptions() {
+            this.packageRepository
+                .search(new Criteria(), Shopware.Context.api)
+                .then((packages) => {
+                    this.packageOptions = packages;
+                })
+        },
+
+        getJoinedCandyPackageValues() {
+            return this.joinedCandyPackageRepository.search(this.joinedCandyPackageCriteria, Shopware.Context.api)
+                .then((result) => {
+                    this.joinedCandyPackages = result;
+                    this.filterLoading = false;
+                })
+        },
+
+
+        onPackageAdd(item) {
+            this.filterLoading = true;
+            let entity = this.joinedCandyPackageRepository.create(Shopware.Context.api);
+            entity.candyId = this.$route.params.id;
+            entity.packageId = item.id;
+            entity.mediaId = this.noImage.id;
+
+            this.joinedCandyPackageRepository.save(entity, Shopware.Context.api).then((res) => {
+                this.getJoinedCandyPackageValues();
+            }).catch((err) => {
+                console.error(err);
+            })
+        },
+
+        onPackageRemove(item) {
+            const packageToRemove = this.joinedCandyPackages.find((cp) => cp.packageId === item.id);
+            this.joinedCandyPackageRepository.delete(packageToRemove.id, Shopware.Context.api)
+                .then((res) => {
+                    this.getJoinedCandyPackageValues();
+                }).catch((err) => {
+                console.error(err);
+            })
+
         }
+
+
     }
 });

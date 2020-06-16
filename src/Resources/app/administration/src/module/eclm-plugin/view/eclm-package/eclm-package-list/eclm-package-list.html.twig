@@ -1,0 +1,26 @@
+<sw-card :large="false">
+
+    <template #toolbar>
+        <sw-button
+            variant="primary"
+            :routerLink="{ name: 'eclm.plugin.packageCreate' }">
+            Add Package
+        </sw-button>
+    </template>
+
+    <template #grid>
+        <sw-entity-listing
+            v-if="packages"
+            :items="packages"
+            :repository="repository"
+            :showSelection="false"
+            :columns="columns"
+            :fullPage="false"
+            :compactMode="true"
+            detailRoute="eclm.plugin.packageDetail"
+        >
+        </sw-entity-listing>
+
+    </template>
+</sw-card>
+

@@ -15,12 +15,13 @@ class Migration1591395589CreateCandyPackageEntity extends MigrationStep
     public function update(Connection $connection): void
     {
         $connection->exec('CREATE TABLE `eclm_candy_package` (
+            `id` BINARY(16) NOT NULL,
             `candy_id` BINARY(16) NOT NULL,
             `package_id` BINARY(16) NOT NULL,
             `media_id` BINARY(16) NULL,
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,
-            PRIMARY KEY (`candy_id`,`package_id`),
+            PRIMARY KEY (`id`),
             KEY `fk.eclm_candy_package.candy_id` (`candy_id`),
             KEY `fk.eclm_candy_package.package_id` (`package_id`),
             KEY `fk.eclm_candy_package.media_id` (`media_id`),

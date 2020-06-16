@@ -10,8 +10,10 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
+use Shopware\Core\Framework\DataAbstractionLayer\MappingEntityDefinition;
 
 class CandyPackageDefinition extends EntityDefinition
 {
@@ -36,12 +38,14 @@ class CandyPackageDefinition extends EntityDefinition
     {
 
         return new FieldCollection([
-            (new FkField('candy_id', 'labelId', CandyDefinition::class))
-                ->addFlags(new PrimaryKey(), new Required()),
+            ( new IdField( 'id', 'id' ) )
+                ->addFlags( new Required(), new PrimaryKey()),
+            (new FkField('candy_id', 'candyId', CandyDefinition::class))
+                ->addFlags(new Required() ),
             (new FkField('package_id', 'packageId', PackageDefinition::class))
-                ->addFlags(new PrimaryKey(), new Required()),
+                ->addFlags(new Required() ),
 
-            new FkField('media_id', 'mediaId', MediaDefinition::class),
+            (new FkField('media_id', 'mediaId', MediaDefinition::class)),
 
             new ManyToOneAssociationField('candy', 'candy_id', CandyDefinition::class),
             new ManyToOneAssociationField('package', 'package_id', PackageDefinition::class),
@@ -52,7 +56,7 @@ class CandyPackageDefinition extends EntityDefinition
                 MediaDefinition::class
             ),
 
-            new CreatedAtField(),
+            new CreatedAtField()
         ]);
     }
 

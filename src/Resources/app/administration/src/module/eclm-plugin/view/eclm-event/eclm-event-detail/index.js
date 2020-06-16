@@ -24,7 +24,8 @@ Component.register('eclm-event-detail', {
             processSuccess: false,
             repository: null,
             mediaRepository: null,
-            labelRepository: null
+            labelRepository: null,
+            eventSaved: true
         }
     },
 

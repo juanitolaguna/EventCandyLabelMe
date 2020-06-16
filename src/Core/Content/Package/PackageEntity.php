@@ -22,32 +22,54 @@ class PackageEntity extends Entity
      */
     protected $active;
 
+
+    /**
+     * @var integer
+     */
+    protected $milliliters;
+
+    /**
+     * @return int
+     */
+    public function getMilliliters(): int
+    {
+        return $this->milliliters;
+    }
+
+    /**
+     * @param int $milliliters
+     */
+    public function setMilliliters(int $milliliters): void
+    {
+        $this->milliliters = $milliliters;
+    }
+
     /**
      *
      * @var MediaEntity|null
      */
     protected $media;
 
-    /**
-     * @var CandyCollection|null
-     */
-    protected $candies;
+//    /**
+//     * @var CandyCollection|null
+//     */
+//    protected $candies;
 
-    /**
-     * @return CandyCollection|null
-     */
-    public function getCandies(): ?CandyCollection
-    {
-        return $this->candies;
-    }
-
-    /**
-     * @param CandyCollection|null $candies
-     */
-    public function setCandies(?CandyCollection $candies): void
-    {
-        $this->candies = $candies;
-    }
+//    /**
+//     * @return CandyCollection|null
+//     */
+//    public function getCandies(): ?CandyCollection
+//    {
+//        return $this->candies;
+//    }
+//
+//    /**
+//     * @param CandyCollection|null $candies
+//     */
+//    public function setCandies(?CandyCollection $candies): void
+//    {
+//        $this->candies = $candies;
+//    }
 
 
 

@@ -17,7 +17,7 @@ class Migration1591185483CreateCandyEntity extends MigrationStep {
         $connection->exec( 'CREATE TABLE IF NOT EXISTS `eclm_candy` (
             `id` BINARY(16) NOT NULL,
             `name` VARCHAR(255) NOT NULL,
-            `eur_pro_ml` INT(11) NOT NULL,
+            `eur_pro_ml` DOUBLE NOT NULL,
             `media_id` BINARY(16) NULL,
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,

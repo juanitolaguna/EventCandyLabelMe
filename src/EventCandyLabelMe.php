@@ -15,7 +15,7 @@ class EventCandyLabelMe extends Plugin {
         $this->container->get( Connection::class )->exec( 'DROP TABLE IF EXISTS eclm_label' );
         $this->container->get( Connection::class )->exec( 'DROP TABLE IF EXISTS eclm_event' );
         $this->container->get( Connection::class )->exec( 'DROP TABLE IF EXISTS eclm_candy_package' );
-        $this->container->get( Connection::class )->exec( 'DROP TABLE IF EXISTS eclm_candy' );
         $this->container->get( Connection::class )->exec( 'DROP TABLE IF EXISTS eclm_package' );
+        $this->container->get( Connection::class )->exec( 'DROP TABLE IF EXISTS eclm_candy' );
     }
 }

@@ -1,0 +1,51 @@
+<sw-page class="candy-package-detail-page" :showSearchBar="false">
+    <template #smart-bar-header>
+        <h2>Candy/Package Details</h2>
+    </template>
+
+    <template #smart-bar-actions>
+        <sw-button-process
+            variant="primary"
+            @click="onClickSave"
+            @process-finish="saveFinish"
+            :isLoading="isLoading"
+            :processSuccess="processSuccess">
+            Save
+        </sw-button-process>
+        <sw-button :routerLink="{ name: 'eclm.plugin.index.candyPackages' }">
+            Cancel
+        </sw-button>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <sw-card v-if="joinedCandyPackage">
+                <p><strong>Candy Name:</strong> {{ joinedCandyPackage.candy.name }}</p>
+                <br>
+                <p><strong>Package Name:</strong> {{ joinedCandyPackage.package.name }}</p>
+            </sw-card>
+
+            <sw-card v-if="joinedCandyPackage" :large="false">
+                <eclm-media-field
+                    v-model="joinedCandyPackage.mediaId"
+                    @media-id-change="onMediaSelect"
+                    :mediaFolderName="'Event Candy'">
+                </eclm-media-field>
+            </sw-card>
+
+        </sw-card-view>
+    </template>
+
+    <template #sidebar>
+        <sw-sidebar>
+            <sw-sidebar-item ref="eclmSidebar" title="Image" icon="default-object-image">
+                <div class="candy-package-image-container">
+                    <img v-if="imageUrl" class="candy-package-image" :src="imageUrl"/>
+                </div>
+            </sw-sidebar-item>
+        </sw-sidebar>
+    </template>
+
+
+</sw-page>
+

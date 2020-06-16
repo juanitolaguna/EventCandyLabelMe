@@ -1,0 +1,18 @@
+// Turn of notifications
+.candy-package-detail-page .sw-page__top-bar-actions {
+    display: none;
+}
+
+// Image in sidebar
+.candy-package-detail-page .candy-package-image-container {
+    margin: 0 auto 40px auto;
+    padding: 10px;
+
+    .candy-package-image {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 5px;
+    }
+}
+
+

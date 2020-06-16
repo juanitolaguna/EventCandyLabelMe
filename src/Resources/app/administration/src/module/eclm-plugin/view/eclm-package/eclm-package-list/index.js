@@ -1,9 +1,9 @@
-import template from './eclm-event-list.html.twig';
+import template from './eclm-package-list.html.twig';
 
 const {Component} = Shopware;
 const {Criteria} = Shopware.Data;
 
-Component.register('eclm-event-list', {
+Component.register('eclm-package-list', {
     template,
 
     inject: [
@@ -12,7 +12,8 @@ Component.register('eclm-event-list', {
 
     data() {
         return {
-            events: null
+            repository: null,
+            packages: null
         };
     },
 
@@ -29,32 +30,37 @@ Component.register('eclm-event-list', {
                 property: 'name',
                 dataIndex: 'name',
                 label: 'Name',
-                routerLink: 'eclm.plugin.eventDetail',
+                routerLink: 'eclm.plugin.packageDetail',
                 inlineEdit: 'string',
                 allowResize: true,
                 primary: true,
                 required: true
             }, {
+                property: 'milliliters',
+                dataIndex: 'milliliters',
+                label: 'Milliliter',
+                inlineEdit: 'number',
+                allowResize: true
+            },{
                 property: 'active',
                 dataIndex: 'active',
                 label: 'Active',
                 allowResize: true,
                 inlineEdit: 'boolean',
                 align: 'center'
-            }]
-        },
-        repository() {
-            return this.repositoryFactory.create('eclm_event');
+            }
+            ]
         }
-
     },
 
 
     created() {
+        this.repository = this.repositoryFactory.create('eclm_package');
+
         this.repository
             .search(new Criteria(), Shopware.Context.api)
             .then((result) => {
-                this.events = result;
+                this.packages = result;
             })
     }
 });

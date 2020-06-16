@@ -15,6 +15,17 @@ import './view/eclm-candy/eclm-candy-create';
 import './view/eclm-label/eclm-label-detail';
 import './view/eclm-label/eclm-label-create';
 
+//Package
+import './view/eclm-package/eclm-package-list';
+import './view/eclm-package/eclm-package-detail';
+import './view/eclm-package/eclm-package-create';
+
+//CandyPackage
+import './view/eclm-candy-package/eclm-candy-package-list';
+import './view/eclm-candy-package/eclm-candy-package-detail';
+
+
+
 //Components
 import './components/eclm-media-field';
 
@@ -50,6 +61,14 @@ Shopware.Module.register('eclm-plugin', {
                 event: {
                     component: 'eclm-event-list',
                     path: 'event',
+                },
+                package: {
+                    component: 'eclm-package-list',
+                    path: 'package'
+                },
+                candyPackages: {
+                    component: 'eclm-candy-package-list',
+                    path: 'candy-packages'
                 }
             }
         },
@@ -95,6 +114,34 @@ Shopware.Module.register('eclm-plugin', {
             component: 'eclm-label-create',
             path: 'label-create/:eventId'
         },
+
+        // Package
+        packageDetail: {
+            component: 'eclm-package-detail',
+            path: 'package-detail/:id',
+            meta: {
+                parentPath: 'eclm.plugin.index.package'
+            }
+        },
+        packageCreate: {
+            component: 'eclm-package-create',
+            path: 'package-create',
+            meta: {
+                parentPath: 'eclm.plugin.index.package'
+            }
+        },
+
+        //Candy&Package
+        candyPackageDetail: {
+            component:'eclm-candy-package-detail',
+            path: 'candy-package-detail/:id',
+            meta: {
+                parentPath: 'eclm.plugin.index.candyPackages'
+            }
+        }
+
+
+
     },
 
     // nav entry

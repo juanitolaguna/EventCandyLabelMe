@@ -15,6 +15,10 @@
         "labelDetail": {
             "name": "Label Name",
             "active": "Active"
+        },
+        "packageDetail": {
+            "name": "Package Name",
+            "milliliters": "Milliliter"
         }
     }
 }

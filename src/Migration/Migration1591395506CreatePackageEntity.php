@@ -17,6 +17,7 @@ class Migration1591395506CreatePackageEntity extends MigrationStep
         $connection->exec('CREATE TABLE `eclm_package` (
             `id` BINARY(16) NOT NULL,
             `name` VARCHAR(255) NOT NULL,
+            `milliliters` INT(11) NOT NULL,
             `active` TINYINT(1) NULL DEFAULT \'0\',
             `media_id` BINARY(16) NULL,
             `created_at` DATETIME(3) NOT NULL,

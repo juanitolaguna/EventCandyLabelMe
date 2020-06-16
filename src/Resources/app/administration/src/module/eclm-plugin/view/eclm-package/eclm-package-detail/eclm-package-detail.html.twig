@@ -1,0 +1,57 @@
+<sw-page class="package-detail-page" :showSearchBar="false">
+    <template #smart-bar-header>
+        <h2>Package Details</h2>
+    </template>
+
+    <template #smart-bar-actions>
+        <sw-button-process
+            variant="primary"
+            @click="onClickSave"
+            @process-finish="saveFinish"
+            :isLoading="isLoading"
+            :processSuccess="processSuccess">
+            Save
+        </sw-button-process>
+        <sw-button :routerLink="{ name: 'eclm.plugin.index.package' }">
+            Cancel
+        </sw-button>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <sw-card v-if="package" :large="false">
+                <sw-text-field :label="$t('eclm.packageDetail.name')" v-model="package.name"></sw-text-field>
+                <sw-number-field  numberType="float" :label="$t('eclm.packageDetail.milliliters')" v-model="package.milliliters" validation="required"></sw-number-field>
+                <eclm-media-field
+                    v-model="package.mediaId"
+                    :showUploadField="false"
+                    :showControls="false"
+                    @media-id-change="onMediaSelect"
+                    :mediaFolderName="'Event Candy'">
+                </eclm-media-field>
+            </sw-card>
+
+{#            <sw-card v-if="package" :large="false">#}
+{#                <sw-entity-many-to-many-select#}
+{#                    :localMode="package.isNew()"#}
+{#                    :label="'Candies'"#}
+{#                    v-model="package.candies">#}
+{#                </sw-entity-many-to-many-select>#}
+{#            </sw-card>#}
+
+        </sw-card-view>
+    </template>
+
+    <template #sidebar>
+        <sw-sidebar>
+            <sw-sidebar-item ref="eclmSidebar" title="Image" icon="default-object-image">
+                <div class="package-image-container">
+                    <img v-if="imageUrl" class="package-image" :src="imageUrl"/>
+                </div>
+            </sw-sidebar-item>
+        </sw-sidebar>
+    </template>
+
+
+</sw-page>
+

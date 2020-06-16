@@ -52,7 +52,6 @@ Component.register('eclm-candy-list', {
         this.repository
             .search(new Criteria(), Shopware.Context.api)
             .then((result) => {
-                console.log(result.first());
                 this.candies = result;
             })
     }

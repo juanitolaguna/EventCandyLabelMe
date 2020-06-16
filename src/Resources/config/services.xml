@@ -24,5 +24,13 @@
         <service id="EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageDefinition">
             <tag name="shopware.entity.definition" entity="eclm_candy_package" />
         </service>
+
+        <service id="EventCandy\LabelMe\Storefront\Controller\LabelMeController" public="true">
+            <argument type="service" id="Shopware\Storefront\Page\Navigation\NavigationPageLoader"/>
+
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
     </services>
 </container>
