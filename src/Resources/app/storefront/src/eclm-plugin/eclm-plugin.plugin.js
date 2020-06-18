@@ -1,17 +1,14 @@
 import Plugin from 'src/plugin-system/plugin.class';
-import Markdown from 'markdown-it'
+import StoreApiClient from 'src/service/store-api-client.service';
 
-const md = new Markdown();
 
-export default class EclmPlugin extends Plugin {
+export class EclmPlugin extends Plugin {
     init() {
-
-
-        console.log(md.render('# markdown works'));
-        window.onscroll = function() {
-            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
-                alert('Hello there!!!');
-            }
-        };
+        // console.log(window.accessKey);
+        //
+        // const httpClient = new StoreApiClient(window.accessKey);
+        // httpClient.get('store-api/v{version}/eclm/get-events', (response) => {
+        //     console.log(response);
+        // });
     }
 }
