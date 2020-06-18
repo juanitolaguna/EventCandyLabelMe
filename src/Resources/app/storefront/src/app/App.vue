@@ -1,8 +1,11 @@
 <template>
     <div>
         <p class="example">{{ msg }}</p>
-        <p>{{ data.address }}</p>
-        <p>{{ data.name }}</p>
+        <template v-if="data">
+            <p>{{ data.address }}</p>
+            <p>{{ data.name }}</p>
+        </template>
+
     </div>
 
 </template>
