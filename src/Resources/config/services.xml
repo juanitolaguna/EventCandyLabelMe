@@ -32,5 +32,10 @@
                 <argument type="service" id="service_container"/>
             </call>
         </service>
+
+        <service id="EventCandy\LabelMe\Storefront\Controller\LabelMeApiController" public="true">
+            <argument type="service" id="eclm_event.repository"/>
+            <argument type="service" id="eclm_label.repository"/>
+        </service>
     </services>
 </container>
