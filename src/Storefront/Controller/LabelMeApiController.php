@@ -2,8 +2,12 @@
 
 namespace EventCandy\LabelMe\Storefront\Controller;
 
+use Composer\Package\Package;
+use EventCandy\LabelMe\Core\Content\Candy\CandyEntity;
+use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
+use EventCandy\LabelMe\Core\Content\Package\PackageEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -30,13 +34,27 @@ class LabelMeApiController extends AbstractController
      */
     private $labelRepository;
 
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $packageRepository;
+
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $candyPackageRepository;
+
     public function __construct(
         EntityRepositoryInterface $eventRepository,
-        EntityRepositoryInterface $labelRepository
+        EntityRepositoryInterface $labelRepository,
+        EntityRepositoryInterface $packageRepository,
+        EntityRepositoryInterface $candyPackageRepository
     )
     {
         $this->eventRepository = $eventRepository;
         $this->labelRepository = $labelRepository;
+        $this->packageRepository = $packageRepository;
+        $this->candyPackageRepository = $candyPackageRepository;
     }
 
 
@@ -86,6 +104,66 @@ class LabelMeApiController extends AbstractController
                 'id' => $label->getId(),
                 'name' => $label->getName(),
                 'thumbnails' => $label->getMedia()->getThumbnails()
+            ];
+        };
+
+        $mapped = $entities->fmap($filter);
+
+        return new JsonResponse($mapped);
+    }
+
+
+    /**
+     * @Route("/store-api/v{version}/eclm/get-packages", name="api.action.eclm.get-packages", methods={"GET"})
+     */
+    public function getPackages(Request $request, Context $context): JsonResponse
+    {
+        $criteria = new Criteria();
+        $criteria->addAssociation('media');
+
+        $entities = $this->packageRepository->search(
+            $criteria,
+            Context::createDefaultContext()
+        );
+
+        $filter = function(PackageEntity $event) {
+            return [
+                'id' => $event->getId(),
+                'name' => $event->getName(),
+                'thumbnails' => $event->getMedia()->getThumbnails()
+            ];
+        };
+
+        $mapped = $entities->fmap($filter);
+        return new JsonResponse($mapped);
+    }
+
+    /**
+     * @Route("/store-api/v{version}/eclm/get-candies/{id}", name="api.action.eclm.get-candies", methods={"GET"})
+     * @param string $id packageId
+     * @param Request $request
+     * @param Context $context
+     * @return JsonResponse
+     */
+    public function getCandies(string $id, Request $request, Context $context): JsonResponse
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('packageId', $id));
+        $criteria->addAssociation('candy');
+        $criteria->addAssociation('media');
+
+
+        $entities =  $this->candyPackageRepository->search(
+            $criteria,
+            Context::createDefaultContext()
+        );
+
+        $filter = function(CandyPackageEntity $cp) {
+            return [
+                'cp_id' => $cp->getId(),
+                'id' => $cp->getCandy()->getId(),
+                'name' => $cp->getCandy()->getName(),
+                'thumbnails' => $cp->getMedia()->getThumbnails()
             ];
         };
 

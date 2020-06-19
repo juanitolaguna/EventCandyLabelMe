@@ -50,26 +50,26 @@ class PackageEntity extends Entity
      */
     protected $media;
 
-//    /**
-//     * @var CandyCollection|null
-//     */
-//    protected $candies;
+    /**
+     * @var CandyCollection|null
+     */
+    protected $candies;
 
-//    /**
-//     * @return CandyCollection|null
-//     */
-//    public function getCandies(): ?CandyCollection
-//    {
-//        return $this->candies;
-//    }
-//
-//    /**
-//     * @param CandyCollection|null $candies
-//     */
-//    public function setCandies(?CandyCollection $candies): void
-//    {
-//        $this->candies = $candies;
-//    }
+    /**
+     * @return CandyCollection|null
+     */
+    public function getCandies(): ?CandyCollection
+    {
+        return $this->candies;
+    }
+
+    /**
+     * @param CandyCollection|null $candies
+     */
+    public function setCandies(?CandyCollection $candies): void
+    {
+        $this->candies = $candies;
+    }
 
 
 

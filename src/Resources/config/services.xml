@@ -36,6 +36,8 @@
         <service id="EventCandy\LabelMe\Storefront\Controller\LabelMeApiController" public="true">
             <argument type="service" id="eclm_event.repository"/>
             <argument type="service" id="eclm_label.repository"/>
+            <argument type="service" id="eclm_package.repository"/>
+            <argument type="service" id="eclm_candy_package.repository"/>
         </service>
     </services>
 </container>

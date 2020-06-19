@@ -9,11 +9,11 @@
             v-if="joinedCandyPackages"
             :items="joinedCandyPackages"
             :repository="joinedCandyPackageRepository"
-            :showSelection="false"
+            :showSelection="true"
+            :showActions="false"
             :columns="columns"
             :fullPage="false"
             :compactMode="true"
-            detailRoute="eclm.plugin.candyDetail"
         ></sw-entity-listing>
 
 {#        <sw-entity-listing#}
