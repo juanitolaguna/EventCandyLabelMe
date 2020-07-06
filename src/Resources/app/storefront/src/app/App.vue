@@ -40,7 +40,7 @@
             <CardDeck v-if="currentComponent === 'events' && !loading" :entities="eclmEvents"
                       :getEntityEvent="'getLabelsEvent'"/>
             <CardDeck v-if="currentComponent === 'labels' && !loading" :entities="eclmLabels"
-                      :getEntityEvent="'getPackagesEvent'"/>
+                      :getEntityEvent="'getCandiesEvent'"/>
             <CardDeck v-if="currentComponent === 'packages' && !loading" :entities="eclmPackages"
                       :getEntityEvent="'getCandiesEvent'"/>
             <CardDeck v-if="currentComponent === 'candies' && !loading" :entities="eclmCandies"
@@ -207,7 +207,7 @@
                 });
 
                 bus.$on('getCandiesEvent', (id) => {
-                    this.selectedPackage = id;
+                    this.selectedLabel = id;
                     this.getCandies(id);
                 })
 

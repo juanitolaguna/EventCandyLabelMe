@@ -13,7 +13,13 @@
 
         <br><br>
 
-        <div class="card-deck">
+        <div class="card" style="max-width:250px;">
+            <img :src="labelImage" class="card-img-top" :alt="result.label.name">
+            <div class="card-body">
+                <h5 class="card-title">Label</h5>
+            </div>
+        </div>
+
             <div class="card" style="max-width:250px;">
 
                 <img :src="packageImage" class="card-img-top" :alt="result.eclm_package.name">
@@ -21,13 +27,7 @@
                     <h5 class="card-title">Verpackung</h5>
                 </div>
             </div>
-            <div class="card" style="max-width:250px;">
-                <img :src="labelImage" class="card-img-top" :alt="result.label.name">
-                <div class="card-body">
-                    <h5 class="card-title">Label</h5>
-                </div>
-            </div>
-        </div>
+
 
     </div>
 </template>
