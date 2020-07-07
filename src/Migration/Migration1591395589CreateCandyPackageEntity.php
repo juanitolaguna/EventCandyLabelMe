@@ -14,7 +14,7 @@ class Migration1591395589CreateCandyPackageEntity extends MigrationStep
 
     public function update(Connection $connection): void
     {
-        $connection->exec('CREATE TABLE `eclm_candy_package` (
+        $connection->exec('CREATE TABLE IF NOT EXISTS `eclm_candy_package` (
             `id` BINARY(16) NOT NULL,
             `candy_id` BINARY(16) NOT NULL,
             `package_id` BINARY(16) NOT NULL,

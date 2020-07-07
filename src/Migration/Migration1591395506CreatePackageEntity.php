@@ -14,7 +14,7 @@ class Migration1591395506CreatePackageEntity extends MigrationStep
 
     public function update(Connection $connection): void
     {
-        $connection->exec('CREATE TABLE `eclm_package` (
+        $connection->exec('CREATE TABLE IF NOT EXISTS `eclm_package` (
             `id` BINARY(16) NOT NULL,
             `name` VARCHAR(255) NOT NULL,
             `milliliters` INT(11) NOT NULL,

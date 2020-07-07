@@ -8,12 +8,14 @@ use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
 use EventCandy\LabelMe\Core\Content\Package\PackageEntity;
+use EventCandy\LabelMe\EventCandyLabelMe;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,24 +40,31 @@ class LabelMeApiController extends AbstractController
     /**
      * @var EntityRepositoryInterface
      */
-    private $packageRepository;
+    private $candyRepository;
 
     /**
      * @var EntityRepositoryInterface
      */
     private $candyPackageRepository;
 
+    /**
+     * @var SystemConfigService
+     */
+    private $systemConfigService;
+
     public function __construct(
         EntityRepositoryInterface $eventRepository,
         EntityRepositoryInterface $labelRepository,
-        EntityRepositoryInterface $packageRepository,
-        EntityRepositoryInterface $candyPackageRepository
+        EntityRepositoryInterface $candyRepository,
+        EntityRepositoryInterface $candyPackageRepository,
+        SystemConfigService $systemConfigService
     )
     {
         $this->eventRepository = $eventRepository;
         $this->labelRepository = $labelRepository;
-        $this->packageRepository = $packageRepository;
+        $this->candyRepository = $candyRepository;
         $this->candyPackageRepository = $candyPackageRepository;
+        $this->systemConfigService = $systemConfigService;
     }
 
 
@@ -116,23 +125,26 @@ class LabelMeApiController extends AbstractController
 
 
     /**
-     * @Route("/store-api/v{version}/eclm/get-packages", name="api.action.eclm.get-packages", methods={"GET"})
+     * @Route("/store-api/v{version}/eclm/get-packages/{id}", name="api.action.eclm.get-packages", methods={"GET"})
      */
-    public function getPackages(Request $request, Context $context): JsonResponse
+    public function getPackages(string $id, Request $request, Context $context): JsonResponse
     {
         $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('candyId', $id));
+        $criteria->addAssociation('package');
         $criteria->addAssociation('media');
 
-        $entities = $this->packageRepository->search(
+        $entities = $this->candyPackageRepository->search(
             $criteria,
             Context::createDefaultContext()
         );
 
-        $filter = function(PackageEntity $event) {
+        $filter = function(CandyPackageEntity $cp) {
             return [
-                'id' => $event->getId(),
-                'name' => $event->getName(),
-                'thumbnails' => $event->getMedia()->getThumbnails()
+                'cp_id' => $cp->getId(),
+                'id' => $cp->getPackage()->getId(),
+                'name' => $cp->getPackage()->getName(),
+                'thumbnails' => $cp->getMedia()->getThumbnails()
             ];
         };
 
@@ -141,31 +153,30 @@ class LabelMeApiController extends AbstractController
     }
 
     /**
-     * @Route("/store-api/v{version}/eclm/get-candies/{id}", name="api.action.eclm.get-candies", methods={"GET"})
+     * @Route("/store-api/v{version}/eclm/get-candies", name="api.action.eclm.get-candies", methods={"GET"})
      * @param string $id packageId
      * @param Request $request
      * @param Context $context
      * @return JsonResponse
      */
-    public function getCandies(string $id, Request $request, Context $context): JsonResponse
+    public function getCandies(Request $request, Context $context): JsonResponse
     {
         $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('packageId', $id));
-        $criteria->addAssociation('candy');
+
+//        $criteria->addFilter(new EqualsFilter('packageId', $id));
+//        $criteria->addAssociation('candy');
         $criteria->addAssociation('media');
 
-
-        $entities =  $this->candyPackageRepository->search(
+        $entities =  $this->candyRepository->search(
             $criteria,
             Context::createDefaultContext()
         );
 
-        $filter = function(CandyPackageEntity $cp) {
+        $filter = function(CandyEntity $candy) {
             return [
-                'cp_id' => $cp->getId(),
-                'id' => $cp->getCandy()->getId(),
-                'name' => $cp->getCandy()->getName(),
-                'thumbnails' => $cp->getMedia()->getThumbnails()
+                'id' => $candy->getId(),
+                'name' => $candy->getName(),
+                'thumbnails' => $candy->getMedia()->getThumbnails()
             ];
         };
 
@@ -173,6 +184,20 @@ class LabelMeApiController extends AbstractController
 
         return new JsonResponse($mapped);
     }
+
+    /**
+     * @Route("/store-api/v{version}/eclm/get-config", name="api.action.eclm.get-config", methods={"GET"})
+     * @param Request $request
+     * @param Context $context
+     * @return JsonResponse
+     */
+    public function getPluginConfig(Request $request, Context $context): JsonResponse
+    {
+//        $name = $this->container->get('EventCandy\LabelMe\EventCandyLabelMe')->getName();
+        $config = $this->systemConfigService->get('EventCandyLabelMe.config');
+        return new JsonResponse($config);
+    }
+
 
 
 }

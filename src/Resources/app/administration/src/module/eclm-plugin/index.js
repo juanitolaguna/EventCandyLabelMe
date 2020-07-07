@@ -146,6 +146,7 @@ Shopware.Module.register('eclm-plugin', {
 
     // nav entry
     navigation: [{
+        id: 'eclm-cms',
         label: 'eclm.general.mainMenuItemGeneral',
         color: '#982AFF',
         path: 'eclm.plugin.index',

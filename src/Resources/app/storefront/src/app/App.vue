@@ -5,31 +5,31 @@
                 <a
                     @click.prevent="selectComponent('events')"
                     :class="['nav-link', eventTabClasses ]"
-                    href="#">Event</a>
+                    href="#">{{config.eventName}}</a>
             </li>
             <li class="nav-item">
                 <a
                     @click.prevent="selectComponent('labels')"
                     :class="['nav-link', labelTabClasses ]"
-                    href="#">Label</a>
-            </li>
-            <li class="nav-item">
-                <a
-                    @click.prevent="selectComponent('packages')"
-                    :class="['nav-link', packageTabClasses ]"
-                    href="#">Package</a>
+                    href="#">{{config.labelName}}</a>
             </li>
             <li class="nav-item">
                 <a
                     @click.prevent="selectComponent('candies')"
                     :class="['nav-link', candyTabClasses]"
-                    href="#">Candies</a>
+                    href="#">{{config.candyName}}</a>
+            </li>
+            <li class="nav-item">
+                <a
+                    @click.prevent="selectComponent('packages')"
+                    :class="['nav-link', packageTabClasses ]"
+                    href="#">{{config.packageName}}</a>
             </li>
             <li class="nav-item">
                 <a
                     @click.prevent="selectComponent('result')"
                     :class="['nav-link', resultTabClasses]"
-                    href="#">Dein Combo</a>
+                    href="#">{{config.comboName}}</a>
             </li>
 
         </ul>
@@ -37,15 +37,45 @@
         <div>
             <Spinner v-if="loading"/>
 
-            <CardDeck v-if="currentComponent === 'events' && !loading" :entities="eclmEvents"
-                      :getEntityEvent="'getLabelsEvent'"/>
-            <CardDeck v-if="currentComponent === 'labels' && !loading" :entities="eclmLabels"
-                      :getEntityEvent="'getCandiesEvent'"/>
-            <CardDeck v-if="currentComponent === 'packages' && !loading" :entities="eclmPackages"
-                      :getEntityEvent="'getCandiesEvent'"/>
-            <CardDeck v-if="currentComponent === 'candies' && !loading" :entities="eclmCandies"
-                      :getEntityEvent="'getResultEvent'"/>
-            <Result v-if="currentComponent === 'result' && !loading" :result="eclmResult"/>
+            <transition name="slide-fade">
+                <CardDeck v-if="currentComponent === 'events' && !loading"
+                          :entities="eclmEvents"
+                          :getEntityEvent="'getLabelsEvent'"
+                          :selectedEntity="selectedEvent"
+                          :header="config.eventHeader"/>
+            </transition>
+
+            <transition name="slide-fade">
+                <CardDeck v-if="currentComponent === 'labels' && !loading"
+                          :entities="eclmLabels"
+                          :getEntityEvent="'getCandiesEvent'"
+                          :selectedEntity="selectedLabel"
+                          :header="config.labelHeader"/>
+            </transition>
+
+            <transition name="slide-fade">
+                <CardDeck v-if="currentComponent === 'candies' && !loading"
+                          :entities="eclmCandies"
+                          :getEntityEvent="'getPackagesEvent'"
+                          :selectedEntity="selectedCandy"
+                          :header="config.candyHeader"/>
+            </transition>
+
+            <transition name="slide-fade">
+                <CardDeck v-if="currentComponent === 'packages' && !loading"
+                          :entities="eclmPackages"
+                          :getEntityEvent="'getResultEvent'"
+                          :selectedEntity="selectedPackage"
+                          :header="config.packageHeader"/>
+            </transition>
+            <transition name="slide-fade">
+                <Result
+                    v-if="currentComponent === 'result'
+                    && !loading"
+                    :result="eclmResult"
+                    :header="config.comboHeader"/>
+                />
+            </transition>
         </div>
     </div>
 </template>
@@ -77,6 +107,8 @@
                 selectedLabel: '',
                 selectedPackage: '',
                 selectedCandy: '',
+
+                config: null,
             }
         },
 
@@ -156,9 +188,9 @@
                 return classes;
             },
 
-            packageTabClasses() {
+            candyTabClasses() {
                 let classes = ''
-                if (this.currentComponent === 'packages') {
+                if (this.currentComponent === 'candies') {
                     classes += ' active';
                 }
                 if (!this.selectedLabel) {
@@ -167,20 +199,9 @@
                 return classes;
             },
 
-            candyTabClasses() {
+            packageTabClasses() {
                 let classes = ''
-                if (this.currentComponent === 'candies') {
-                    classes += ' active';
-                }
-                if (!this.selectedPackage) {
-                    classes += ' disabled'
-                }
-                return classes;
-            },
-
-            resultTabClasses() {
-                let classes = ''
-                if (this.currentComponent === 'result') {
+                if (this.currentComponent === 'packages') {
                     classes += ' active';
                 }
                 if (!this.selectedCandy) {
@@ -190,29 +211,42 @@
             },
 
 
+            resultTabClasses() {
+                let classes = ''
+                if (this.currentComponent === 'result') {
+                    classes += ' active';
+                }
+                if (!this.selectedPackage) {
+                    classes += ' disabled';
+                }
+                return classes;
+            },
+
+
         },
 
         methods: {
             componentCreated() {
-                this.getEvents();
+                this.getConfig();
+                // this.getEvents();
 
                 bus.$on('getLabelsEvent', (id) => {
                     this.selectedEvent = id;
                     this.getLabels(id);
                 });
 
-                bus.$on('getPackagesEvent', (id) => {
-                    this.selectedLabel = id;
-                    this.getPackages();
-                });
-
                 bus.$on('getCandiesEvent', (id) => {
                     this.selectedLabel = id;
-                    this.getCandies(id);
+                    this.getCandies();
                 })
 
-                bus.$on('getResultEvent', (id) => {
+                bus.$on('getPackagesEvent', (id) => {
                     this.selectedCandy = id;
+                    this.getPackages(id);
+                });
+
+                bus.$on('getResultEvent', (id) => {
+                    this.selectedPackage = id;
                     this.currentComponent = 'result';
                 })
 
@@ -240,33 +274,41 @@
                 this.httpClient.get(`store-api/v{version}/eclm/get-labels/${id}`, (response) => {
                     this.loading = false;
                     this.labels = JSON.parse(response);
-
                     this.selectedLabel = '';
-                    this.selectedPackage = '';
                     this.selectedCandy = '';
+                    this.selectedPackage = '';
                 });
             },
 
-            getPackages() {
-                this.currentComponent = 'packages'
-                this.loading = true;
-                this.httpClient.get('store-api/v{version}/eclm/get-packages', (response) => {
-                    this.loading = false;
-                    this.packages = JSON.parse(response);
-                    this.selectedPackage = '';
-                    this.selectedCandy = '';
-                });
-            },
-
-            getCandies(id) {
+            getCandies() {
                 this.currentComponent = 'candies';
                 this.loading = true;
-                this.httpClient.get(`store-api/v{version}/eclm/get-candies/${id}`, (response) => {
+                this.httpClient.get(`store-api/v{version}/eclm/get-candies`, (response) => {
                     this.loading = false;
                     this.candies = JSON.parse(response);
                     this.selectedCandy = '';
+                    this.selectedPackage = '';
                 });
             },
+
+            getPackages(id) {
+                this.currentComponent = 'packages'
+                this.loading = true;
+                this.httpClient.get(`store-api/v{version}/eclm/get-packages/${id}`, (response) => {
+                    this.loading = false;
+                    this.packages = JSON.parse(response);
+                    this.selectedPackage = '';
+                });
+            },
+
+            getConfig() {
+                this.httpClient.get(`store-api/v{version}/eclm/get-config`, (response) => {
+                    this.loading = false;
+                    this.config = JSON.parse(response);
+                    this.getEvents();
+                });
+            },
+
 
             //#helpers
             computeCard(entities) {

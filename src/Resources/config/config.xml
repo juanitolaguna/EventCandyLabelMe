@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Event</title>
+        <input-field>
+            <name>eventName</name>
+            <label>Event Tab</label>
+            <placeholder>Event</placeholder>
+            <defaultValue>Event</defaultValue>
+        </input-field>
+        <component name="sw-text-editor">
+            <name>eventHeader</name>
+            <label>Event Header</label>
+            <placeholder>Wähle dein ...</placeholder>
+            <defaultValue>&lt;h3&gt;Wähle zunächst dein Thema!&lt;/h3&gt;</defaultValue>
+        </component>
+    </card>
+
+    <card>
+        <title>Label</title>
+        <input-field>
+            <name>labelName</name>
+            <label>Label Tab</label>
+            <placeholder>Label</placeholder>
+            <defaultValue>Label</defaultValue>
+        </input-field>
+        <component name="sw-text-editor">
+            <name>labelHeader</name>
+            <label>Label Header</label>
+            <placeholder>Wähle dein ...</placeholder>
+            <defaultValue>&lt;h3&gt;Wähle ein Label!&lt;/h3&gt;</defaultValue>
+        </component>
+    </card>
+
+    <card>
+        <title>Candy</title>
+        <input-field>
+            <name>candyName</name>
+            <label>Candy Tab</label>
+            <placeholder>Candy</placeholder>
+            <defaultValue>Candy</defaultValue>
+        </input-field>
+        <component name="sw-text-editor">
+            <name>candyHeader</name>
+            <label>Candy Header</label>
+            <placeholder>Wähle eine Süßigkeit ...</placeholder>
+            <defaultValue>&lt;h3&gt;Wähle eine Süßigkeit!&lt;/h3&gt;</defaultValue>
+        </component>
+    </card>
+
+    <card>
+        <title>Package</title>
+        <input-field>
+            <name>packageName</name>
+            <label>Package Tab</label>
+            <placeholder>Package</placeholder>
+            <defaultValue>Package</defaultValue>
+        </input-field>
+        <component name="sw-text-editor">
+            <name>packageHeader</name>
+            <label>Package Header</label>
+            <placeholder>Wähle deine Verpackung ...</placeholder>
+            <defaultValue>&lt;h3&gt;Wähle eine Verpackung!&lt;/h3&gt;</defaultValue>
+        </component>
+    </card>
+
+    <card>
+        <title>Combo</title>
+        <input-field>
+            <name>comboName</name>
+            <label>Combo Tab</label>
+            <placeholder>Combo</placeholder>
+            <defaultValue>Dein Combo</defaultValue>
+        </input-field>
+        <component name="sw-text-editor">
+            <name>comboHeader</name>
+            <label>Combo Header</label>
+            <placeholder>Deine Auswahl...</placeholder>
+            <defaultValue>&lt;h3&gt;Deine Auswahl: &lt;/h3&gt;</defaultValue>
+        </component>
+    </card>
+</config>
