@@ -1,0 +1,45 @@
+{% block sw_order_detail_base__user_card %}
+    <sw-alert class="eclm-order-info" v-if="details" variant="info" appearance="notification" :showIcon="true"
+              :closable="false">
+        Diese Bestellung enthält <strong>"Label Me"</strong> Items,
+        weitere Infos zu den Items siehe unten &#x2193;
+    </sw-alert>
+    {% parent() %}
+{% endblock %}
+
+{% block sw_order_detail_customer_comment_card %}
+    {% parent() %}
+
+    {#    <sw-icon name="default-object-puzzle-piece" color="#982aff"></sw-icon>#}
+    {#    <h1 style="display: inline-block; font-weight: 600;">&nbsp;Label Me - Info</h1>#}
+
+    <template v-for="(item, index) in details">
+        <sw-card :hero="false" :isLoading="false" :large="false" :title="'Label Me Item ' + (index+1)">
+            <div class="eclm-order-details-flex">
+                <div>
+                    <ul class="eclm-order-details" style="list-style-type: none;">
+                        <li><strong>Event: </strong>{{ item.event }}</li>
+                        <li><strong>Label: </strong>{{ item.label }}</li>
+                        <li><strong>Package: </strong>{{ item.package }}</li>
+                        <li><strong>Candy: </strong>{{ item.candy }}</li>
+                    </ul>
+                    <br><br>
+
+                    <ul class="eclm-order-details" style="list-style-type: none;">
+                        <li><strong>PackageNummer (Lager): </strong>5569977366</li>
+                        <li><strong>LabelNummer: (Lager) </strong> 3354776553</li>
+                    </ul>
+                </div>
+                <div>
+                    <img class="eclm-order-detail-image" :src="item.labelUrl" :alt="item.label">
+                    <img class="eclm-order-detail-image" :src="item.packageUrl" :alt="item.package">
+                </div>
+
+            </div>
+        </sw-card>
+    </template>
+
+
+{% endblock %}
+
+
