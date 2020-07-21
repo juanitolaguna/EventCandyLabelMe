@@ -30,9 +30,15 @@
 </template>
 
 <script>
-    import {bus} from "../../main";
+    import StoreApiClient from 'src/service/store-api-client.service';
+    import DomAccess from 'src/helper/dom-access.helper';
 
     export default {
+        data() {
+            return {
+                cartEl: null
+            }
+        },
 
         props: ['result', 'header'],
 
@@ -44,13 +50,51 @@
             labelImage() {
                 const thumbnail = this.result.label.thumbnails.filter((e) => e.width === 400)[0];
                 return thumbnail.url;
+            },
+
+            httpClient() {
+                return new StoreApiClient(window.accessKey);
+            },
+            pluginManager() {
+                return window.PluginManager
             }
         },
 
         methods: {
             insertCart() {
-                alert('Steht auf der Todo Liste!')
+
+                // this.httpClient.getBasicHeaders();
+                const thumbnail = this.result.eclm_package.thumbnails.filter((e) => e.width === 400)[0];
+                const result = this.result;
+                result.eclm_package.thumbnail = thumbnail;
+                //remove unused data
+                // delete result.eclm_package.thumbnails;
+
+                console.log(result);
+
+                return this.httpClient.post('store-api/v{version}/eclm/add-line-item', JSON.stringify(result),
+                    this.onPost);
+
+            },
+
+            onPost(res) {
+                // console.log(res)
+
+
+                const cartWidgetEl = DomAccess.querySelector(this.cartEl, '[data-cart-widget]');
+                const cartWidgetInstance = this.pluginManager.getPluginInstanceFromElement(cartWidgetEl, 'CartWidget');
+                cartWidgetInstance.fetch();
+
+
+
+                // const offCanvasEl = DomAccess.querySelector(document, '[data-offcanvas-cart]');
+                // const offCanvas = this.pluginManager.getPluginInstanceFromElement(offCanvasEl, 'OffCanvasCart');
+                // offCanvas.openOffCanvas(window.router['frontend.cart.offcanvas'], false);
             }
+        },
+
+        created() {
+            this.cartEl = DomAccess.querySelector(document, '.header-cart');
         }
     }
 </script>

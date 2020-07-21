@@ -1,4 +1,4 @@
-.card {
+.eclm-card {
     padding-bottom: 10px;
     margin: 0 auto; /* Added */
     float: none; /* Added */
@@ -27,7 +27,7 @@
     border: 2px solid #ea8e10;
 }
 
-.card:hover {
+.eclm-card:hover {
     -webkit-box-shadow: 1px 1px 20px 0px rgba(145,143,145,1);
     -moz-box-shadow: 1px 1px 20px 0px rgba(145,143,145,1);
     box-shadow: 1px 1px 20px 0px rgba(145,143,145,1);

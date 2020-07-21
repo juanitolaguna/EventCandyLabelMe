@@ -9,16 +9,28 @@ use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
 use EventCandy\LabelMe\Core\Content\Package\PackageEntity;
 use EventCandy\LabelMe\EventCandyLabelMe;
+use Exception;
+use Shopware\Core\Checkout\Cart\Cart;
+use Shopware\Core\Checkout\Cart\CartPersister;
+use Shopware\Core\Checkout\Cart\LineItem\LineItem;
+use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
+use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
+use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -52,12 +64,31 @@ class LabelMeApiController extends AbstractController
      */
     private $systemConfigService;
 
+    /**
+     * @var CartService
+     */
+    private $cartService;
+
+    /**
+     * @var CartPersister
+     */
+    private $cartPersister;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+
     public function __construct(
         EntityRepositoryInterface $eventRepository,
         EntityRepositoryInterface $labelRepository,
         EntityRepositoryInterface $candyRepository,
         EntityRepositoryInterface $candyPackageRepository,
-        SystemConfigService $systemConfigService
+        SystemConfigService $systemConfigService,
+        CartService $cartService,
+        CartPersister $cartPersister,
+        LoggerInterface $logger
     )
     {
         $this->eventRepository = $eventRepository;
@@ -65,6 +96,9 @@ class LabelMeApiController extends AbstractController
         $this->candyRepository = $candyRepository;
         $this->candyPackageRepository = $candyPackageRepository;
         $this->systemConfigService = $systemConfigService;
+        $this->cartService = $cartService;
+        $this->cartPersister = $cartPersister;
+        $this->logger = $logger;
     }
 
 
@@ -82,7 +116,7 @@ class LabelMeApiController extends AbstractController
             Context::createDefaultContext()
         );
 
-        $filter = function(EventEntity $event) {
+        $filter = function (EventEntity $event) {
             return [
                 'id' => $event->getId(),
                 'name' => $event->getName(),
@@ -105,12 +139,12 @@ class LabelMeApiController extends AbstractController
         $criteria->addAssociation('media');
 
 
-        $entities =  $this->labelRepository->search(
+        $entities = $this->labelRepository->search(
             $criteria,
             Context::createDefaultContext()
         );
 
-        $filter = function(LabelEntity $label) {
+        $filter = function (LabelEntity $label) {
             return [
                 'id' => $label->getId(),
                 'name' => $label->getName(),
@@ -139,7 +173,7 @@ class LabelMeApiController extends AbstractController
             Context::createDefaultContext()
         );
 
-        $filter = function(CandyPackageEntity $cp) {
+        $filter = function (CandyPackageEntity $cp) {
             return [
                 'cp_id' => $cp->getId(),
                 'id' => $cp->getPackage()->getId(),
@@ -167,12 +201,12 @@ class LabelMeApiController extends AbstractController
 //        $criteria->addAssociation('candy');
         $criteria->addAssociation('media');
 
-        $entities =  $this->candyRepository->search(
+        $entities = $this->candyRepository->search(
             $criteria,
             Context::createDefaultContext()
         );
 
-        $filter = function(CandyEntity $candy) {
+        $filter = function (CandyEntity $candy) {
             return [
                 'id' => $candy->getId(),
                 'name' => $candy->getName(),
@@ -198,6 +232,55 @@ class LabelMeApiController extends AbstractController
         return new JsonResponse($config);
     }
 
+    /**
+     * @Route("/store-api/v{version}/eclm/add-line-item", name="api.action.add-line-item", methods={"POST"}, defaults={"XmlHttpRequest": true})
+     * @param Request $request
+     * @param Context $context
+     * @return JsonResponse
+     */
+    public function addLineItems(Cart $cart, RequestDataBag $requestDataBag, Request $request, SalesChannelContext $salesChannelContext): Response
+    {
+//        /** @var RequestDataBag $lineItemData */
+        $lineItemData = $requestDataBag->all();
+
+
+        $this->logger->log(100, '$lineItemData from request Bag', [$lineItemData['event']]);
+
+        if (!$lineItemData['event']) {
+            throw new MissingRequestParameterException('Bad Payload');
+        }
+
+
+        try {
+            $id = Uuid::randomHex();
+            $lineItem = new LineItem(
+                $id,
+                'event-candy-label-me',
+                $id,
+                1
+            );
+
+            $lineItem->setLabel("Event Pack");
+            $lineItem->setGood(false);
+            $lineItem->setStackable(true);
+            $lineItem->setRemovable(true);
+            $lineItem->setPayload($lineItemData);
+
+           $this->cartService->add($cart, $lineItem, $salesChannelContext);
+           $this->cartPersister->save($cart, $salesChannelContext);
+
+
+        } catch (Exception $exception) {
+            return new JsonResponse($exception);
+        }
+
+
+        return $this->redirectToRoute('frontend.cart.offcanvas');
+
+//        return new RedirectResponse('frontent.cart.offcanvas');
+
+//        return new JsonResponse($lineItemData);
+    }
 
 
 }

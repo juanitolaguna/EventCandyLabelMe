@@ -39,6 +39,25 @@
             <argument type="service" id="eclm_candy.repository"/>
             <argument type="service" id="eclm_candy_package.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
+            <argument type="service" id="logger"/>
         </service>
+
+        <service id="EventCandy\LabelMe\Core\Checkout\Cart\EclmCartProcessor" public="true">
+            <argument type="service" id="logger"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
+            <argument type="service" id="media.repository"/>
+
+
+            <!-- inject before product processor (5000) -->
+            <tag name="shopware.cart.processor" priority="6000" />
+            <tag name="shopware.cart.collector" priority="6000" />
+        </service>
+
+
+
     </services>
 </container>
