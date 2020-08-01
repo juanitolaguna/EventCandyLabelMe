@@ -53,11 +53,31 @@
 
 
             <!-- inject before product processor (5000) -->
-            <tag name="shopware.cart.processor" priority="6000" />
-            <tag name="shopware.cart.collector" priority="6000" />
+            <tag name="shopware.cart.processor" priority="6000"/>
+            <tag name="shopware.cart.collector" priority="6000"/>
         </service>
 
+        <!-- DemoDataServices -->
+        <service id="EventCandy\LabelMe\DemoDataService">
+            <argument type="service" id="Shopware\Core\Framework\Api\Controller\SyncController"/>
+            <argument type="tagged" tag="eclm.demo_data.data_provider"/>
+        </service>
 
+        <service id="EventCandy\LabelMe\DataProvider\BaseMediaProvider">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver"/>
+            <argument type="service" id="media_folder.repository"/>
+            <argument type="service" id="media_folder_configuration.repository"/>
+
+            <tag name="eclm.demo_data.data_provider" priority="1100"/>
+        </service>
+
+        <!-- Commands  -->
+        <service id="EventCandy\LabelMe\Commands\CreateDemoData">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="media_folder.repository"/>
+            <tag name="console.command"/>
+        </service>
 
     </services>
 </container>

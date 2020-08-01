@@ -19,6 +19,15 @@
 
     <template #content>
         <sw-card-view>
+
+            <sw-card>
+                <sw-price-field :taxRate="{ taxRate: 19 }"
+                                :price="[{net: 569.7731092436975, gross: 678.03, linked: true, currencyId: 'b7d2554b0ce847cd82f3ac9bd1c0dfca'}]"
+                                :defaultPrice="{}"
+                                :currency="{}">
+                </sw-price-field>
+            </sw-card>
+
             <sw-card v-if="joinedCandyPackage">
                 <p><strong>Candy Name:</strong> {{ joinedCandyPackage.candy.name }}</p>
                 <br>

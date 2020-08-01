@@ -37,22 +37,29 @@ Component.register('eclm-candy-package-list', {
 
 
         columns() {
-            return [{
-                property: 'candy.name',
-                label: 'Candy Name',
-                routerLink: 'eclm.plugin.candyPackageDetail',
-                allowResize: true,
-                // primary: true,
+            return [
+                {
+                    property: 'id',
+                    label: 'Id',
+                    routerLink: 'eclm.plugin.candyPackageDetail',
+                    allowResize: true,
+                    primary: true,
+                },
+                {
+                    property: 'candy.name',
+                    label: 'Candy Name',
+                    allowResize: true,
+                    // primary: true,
 
-            }, {
-                property: 'package.name',
-                label: 'Package Name',
-                allowResize: true
-            }, {
-                property: 'media.fileName',
-                label: 'Image',
-                allowResize: true
-            }]
+                }, {
+                    property: 'package.name',
+                    label: 'Package Name',
+                    allowResize: true
+                }, {
+                    property: 'media.fileName',
+                    label: 'Image',
+                    allowResize: true
+                }]
         }
     },
 
