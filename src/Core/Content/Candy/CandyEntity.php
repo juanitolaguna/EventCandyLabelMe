@@ -16,9 +16,10 @@ class CandyEntity extends Entity {
     protected $name;
 
     /**
-     * @var float
+     * @var bool
      */
-    protected $eurProMl;
+    protected $active;
+
 
     /**
      * @var MediaEntity|null
@@ -59,18 +60,21 @@ class CandyEntity extends Entity {
         $this->name = $name;
     }
 
+
     /**
-     * @return float
+     * @return bool
      */
-    public function getEurProMl(): float {
-        return $this->eurProMl;
+    public function isActive(): bool
+    {
+        return $this->active;
     }
 
     /**
-     * @param float $eurProMl
+     * @param bool $active
      */
-    public function setEurProMl( float $eurProMl ): void {
-        $this->eurProMl = $eurProMl;
+    public function setActive(bool $active): void
+    {
+        $this->active = $active;
     }
 
     /**

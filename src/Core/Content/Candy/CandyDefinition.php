@@ -6,6 +6,7 @@ use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageDefinition;
 use EventCandy\LabelMe\Core\Content\Package\PackageDefinition;
 use Shopware\Core\Content\Media\MediaDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
@@ -42,8 +43,7 @@ class CandyDefinition extends EntityDefinition {
             ( new StringField( 'name', 'name' ) )
                 ->addFlags( new Required() ),
 
-            ( new FloatField( 'eur_pro_ml', 'eurProMl' ) )
-                ->addFlags( new Required() ),
+            (new BoolField('active', 'active')),
 
 
             new FkField( 'media_id', 'mediaId', MediaDefinition::class ),

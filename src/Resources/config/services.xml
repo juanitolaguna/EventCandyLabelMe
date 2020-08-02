@@ -57,12 +57,20 @@
             <tag name="shopware.cart.collector" priority="6000"/>
         </service>
 
-        <!-- DemoDataServices -->
+        <!-- DemoDataService -->
+
         <service id="EventCandy\LabelMe\DemoDataService">
             <argument type="service" id="Shopware\Core\Framework\Api\Controller\SyncController"/>
             <argument type="tagged" tag="eclm.demo_data.data_provider"/>
         </service>
 
+        <!--  DemoDataProviders -->
+        <service id="EventCandy\LabelMe\DataProvider\DemoDataProvider" abstract="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver"/>
+        </service>
+
+        <!-- Create Plugin Media Folder and Data -->
         <service id="EventCandy\LabelMe\DataProvider\BaseMediaProvider">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver"/>
@@ -72,8 +80,20 @@
             <tag name="eclm.demo_data.data_provider" priority="1100"/>
         </service>
 
+
+        <service id="EventCandy\LabelMe\DataProvider\CandyMediaProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="1000"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\DataProvider\CandyProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="900"/>
+        </service>
+
+
         <!-- Commands  -->
-        <service id="EventCandy\LabelMe\Commands\CreateDemoData">
+        <service id="EventCandy\LabelMe\Commands\EclmCommands">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="media_folder.repository"/>
             <tag name="console.command"/>

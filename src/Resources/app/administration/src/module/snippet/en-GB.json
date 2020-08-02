@@ -6,7 +6,7 @@
         },
         "candyDetail": {
             "name": "Candy Name",
-            "eurProMl": "Euro Pro 100 ML"
+            "active": "Active"
         },
         "eventDetail": {
             "name": "Event Name",

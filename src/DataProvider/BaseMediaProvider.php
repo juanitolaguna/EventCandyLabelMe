@@ -57,7 +57,7 @@ class BaseMediaProvider extends DemoDataProvider
 
     public function prepare(Context $context): void
     {
-        $folderName = 'Event Candy 2';
+        $folderName = 'Event Candy';
 
         $thumbnails = $this->connection->fetchAll('
                 select LOWER(HEX(media_thumbnail_size.id)) AS id from media_thumbnail_size

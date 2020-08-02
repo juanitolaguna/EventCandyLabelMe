@@ -2,6 +2,7 @@
 
 namespace EventCandy\LabelMe;
 
+use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
@@ -32,15 +33,15 @@ class EventCandyLabelMe extends Plugin
 
     public function uninstall(UninstallContext $uninstallContext): void
     {
-        if ($uninstallContext->keepUserData()) {
-            return;
-        }
+//        if ($uninstallContext->keepUserData()) {
+//            return;
+//        }
 
-//        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_label');
-//        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_event');
-//        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_candy_package');
-//        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_package');
-//        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_candy');
+        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_label');
+        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_event');
+        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_candy_package');
+        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_package');
+        $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_candy');
     }
 
 

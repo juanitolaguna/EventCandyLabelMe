@@ -21,8 +21,7 @@
         <sw-card-view>
             <sw-card v-if="candy" :large="false">
                 <sw-text-field :label="$t('eclm.candyDetail.name')" v-model="candy.name"></sw-text-field>
-                <sw-number-field numberType="float" :label="$t('eclm.candyDetail.eurProMl')" v-model="candy.eurProMl"
-                                 validation="required"></sw-number-field>
+                <sw-checkbox-field :label="$t('eclm.candyDetail.active')" v-model="candy.active"></sw-checkbox-field>
                 <eclm-media-field
                     v-model="candy.mediaId"
                     :showUploadField="false"

@@ -36,11 +36,12 @@ Component.register('eclm-candy-list', {
                 primary: true,
                 required: true
             }, {
-                property: 'eurProMl',
-                dataIndex: 'eurProMl',
-                label: '€/100ml',
-                inlineEdit: 'number',
-                allowResize: true
+                property: 'active',
+                dataIndex: 'active',
+                label: 'Active',
+                allowResize: true,
+                inlineEdit: 'boolean',
+                align: 'center'
             }]
         }
     },
