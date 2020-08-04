@@ -91,6 +91,41 @@
             <tag name="eclm.demo_data.data_provider" priority="900"/>
         </service>
 
+        <service id="EventCandy\LabelMe\DataProvider\PackageMediaProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="800"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\DataProvider\PackageProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="700"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\DataProvider\EventMediaProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="600"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\DataProvider\EventProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="500"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\DataProvider\LabelMediaProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="400"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\DataProvider\LabelProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="300"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\DataProvider\CandyPackageProvider"
+                 parent="EventCandy\LabelMe\DataProvider\DemoDataProvider">
+            <tag name="eclm.demo_data.data_provider" priority="200"/>
+        </service>
+
 
         <!-- Commands  -->
         <service id="EventCandy\LabelMe\Commands\EclmCommands">

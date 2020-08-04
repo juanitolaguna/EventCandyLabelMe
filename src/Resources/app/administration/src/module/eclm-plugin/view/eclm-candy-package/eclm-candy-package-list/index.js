@@ -29,6 +29,7 @@ Component.register('eclm-candy-package-list', {
         },
         joinedCandyPackageCriteria() {
             const criteria = new Criteria();
+            criteria.getAssociation('product');
             criteria.getAssociation('candy');
             criteria.getAssociation('package');
             criteria.getAssociation('media');
@@ -38,27 +39,36 @@ Component.register('eclm-candy-package-list', {
 
         columns() {
             return [
-                {
-                    property: 'id',
-                    label: 'Id',
-                    routerLink: 'eclm.plugin.candyPackageDetail',
-                    allowResize: true,
-                    primary: true,
-                },
+                // {
+                //     property: 'id',
+                //     label: 'Id',
+                //     routerLink: 'eclm.plugin.candyPackageDetail',
+                //     allowResize: true,
+                //     primary: true,
+                // },
                 {
                     property: 'candy.name',
                     label: 'Candy Name',
                     allowResize: true,
+                    routerLink: 'eclm.plugin.candyPackageDetail',
                     // primary: true,
 
                 }, {
                     property: 'package.name',
                     label: 'Package Name',
-                    allowResize: true
+                    allowResize: true,
+                    routerLink: 'eclm.plugin.candyPackageDetail'
                 }, {
                     property: 'media.fileName',
                     label: 'Image',
-                    allowResize: true
+                    allowResize: true,
+                    routerLink: 'eclm.plugin.candyPackageDetail'
+                },
+                {
+                    property: 'product.name',
+                    label: 'Product',
+                    allowResize: true,
+                    routerLink: 'eclm.plugin.candyPackageDetail'
                 }]
         }
     },

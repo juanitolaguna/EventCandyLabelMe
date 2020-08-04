@@ -20,12 +20,12 @@ class BaseMediaProvider extends DemoDataProvider
     /**
      * @var FileSaver
      */
-    private $fileSaver;
+    protected $fileSaver;
 
     /**
      * @var Connection
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var EntityRepositoryInterface

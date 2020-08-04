@@ -19,15 +19,18 @@ class Migration1591395589CreateCandyPackageEntity extends MigrationStep
             `candy_id` BINARY(16) NOT NULL,
             `package_id` BINARY(16) NOT NULL,
             `media_id` BINARY(16) NULL,
+            `product_id` BINARY(16) NULL,
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,
             PRIMARY KEY (`id`),
             KEY `fk.eclm_candy_package.candy_id` (`candy_id`),
             KEY `fk.eclm_candy_package.package_id` (`package_id`),
             KEY `fk.eclm_candy_package.media_id` (`media_id`),
+            KEY `fk.eclm_candy_package.product_id` (`product_id`),
             CONSTRAINT `fk.eclm_candy_package.candy_id` FOREIGN KEY (`candy_id`) REFERENCES `eclm_candy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
             CONSTRAINT `fk.eclm_candy_package.package_id` FOREIGN KEY (`package_id`) REFERENCES `eclm_package` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-            CONSTRAINT `fk.eclm_candy_package.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+            CONSTRAINT `fk.eclm_candy_package.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+            CONSTRAINT `fk.eclm_candy_package.product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;');
     }
 

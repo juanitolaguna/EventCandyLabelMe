@@ -19,19 +19,45 @@
 
     <template #content>
         <sw-card-view>
-
-            <sw-card>
-                <sw-price-field :taxRate="{ taxRate: 19 }"
-                                :price="[{net: 569.7731092436975, gross: 678.03, linked: true, currencyId: 'b7d2554b0ce847cd82f3ac9bd1c0dfca'}]"
-                                :defaultPrice="{}"
-                                :currency="{}">
-                </sw-price-field>
-            </sw-card>
-
             <sw-card v-if="joinedCandyPackage">
                 <p><strong>Candy Name:</strong> {{ joinedCandyPackage.candy.name }}</p>
                 <br>
                 <p><strong>Package Name:</strong> {{ joinedCandyPackage.package.name }}</p>
+            </sw-card>
+
+            <sw-card>
+
+{#                <sw-entity-single-select#}
+{#                    entity="sales_channel"#}
+{#                    :label="$tc('sw-customer.baseForm.labelSalesChannel')"#}
+{#                    :placeholder="$tc('sw-customer.baseForm.placeholderSalesChannel')"#}
+{#                    :value="customer.salesChannelId"#}
+{#                    @change="onSalesChannelChange"#}
+{#                    :error="customerSalesChannelIdError">#}
+{#                </sw-entity-single-select>#}
+
+
+{#                <sw-single-select#}
+{#                    :helpText="'Weise ein Produkt zu'"#}
+{#                    :label="'Produkt'"#}
+{#                    v-model="products.name"#}
+{#                    :options="categoryTypes">#}
+{#                </sw-single-select>#}
+
+                <sw-single-select
+                    v-if="products.length"
+                    :options="productOptions"
+                    labelValue="label"
+                    valueProperty="value"
+                    :placeholder="'Füge ein Produkt hinzu'"
+                    :label="'Produkt'"
+                    :value="joinedCandyPackage.productId"
+                    @input="changeProduct"
+                    @search="searchProduct"
+                    @select-expanded="getProducts"
+                    required
+                >
+                </sw-single-select>
             </sw-card>
 
             <sw-card v-if="joinedCandyPackage" :large="false">

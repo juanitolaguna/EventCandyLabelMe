@@ -81,6 +81,12 @@ class EclmCommands extends Command
                 't',
                 InputOption::VALUE_OPTIONAL,
                 'Execute & Test Code',
+                false)
+            ->addOption(
+                'uuids',
+                'u',
+                InputOption::VALUE_OPTIONAL,
+                'Generate Uuids',
                 false);
     }
 
@@ -92,6 +98,10 @@ class EclmCommands extends Command
 
         if ($input->getOption('tinker')) {
             $this->tinker($input, $output);
+        }
+
+        if ($input->getOption('uuids')) {
+            $this->generateUuids($input, $output);
         }
     }
 
@@ -133,10 +143,45 @@ class EclmCommands extends Command
     private function tinker(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Tinker...');
-        $result = $this->connection->fetchColumn("
-            select lower(hex(media_folder.id))
-            from media_folder where media_folder.name like :name", ['name' => '%Event Candy%']);
+        $payload = [];
 
-        $output->writeln($result);
+        $result = $this->connection->fetchAll("
+            select lower(hex(eclm_candy.id)) as id
+            from eclm_candy");
+
+        $result2 = $this->connection->fetchAll("
+            select lower(hex(eclm_package.id)) as id
+            from eclm_package");
+
+        $noimage = $this->connection->fetchColumn("
+         select lower(hex(media.id))
+            from media where media.file_name like '%noimage%'");
+
+        foreach ($result as $candy) {
+            foreach ($result2 as $package) {
+                $c_p = [
+                    'id' => Uuid::randomHex(),
+                    'candyId' => $candy['id'],
+                    'packageId' => $package['id'],
+                    'mediaId' => $noimage
+                ];
+
+                array_push($payload, $c_p);
+
+            }
+        }
+
+        $output->writeln(print_r($payload));
+    }
+
+    private function generateUuids(InputInterface $input, OutputInterface $output)
+    {
+
+        $output->writeln("generate uuid's");
+
+        for ($i = 0; $i < $input->getOption('uuids'); $i++) {
+            $uuid = Uuid::randomHex();
+            $output->writeln($uuid);
+        }
     }
 }

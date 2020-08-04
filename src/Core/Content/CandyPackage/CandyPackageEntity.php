@@ -5,6 +5,7 @@ namespace EventCandy\LabelMe\Core\Content\CandyPackage;
 use EventCandy\LabelMe\Core\Content\Candy\CandyEntity;
 use EventCandy\LabelMe\Core\Content\Package\PackageEntity;
 use Shopware\Core\Content\Media\MediaEntity;
+use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
@@ -28,6 +29,27 @@ class CandyPackageEntity extends Entity
      * @var CandyEntity|null
      */
     protected $candy;
+
+    /**
+     * @var ProductEntity|null
+     */
+    protected $product;
+
+    /**
+     * @return ProductEntity|null
+     */
+    public function getProduct(): ?ProductEntity
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param ProductEntity|null $product
+     */
+    public function setProduct(?ProductEntity $product): void
+    {
+        $this->product = $product;
+    }
 
     /**
      * @return PackageEntity|null

@@ -21,6 +21,7 @@
         <sw-card-view>
             <sw-card v-if="package" :large="false">
                 <sw-text-field :label="$t('eclm.packageDetail.name')" v-model="package.name"></sw-text-field>
+                <sw-checkbox-field :label="$t('eclm.candyDetail.active')" v-model="package.active"></sw-checkbox-field>
                 <sw-number-field  numberType="float" :label="$t('eclm.packageDetail.milliliters')" v-model="package.milliliters" validation="required"></sw-number-field>
                 <eclm-media-field
                     v-model="package.mediaId"

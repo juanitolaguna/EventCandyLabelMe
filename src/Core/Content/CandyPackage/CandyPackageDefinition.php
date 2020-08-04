@@ -5,6 +5,7 @@ namespace EventCandy\LabelMe\Core\Content\CandyPackage;
 use EventCandy\LabelMe\Core\Content\Candy\CandyDefinition;
 use EventCandy\LabelMe\Core\Content\Package\PackageDefinition;
 use Shopware\Core\Content\Media\MediaDefinition;
+use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
@@ -46,6 +47,7 @@ class CandyPackageDefinition extends EntityDefinition
                 ->addFlags(new Required() ),
 
             (new FkField('media_id', 'mediaId', MediaDefinition::class)),
+            (new FkField('product_id', 'productId', ProductDefinition::class)),
 
             new ManyToOneAssociationField('candy', 'candy_id', CandyDefinition::class),
             new ManyToOneAssociationField('package', 'package_id', PackageDefinition::class),
@@ -54,6 +56,12 @@ class CandyPackageDefinition extends EntityDefinition
                 'media',
                 'media_id',
                 MediaDefinition::class
+            ),
+
+            new ManyToOneAssociationField(
+                'product',
+                'product_id',
+                ProductDefinition::class
             ),
 
             new CreatedAtField()

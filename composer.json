@@ -1,18 +1,19 @@
 {
-  "name": "event-candy/label-me-plugin",
-  "description": "LabelMe plugin",
-  "type": "shopware-platform-plugin",
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "EventCandy\\LabelMe\\": "src/"
+    "name": "event-candy/label-me-plugin",
+    "description": "LabelMe plugin",
+    "type": "shopware-platform-plugin",
+    "license": "MIT",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "EventCandy\\LabelMe\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "EventCandy\\LabelMe\\EventCandyLabelMe",
+        "label": {
+            "de-DE": "LabelMe plugin",
+            "en-GB": "LabelMe plugin"
+        }
     }
-  },
-  "extra": {
-    "shopware-plugin-class": "EventCandy\\LabelMe\\EventCandyLabelMe",
-    "label": {
-      "de-DE": "LabelMe plugin",
-      "en-GB": "LabelMe plugin"
-    }
-  }
 }

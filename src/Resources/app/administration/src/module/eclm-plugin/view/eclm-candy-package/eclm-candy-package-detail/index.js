@@ -1,7 +1,7 @@
 import template from './eclm-candy-package-detail.html.twig';
 import './eclm-candy-package-detail.scss';
 
-const {Component, Mixin } = Shopware;
+const {Component, Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
 
 Component.register('eclm-candy-package-detail', {
@@ -18,6 +18,7 @@ Component.register('eclm-candy-package-detail', {
     data() {
         return {
             joinedCandyPackage: null,
+            products: [],
             imageUrl: null,
             isLoading: false,
             processSuccess: false,
@@ -25,6 +26,14 @@ Component.register('eclm-candy-package-detail', {
     },
 
     computed: {
+        productOptions() {
+            return this.products.map((product) => {
+                return {
+                    value: product.id,
+                    label: product.name
+                }
+            })
+        },
         joinedCandyPackageRepository() {
             return this.repositoryFactory.create('eclm_candy_package');
         },
@@ -32,6 +41,13 @@ Component.register('eclm-candy-package-detail', {
             const criteria = new Criteria();
             criteria.getAssociation('candy');
             criteria.getAssociation('package');
+            return criteria;
+        },
+        productRepository() {
+            return this.repositoryFactory.create('product');
+        },
+        productCriteria() {
+            const criteria = new Criteria();
             return criteria;
         },
         mediaRepository() {
@@ -56,6 +72,7 @@ Component.register('eclm-candy-package-detail', {
     methods: {
         componentCreated() {
             this.getCandyPackageEntry();
+
         },
 
         getCandyPackageEntry() {
@@ -64,6 +81,57 @@ Component.register('eclm-candy-package-detail', {
                 .then((entity) => {
                     this.joinedCandyPackage = entity;
                     this.getImage(this.joinedCandyPackage.mediaId);
+                    this.getProducts();
+                });
+        },
+
+        getProducts() {
+            if (this.joinedCandyPackage.productId !== null) {
+                this.getRelatedProductAndList();
+            } else {
+                this.getProductList();
+            }
+        },
+
+        getProductList() {
+            this.productRepository
+                .search(this.productCriteria, Shopware.Context.api)
+                .then((result) => {
+                    result.forEach((product) => {
+                        this.products.push(product);
+                    })
+                });
+        },
+
+        getRelatedProductAndList() {
+            this.productRepository
+                .get(this.joinedCandyPackage.productId, Shopware.Context.api)
+                .then((result) => {
+                    this.products.push(result);
+                    this.getProductList();
+                });
+        },
+
+        changeProduct(payload) {
+            this.joinedCandyPackage.productId = payload;
+        },
+
+        searchProduct(payload) {
+            const criteria = new Criteria();
+            if (payload !== '') {
+                criteria.addFilter(Criteria.contains('name', payload));
+            }
+            this.productRepository
+                .search(criteria, Shopware.Context.api)
+                .then((result) => {
+                    this.products = result;
+                    if (!result.length) {
+                        const noProducts = {
+                            id: '000000',
+                            name: 'No results found'
+                        }
+                        this.products.push(noProducts);
+                    }
                 });
         },
 
@@ -101,6 +169,7 @@ Component.register('eclm-candy-package-detail', {
 
         saveFinish() {
             this.processSuccess = false;
-        }
+        },
+
     }
 });

@@ -6,7 +6,7 @@ namespace EventCandy\LabelMe\DataProvider;
 
 use Shopware\Core\Framework\Uuid\Uuid;
 
-class CandyProvider extends DemoDataProvider
+class PackageProvider extends DemoDataProvider
 {
 
     public function getAction(): string
@@ -16,7 +16,7 @@ class CandyProvider extends DemoDataProvider
 
     public function getEntity(): string
     {
-        return 'eclm_candy';
+        return 'eclm_package';
     }
 
     public function getPayload(): array
@@ -24,21 +24,24 @@ class CandyProvider extends DemoDataProvider
         return [
             [
                 'id' => Uuid::randomHex(),
-                'name' => 'Candy 2',
+                'name' => 'Package 3',
                 'active' => true,
-                'mediaId' => 'b9c207ca62da47a1ac9019c475daaf02'
+                'milliliters' => 100,
+                'mediaId' => '8f21cd6ccb4947989971952e572a1b6b'
             ],
             [
                 'id' => Uuid::randomHex(),
-                'name' => 'Candy 1',
+                'name' => 'Package 1',
                 'active' => true,
-                'mediaId' => 'c7ce0e396809439c8997ae68992924aa'
+                'milliliters' => 200,
+                'mediaId' => '9548f3a1da53447492ddd1a5595e2069'
             ],
             [
                 'id' => Uuid::randomHex(),
-                'name' => 'Candy 3',
+                'name' => 'Package 2',
                 'active' => true,
-                'mediaId' => 'c614ef6e428a4d7ab861ff8a2b98d2f3'
+                'milliliters' => 300,
+                'mediaId' => '345520539f7a479285491d21decc45d4'
             ]
         ];
     }
