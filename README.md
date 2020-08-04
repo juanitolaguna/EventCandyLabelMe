@@ -1,7 +1,7 @@
 ## Vagrant worflow
 
 build storefront
-- ` `./psh.phar storefront:build``
+- `./psh.phar storefront:build`
 copy storefront files from:
 - `EventCandyLabelMe/src/Resources/app/storefront/dist`
 
@@ -12,4 +12,4 @@ copy administration files from:
 - `EventCandyLabelMe/src/Resources/public/administration`
 
 remove all DS_Store files if exists then zip. Plugin ready for upload.
-- `find . -name '.DS_Store' -type f -delete
+- `find . -name '.DS_Store' -type f -delete`
