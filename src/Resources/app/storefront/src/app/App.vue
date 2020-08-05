@@ -1,6 +1,6 @@
 <template>
     <div class="eclm-container">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" v-if="config">
             <li class="nav-item">
                 <a
                     @click.prevent="selectComponent('events')"
@@ -34,7 +34,7 @@
 
         </ul>
         <br><br>
-        <div>
+        <div v-if="stock">
             <Spinner v-if="loading"/>
 
             <transition name="slide-fade">
@@ -77,6 +77,9 @@
                 />
             </transition>
         </div>
+        <div v-else style="padding: 5px; max-width: 50%">
+            <p>Zur zeit sind keine Label Me Produkte im bestand Vorhanden, aber wir arbeiten dran.</p>
+        </div>
     </div>
 </template>
 
@@ -86,6 +89,7 @@
     import {bus} from '../main.js'
     import Spinner from "./components/Spinner.vue";
     import Result from "./components/Result.vue";
+
 
     export default {
         components: {
@@ -97,6 +101,8 @@
             return {
                 currentComponent: '',
                 loading: true,
+
+                stock: true,
 
                 events: null,
                 labels: null,
@@ -138,8 +144,8 @@
             eclmResult() {
                 let event = 'No event selected';
                 let label = 'No label selected';
-                let eclm_package = 'No package selected';
                 let candy = 'No candy selected';
+                let eclm_package = 'No package selected';
                 if (this.selectedEvent) {
                     event = Object.values(this.events)
                         .filter((e) => e.id === this.selectedEvent)[0];
@@ -150,21 +156,23 @@
                         .filter((e) => e.id === this.selectedLabel)[0];
                 }
 
-                if (this.selectedPackage) {
-                    eclm_package = Object.values(this.packages)
-                        .filter((e) => e.id === this.selectedPackage)[0];
-                }
-
                 if (this.selectedCandy) {
                     candy = Object.values(this.candies)
                         .filter((e) => e.id === this.selectedCandy)[0];
                 }
 
+                if (this.selectedPackage) {
+                    eclm_package = Object.values(this.packages)
+                        .filter((e) => e.id === this.selectedPackage)[0];
+                }
+
+
+
                 return {
                     'event': event,
                     'label': label,
-                    'eclm_package': eclm_package,
                     'candy': candy,
+                    'eclm_package': eclm_package,
                 };
             },
 
@@ -250,6 +258,8 @@
                     this.currentComponent = 'result';
                 })
 
+                this.getStock();
+
 
             },
 
@@ -309,6 +319,15 @@
                 });
             },
 
+            getStock(){
+                this.httpClient.get(`store-api/v{version}/eclm/get-candies`, (response) => {
+                    const res = JSON.parse(response);
+                    if (!res) {
+                        this.stock = false;
+                    }
+                });
+            },
+
 
             //#helpers
             computeCard(entities) {
@@ -320,7 +339,8 @@
                     return {
                         'id': e.id,
                         'name': e.name,
-                        'thumbnail': thumbnail[0]
+                        'thumbnail': thumbnail[0],
+                        'product' : e.product ? e.product : undefined
                     }
                 })
             },

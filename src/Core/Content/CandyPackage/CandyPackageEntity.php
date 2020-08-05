@@ -87,7 +87,7 @@ class CandyPackageEntity extends Entity
 
     /**
      * @return MediaEntity|null
-     */
+         */
     public function getMedia(): ?MediaEntity
     {
         return $this->media;

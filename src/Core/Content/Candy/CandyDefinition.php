@@ -5,6 +5,7 @@ namespace EventCandy\LabelMe\Core\Content\Candy;
 use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageDefinition;
 use EventCandy\LabelMe\Core\Content\Package\PackageDefinition;
 use Shopware\Core\Content\Media\MediaDefinition;
+use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
@@ -60,6 +61,14 @@ class CandyDefinition extends EntityDefinition {
                 CandyPackageDefinition::class,
                 'candy_id',
                 'package_id'
+            ),
+
+            new ManyToManyAssociationField(
+                'products',
+                ProductDefinition::class,
+                CandyPackageDefinition::class,
+                'candy_id',
+                'product_id'
             ),
         ] );
     }

@@ -4,6 +4,9 @@
             <div class="col-md-6">
                 <div class="result-title" v-html="header"></div>
                 <button @click.prevent="insertCart" type="button" class="btn btn-primary">In den Warenkorb</button>
+                <strong style="font-size: large">
+                    &nbsp; {{ result.eclm_package.product.currency}}{{ result.eclm_package.product.price.gross}}
+                </strong>
                 <br><br>
 
                 <ul class="list-group">
@@ -70,7 +73,7 @@
                 //remove unused data
                 // delete result.eclm_package.thumbnails;
 
-                console.log(result);
+                console.log(JSON.stringify(result));
 
                 return this.httpClient.post('store-api/v{version}/eclm/add-line-item', JSON.stringify(result),
                     this.onPost);
@@ -84,7 +87,6 @@
                 const cartWidgetEl = DomAccess.querySelector(this.cartEl, '[data-cart-widget]');
                 const cartWidgetInstance = this.pluginManager.getPluginInstanceFromElement(cartWidgetEl, 'CartWidget');
                 cartWidgetInstance.fetch();
-
 
 
                 // const offCanvasEl = DomAccess.querySelector(document, '[data-offcanvas-cart]');

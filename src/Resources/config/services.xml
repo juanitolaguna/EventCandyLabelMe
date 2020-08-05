@@ -38,6 +38,7 @@
             <argument type="service" id="eclm_label.repository"/>
             <argument type="service" id="eclm_candy.repository"/>
             <argument type="service" id="eclm_candy_package.repository"/>
+            <argument type="service" id="currency.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
@@ -50,6 +51,7 @@
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
             <argument type="service" id="media.repository"/>
+            <argument type="service" id="product.repository"/>
 
 
             <!-- inject before product processor (5000) -->

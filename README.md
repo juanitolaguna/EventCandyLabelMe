@@ -13,3 +13,8 @@ copy administration files from:
 
 remove all DS_Store files if exists then zip. Plugin ready for upload.
 - `find . -name '.DS_Store' -type f -delete`
+
+
+"vue": "^2.6.11",
+"vue-loader": "^15.9.2",
+"vue-template-compiler": "^2.6.11",

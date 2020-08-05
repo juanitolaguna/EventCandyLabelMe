@@ -2,35 +2,32 @@
 
 namespace EventCandy\LabelMe\Storefront\Controller;
 
-use Composer\Package\Package;
-use EventCandy\LabelMe\Core\Content\Candy\CandyEntity;
 use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
-use EventCandy\LabelMe\Core\Content\Package\PackageEntity;
-use EventCandy\LabelMe\EventCandyLabelMe;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartPersister;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Content\Product\Aggregate\ProductPrice\ProductPriceEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
+use Shopware\Core\System\Currency\CurrencyEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Shopware\Storefront\Framework\Twig\Extension\SwSanitizeTwigFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -60,6 +57,11 @@ class LabelMeApiController extends AbstractController
     private $candyPackageRepository;
 
     /**
+     * @var EntityRepositoryInterface
+     */
+    private $currencyRepository;
+
+    /**
      * @var SystemConfigService
      */
     private $systemConfigService;
@@ -85,6 +87,7 @@ class LabelMeApiController extends AbstractController
         EntityRepositoryInterface $labelRepository,
         EntityRepositoryInterface $candyRepository,
         EntityRepositoryInterface $candyPackageRepository,
+        EntityRepositoryInterface $currencyRepository,
         SystemConfigService $systemConfigService,
         CartService $cartService,
         CartPersister $cartPersister,
@@ -95,6 +98,7 @@ class LabelMeApiController extends AbstractController
         $this->labelRepository = $labelRepository;
         $this->candyRepository = $candyRepository;
         $this->candyPackageRepository = $candyPackageRepository;
+        $this->currencyRepository = $currencyRepository;
         $this->systemConfigService = $systemConfigService;
         $this->cartService = $cartService;
         $this->cartPersister = $cartPersister;
@@ -108,8 +112,9 @@ class LabelMeApiController extends AbstractController
     public function getEvents(Request $request, Context $context): JsonResponse
     {
         $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('active', true));
-        $criteria->addAssociation('media');
+        $criteria
+            ->addFilter(new EqualsFilter('active', true))
+            ->addAssociation('media');
 
         $entities = $this->eventRepository->search(
             $criteria,
@@ -135,8 +140,10 @@ class LabelMeApiController extends AbstractController
     public function getLabels(string $id, Request $request, Context $context): JsonResponse
     {
         $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('eventId', $id));
-        $criteria->addAssociation('media');
+        $criteria
+            ->addFilter(new EqualsFilter('eventId', $id))
+            ->addFilter(new EqualsFilter('active', true))
+            ->addAssociation('media');
 
 
         $entities = $this->labelRepository->search(
@@ -159,6 +166,78 @@ class LabelMeApiController extends AbstractController
 
 
     /**
+     * @Route("/store-api/v{version}/eclm/get-candies", name="api.action.eclm.get-candies", methods={"GET"})
+     * @param Request $request
+     * @param Context $context
+     * @return JsonResponse
+     */
+    public function getCandies(Request $request, Context $context): JsonResponse
+    {
+
+
+
+        $criteria = new Criteria();
+        $criteria
+            ->addAssociation('candy')
+            ->addAssociation('candy.media')
+            ->addAssociation('package')
+            ->addAssociation('product');
+
+
+
+        $entities = $this->candyPackageRepository->search(
+            $criteria,
+            Context::createDefaultContext()
+        );
+
+
+        $filter = function (CandyPackageEntity $cp) {
+
+            $candyActive = false;
+            $packageAvailable = false;
+            $stock = false;
+
+            if ($cp->getCandy() !== null) {
+                $candyActive = $cp->getCandy()->isActive();
+            }
+
+            if ($cp->getPackage() !== null) {
+                $packageAvailable = $cp->getPackage()->isActive();
+            }
+
+            if ($cp->getProduct() !== null) {
+                $stock = $cp->getProduct()->getStock();
+            }
+
+
+            if ($candyActive && $packageAvailable && $stock) {
+                return [
+                    'id' => $cp->getCandy()->getId(),
+                    'name' => $cp->getCandy()->getName(),
+                    'thumbnails' => $cp->getCandy()->getMedia()->getThumbnails()
+                ];
+            }
+        };
+
+        $mapped = $entities->fmap($filter);
+
+        $deduplicated = [];
+        $candies = [];
+        foreach ($mapped as $key => $candy) {
+            if (!in_array($candy['name'], $candies)) {
+                $candies[] = $candy['name'];
+                $deduplicated[$key] = $candy;
+            }
+        }
+
+        if (empty($deduplicated)) {
+            return new JsonResponse(false);
+        }
+        return new JsonResponse($deduplicated);
+    }
+
+
+    /**
      * @Route("/store-api/v{version}/eclm/get-packages/{id}", name="api.action.eclm.get-packages", methods={"GET"})
      */
     public function getPackages(string $id, Request $request, Context $context): JsonResponse
@@ -167,57 +246,43 @@ class LabelMeApiController extends AbstractController
         $criteria->addFilter(new EqualsFilter('candyId', $id));
         $criteria->addAssociation('package');
         $criteria->addAssociation('media');
+        $criteria->addAssociation('product');
 
         $entities = $this->candyPackageRepository->search(
             $criteria,
-            Context::createDefaultContext()
+            $context
         );
 
-        $filter = function (CandyPackageEntity $cp) {
-            return [
-                'cp_id' => $cp->getId(),
-                'id' => $cp->getPackage()->getId(),
-                'name' => $cp->getPackage()->getName(),
-                'thumbnails' => $cp->getMedia()->getThumbnails()
-            ];
+        /** @var CurrencyEntity $currency */
+        $currency = $this->currencyRepository
+            ->search(new Criteria([$context->getCurrencyId()]), $context)
+            ->first();
+        $currencySymbol = $currency->getSymbol();
+
+        $filter = function (CandyPackageEntity $cp) use ($context, $currencySymbol){
+            $packageActive = $cp->getPackage()->isActive();
+            $productAvailable = $cp->getProduct()->getStock();
+
+            if ($packageActive && $productAvailable > 0) {
+                return [
+                    'cp_id' => $cp->getId(),
+                    'id' => $cp->getPackage()->getId(),
+                    'name' => $cp->getPackage()->getName(),
+                    'thumbnails' => $cp->getMedia()->getThumbnails(),
+                    'product' => [
+                        'id' => $cp->getProduct()->getId(),
+                        'name' => $cp->getProduct()->getName(),
+                        'price' => $cp->getProduct()->getCurrencyPrice($context->getCurrencyId()),
+                        'currency' => $currencySymbol
+                    ]
+                ];
+            }
         };
 
         $mapped = $entities->fmap($filter);
         return new JsonResponse($mapped);
     }
 
-    /**
-     * @Route("/store-api/v{version}/eclm/get-candies", name="api.action.eclm.get-candies", methods={"GET"})
-     * @param string $id packageId
-     * @param Request $request
-     * @param Context $context
-     * @return JsonResponse
-     */
-    public function getCandies(Request $request, Context $context): JsonResponse
-    {
-        $criteria = new Criteria();
-
-//        $criteria->addFilter(new EqualsFilter('packageId', $id));
-//        $criteria->addAssociation('candy');
-        $criteria->addAssociation('media');
-
-        $entities = $this->candyRepository->search(
-            $criteria,
-            Context::createDefaultContext()
-        );
-
-        $filter = function (CandyEntity $candy) {
-            return [
-                'id' => $candy->getId(),
-                'name' => $candy->getName(),
-                'thumbnails' => $candy->getMedia()->getThumbnails()
-            ];
-        };
-
-        $mapped = $entities->fmap($filter);
-
-        return new JsonResponse($mapped);
-    }
 
     /**
      * @Route("/store-api/v{version}/eclm/get-config", name="api.action.eclm.get-config", methods={"GET"})
@@ -246,7 +311,7 @@ class LabelMeApiController extends AbstractController
 
         $this->logger->log(100, '$lineItemData from request Bag', [$lineItemData['event']]);
 
-        if (!$lineItemData['event']) {
+        if (!$lineItemData['eclm_package']) {
             throw new MissingRequestParameterException('Bad Payload');
         }
 
@@ -260,14 +325,10 @@ class LabelMeApiController extends AbstractController
                 1
             );
 
-            $lineItem->setLabel("Event Pack");
-            $lineItem->setGood(false);
-            $lineItem->setStackable(true);
-            $lineItem->setRemovable(true);
             $lineItem->setPayload($lineItemData);
 
-           $this->cartService->add($cart, $lineItem, $salesChannelContext);
-           $this->cartPersister->save($cart, $salesChannelContext);
+            $this->cartService->add($cart, $lineItem, $salesChannelContext);
+            $this->cartPersister->save($cart, $salesChannelContext);
 
 
         } catch (Exception $exception) {
