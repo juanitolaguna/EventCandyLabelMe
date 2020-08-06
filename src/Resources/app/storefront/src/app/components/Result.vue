@@ -82,16 +82,13 @@
 
             onPost(res) {
                 // console.log(res)
+                // const cartWidgetEl = DomAccess.querySelector(this.cartEl, '[data-cart-widget]');
+                // const cartWidgetInstance = this.pluginManager.getPluginInstanceFromElement(cartWidgetEl, 'CartWidget');
+                // cartWidgetInstance.fetch();
 
-
-                const cartWidgetEl = DomAccess.querySelector(this.cartEl, '[data-cart-widget]');
-                const cartWidgetInstance = this.pluginManager.getPluginInstanceFromElement(cartWidgetEl, 'CartWidget');
-                cartWidgetInstance.fetch();
-
-
-                // const offCanvasEl = DomAccess.querySelector(document, '[data-offcanvas-cart]');
-                // const offCanvas = this.pluginManager.getPluginInstanceFromElement(offCanvasEl, 'OffCanvasCart');
-                // offCanvas.openOffCanvas(window.router['frontend.cart.offcanvas'], false);
+                const offCanvasCartEl = DomAccess.querySelector(document, '[data-offcanvas-cart]');
+                const offCanvasCartInstance = this.pluginManager.getPluginInstanceFromElement(offCanvasCartEl, 'OffCanvasCart');
+                offCanvasCartInstance.openOffCanvas(window.router['frontend.cart.offcanvas'], false);
             }
         },
 

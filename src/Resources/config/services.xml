@@ -5,6 +5,15 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+
+        <service id="EventCandy\LabelMe\Subscriber\EclmStockUpdater">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Shopware\Core\Content\Product\ProductDefinition"/>
+            <argument type="service" id="Shopware\Core\Framework\Adapter\Cache\CacheClearer"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Cache\EntityCacheKeyGenerator"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <service id="EventCandy\LabelMe\Core\Content\Candy\CandyDefinition">
             <tag name="shopware.entity.definition" entity="eclm_candy"/>
         </service>
@@ -52,6 +61,7 @@
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
             <argument type="service" id="media.repository"/>
             <argument type="service" id="product.repository"/>
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface"/>
 
 
             <!-- inject before product processor (5000) -->

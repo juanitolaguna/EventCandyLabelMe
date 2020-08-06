@@ -19,7 +19,7 @@ class EventCandyLabelMe extends Plugin
     public function activate(ActivateContext $context): void
     {
 
-        file_put_contents('log.txt', "Activate ECLM Plugin\n", FILE_APPEND );
+//        file_put_contents('log.txt', "Activate ECLM Plugin\n", FILE_APPEND );
         $this->demoDataService->generate($context->getContext());
     }
 

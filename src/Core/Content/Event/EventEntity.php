@@ -87,7 +87,7 @@ class EventEntity extends Entity
 
     public function getLabels(): ?LabelCollection
     {
-        file_put_contents('log.txt', 'get Labels', FILE_APPEND );
+//        file_put_contents('log.txt', 'get Labels', FILE_APPEND );
         return $this->labels;
     }
 

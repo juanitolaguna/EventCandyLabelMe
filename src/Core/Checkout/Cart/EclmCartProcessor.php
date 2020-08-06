@@ -19,6 +19,7 @@ use Shopware\Core\Checkout\Cart\Tax\Struct\CalculatedTaxCollection;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Content\Product\ProductEntity;
+use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -58,6 +59,11 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      */
     private $productRepository;
 
+    /**
+     * @var ProductPriceDefinitionBuilderInterface
+     */
+    private $priceDefinitionBuilder;
+
 
     public const TYPE = 'event-candy-label-me';
     public const DATA_KEY = 'eclm-';
@@ -71,6 +77,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      * @param QuantityPriceCalculator $quantityPriceCalculator
      * @param EntityRepositoryInterface $mediaRepository
      * @param EntityRepositoryInterface $productRepository
+     * @param ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder
      */
     public function __construct(
         LoggerInterface $logger,
@@ -78,7 +85,8 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         AbsolutePriceCalculator $absolutePriceCalculator,
         QuantityPriceCalculator $quantityPriceCalculator,
         EntityRepositoryInterface $mediaRepository,
-        EntityRepositoryInterface $productRepository
+        EntityRepositoryInterface $productRepository,
+        ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder
 
     )
     {
@@ -88,6 +96,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         $this->quantityPriceCalculator = $quantityPriceCalculator;
         $this->mediaRepository = $mediaRepository;
         $this->productRepository = $productRepository;
+        $this->priceDefinitionBuilder = $priceDefinitionBuilder;
     }
 
 
@@ -100,16 +109,22 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             return;
         }
 
-        $this->logger->log(100, 'collect label-me');
+//        $this->logger->log(100, 'collect label-me');
 
         foreach ($eclmItems as $item) {
             $payload = $item->getPayload();
 
             $productId = $payload['eclm_package']['product']['id'];
 
+            $item->setReferencedId($productId);
+
             /** @var ProductEntity $product */
             $product = $this->productRepository
                 ->search(new Criteria([$productId]), $context->getContext())->first();
+
+
+            $prices = $this->priceDefinitionBuilder->build($product, $context, $item->getQuantity());
+            $item->setPriceDefinition($prices->getQuantityPrice());
 
             //setLabel
             if (!$item->getLabel()) {
@@ -164,30 +179,12 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         }
 
         foreach ($eclmItems as $item) {
-
-
-            $payload = $item->getPayload();
-            $productId = $payload['eclm_package']['product']['id'];
-
-            $lineItem = (new LineItem($productId, LineItem::PRODUCT_LINE_ITEM_TYPE, $productId, 1))
-                ->setRemovable(true)
-                ->setStackable(true);
-
-            $priceDefinition = $lineItem->getPriceDefinition();
+            $priceDefinition = $item->getPriceDefinition();
             if ($priceDefinition === null || !$priceDefinition instanceof QuantityPriceDefinition) {
-                throw new \RuntimeException(sprintf('Product "%s" has invalid price definition', $lineItem->getLabel()));
+                throw new \RuntimeException(sprintf('Product "%s" has invalid price definition', $item->getLabel()));
             }
 
-//            $item->setPrice( $this->quantityPriceCalculator->calculate($priceDefinition, $context));
-
-
-            $item->setPrice(new CalculatedPrice(
-                $payload['eclm_package']['product']['price']['gross'],
-                $payload['eclm_package']['product']['price']['gross'],
-                new CalculatedTaxCollection(),
-                new TaxRuleCollection()
-            ));
-
+            $item->setPrice( $this->quantityPriceCalculator->calculate($priceDefinition, $context));
             $toCalculate->add($item);
         }
 

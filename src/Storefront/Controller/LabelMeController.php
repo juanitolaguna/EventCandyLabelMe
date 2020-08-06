@@ -41,7 +41,9 @@ class LabelMeController extends StorefrontController
 
         return $this->renderStorefront(
             '@EventCandyLabelMe/storefront/page/eclm.html.twig',
-            ['page' => $page]
+            [
+                'page' => $page,
+            ]
         );
     }
 

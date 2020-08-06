@@ -15,7 +15,7 @@ class Migration1591186546CreateLabelEntity extends MigrationStep
     public function update(Connection $connection): void
     {
 
-        file_put_contents('log.txt', 'Create Label Entity', FILE_APPEND );
+//        file_put_contents('log.txt', 'Create Label Entity', FILE_APPEND );
 
         $connection->exec('CREATE TABLE IF NOT EXISTS `eclm_label` (
             `id` BINARY(16) NOT NULL,

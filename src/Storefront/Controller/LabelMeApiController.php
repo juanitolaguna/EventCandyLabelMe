@@ -206,7 +206,7 @@ class LabelMeApiController extends AbstractController
             }
 
             if ($cp->getProduct() !== null) {
-                $stock = $cp->getProduct()->getStock();
+                $stock = $cp->getProduct()->getAvailableStock();
             }
 
 
@@ -261,7 +261,7 @@ class LabelMeApiController extends AbstractController
 
         $filter = function (CandyPackageEntity $cp) use ($context, $currencySymbol){
             $packageActive = $cp->getPackage()->isActive();
-            $productAvailable = $cp->getProduct()->getStock();
+            $productAvailable = $cp->getProduct()->getAvailableStock();
 
             if ($packageActive && $productAvailable > 0) {
                 return [
@@ -309,7 +309,7 @@ class LabelMeApiController extends AbstractController
         $lineItemData = $requestDataBag->all();
 
 
-        $this->logger->log(100, '$lineItemData from request Bag', [$lineItemData['event']]);
+//        $this->logger->log(100, '$lineItemData from request Bag', [$lineItemData['event']]);
 
         if (!$lineItemData['eclm_package']) {
             throw new MissingRequestParameterException('Bad Payload');

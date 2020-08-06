@@ -16,7 +16,7 @@ class Migration1591186484CreateEventEntity extends MigrationStep
     public function update(Connection $connection): void
     {
 
-        file_put_contents('log.txt', 'Create Event Entity', FILE_APPEND );
+//        file_put_contents('log.txt', 'Create Event Entity', FILE_APPEND );
         $connection->exec('CREATE TABLE IF NOT EXISTS `eclm_event` (
             `id` BINARY(16) NOT NULL,
             `name` VARCHAR(255) NOT NULL,

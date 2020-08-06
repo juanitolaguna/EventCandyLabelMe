@@ -15,7 +15,7 @@ class Migration1591185483CreateCandyEntity extends MigrationStep
     public function update(Connection $connection): void
     {
 
-        file_put_contents('log.txt', 'Create Candy Entity', FILE_APPEND);
+//        file_put_contents('log.txt', 'Create Candy Entity', FILE_APPEND);
 
         $connection->exec('CREATE TABLE IF NOT EXISTS `eclm_candy` (
             `id` BINARY(16) NOT NULL,

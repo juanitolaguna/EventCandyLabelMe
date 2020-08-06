@@ -33,13 +33,13 @@ class DemoDataService
     public function generate(Context $context): void
     {
 
-        file_put_contents('log.txt', 'generate', FILE_APPEND);
+//        file_put_contents('log.txt', 'generate', FILE_APPEND);
         /** @var DemoDataProvider $dataProvider */
         foreach ($this->demoDataProvider as $dataProvider) {
 
             $dataProvider->prepare($context);
 
-            file_put_contents('log.txt', "Action\n" . $dataProvider->getAction(), FILE_APPEND);
+//            file_put_contents('log.txt', "Action\n" . $dataProvider->getAction(), FILE_APPEND);
 
             $payload = [
                 [
