@@ -1,0 +1,70 @@
+{% sw_extends '@Storefront/storefront/component/checkout/offcanvas-item.html.twig' %}
+
+
+{% block component_offcanvas_product_image %}
+    {% block component_offcanvas_product_image_inner %}
+
+        {% if lineItem.payload.label %}
+<div class="cart-item-img" style="border:none">
+    {% else %}
+    <div class="cart-item-img">
+        {% endif %}
+
+
+        {% if isDiscount %}
+            <div class="cart-item-discount-icon">
+                {% sw_icon 'marketing' style {
+                    'color': 'success'
+                } %}
+            </div>
+        {% elseif isNested %}
+            <div class="cart-item-nested-icon">
+                {% sw_icon 'bag-product' style {
+                    'color': 'light'
+                } %}
+            </div>
+        {% else %}
+
+            {% if lineItem.payload.label %}
+                {% if lineItem.cover.url %}
+                    <img class="img-fluid cart-item-img-source"
+                         src="{{ lineItem.payload.label.thumbnails[0].url }}"
+                         alt="{{ lineItem.payload.label.name }}"/>
+                {% else %}
+                    {% sw_icon 'placeholder' style {
+                        'size': 'fluid'
+                    } %}
+                {% endif %}
+                </a>
+            {% endif %}
+
+            {% if not lineItem.payload.label %}
+                <a href="{{ seoUrl('frontend.detail.page', {'productId': referencedId}) }}"
+                class="cart-item-img-link"
+                title="{{ label }}">
+            {% endif %}
+            {% if lineItem.cover.url %}
+                {% sw_thumbnails 'cart-item-img-thumbnails' with {
+                    media: lineItem.cover,
+                    sizes: {
+                        'default': '100px'
+                    },
+                    attributes: {
+                        'class': 'img-fluid cart-item-img-source',
+                        'alt': label,
+                        'title': label
+                    }
+                } %}
+            {% else %}
+                {% sw_icon 'placeholder' style {
+                    'size': 'fluid'
+                } %}
+            {% endif %}
+            {% if not lineItem.payload.label %}
+                </a>
+            {% endif %}
+
+        {% endif %}
+    </div>
+    {% endblock %}
+    {% endblock %}

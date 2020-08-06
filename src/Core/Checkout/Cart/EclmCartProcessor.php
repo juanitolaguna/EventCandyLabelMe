@@ -130,9 +130,19 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             if (!$item->getLabel()) {
                 $event = $payload['event']['name'];
                 $label = $payload['label']['name'];
+
+//                if (strlen($label) >= 15) {
+//                    $label =  substr($label, 0, 7). "..." . substr($label, -7);
+//                }
+
+                if (strlen($label) >= 12) {
+                    $label = substr($label, 0, 12) . "...";
+                }
+
+
                 $candy = $payload['candy']['name'];
                 $package = $payload['eclm_package']['name'];
-                $label = "{$event} | {$label} | {$candy} | {$package}";
+                $label = "{$event},  {$label} \n {$package}, {$candy}";
                 $item->setLabel($label);
             }
 
@@ -184,7 +194,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 throw new \RuntimeException(sprintf('Product "%s" has invalid price definition', $item->getLabel()));
             }
 
-            $item->setPrice( $this->quantityPriceCalculator->calculate($priceDefinition, $context));
+            $item->setPrice($this->quantityPriceCalculator->calculate($priceDefinition, $context));
             $toCalculate->add($item);
         }
 
