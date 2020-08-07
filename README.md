@@ -14,6 +14,11 @@ copy administration files from:
 remove all DS_Store files if exists then zip. Plugin ready for upload.
 - `find . -name '.DS_Store' -type f -delete`
 
+vagrant
+- `vagrant up`
+- `vagrant ssh`
+- `vagrant halt`
+- `vagrant reload`
 
 "vue": "^2.6.11",
 "vue-loader": "^15.9.2",
