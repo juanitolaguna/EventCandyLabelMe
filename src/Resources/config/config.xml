@@ -8,7 +8,7 @@
             <name>eventName</name>
             <label>Event Tab</label>
             <placeholder>Event</placeholder>
-            <defaultValue>Event</defaultValue>
+            <defaultValue>Thema</defaultValue>
         </input-field>
         <component name="sw-text-editor">
             <name>eventHeader</name>

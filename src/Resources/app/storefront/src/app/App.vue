@@ -167,7 +167,6 @@
                 }
 
 
-
                 return {
                     'event': event,
                     'label': label,
@@ -319,7 +318,7 @@
                 });
             },
 
-            getStock(){
+            getStock() {
                 this.httpClient.get(`store-api/v{version}/eclm/get-candies`, (response) => {
                     const res = JSON.parse(response);
                     if (!res) {
@@ -340,7 +339,8 @@
                         'id': e.id,
                         'name': e.name,
                         'thumbnail': thumbnail[0],
-                        'product' : e.product ? e.product : undefined
+                        'milliliter': e.milliliter ? e.milliliter : undefined,
+                        'product': e.product ? e.product : undefined
                     }
                 })
             },

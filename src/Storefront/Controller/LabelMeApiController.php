@@ -268,6 +268,7 @@ class LabelMeApiController extends AbstractController
                     'cp_id' => $cp->getId(),
                     'id' => $cp->getPackage()->getId(),
                     'name' => $cp->getPackage()->getName(),
+                    'milliliter' => $cp->getPackage()->getMilliliters(),
                     'thumbnails' => $cp->getMedia()->getThumbnails(),
                     'product' => [
                         'id' => $cp->getProduct()->getId(),

@@ -52,7 +52,7 @@
                     :placeholder="'Füge ein Produkt hinzu'"
                     :label="'Produkt'"
                     :value="joinedCandyPackage.productId"
-                    @input="changeProduct"
+                    @change="changeProduct"
                     @search="searchProduct"
                     @select-expanded="getProducts"
                     required

@@ -4,15 +4,24 @@
         <br><br>
         <div class="card-deck" v-if="entities.length">
             <div v-for="entity in entities">
-                <div v-on:click.prevent="onSelect(entity.id)" :class="['card eclm-card', isSelected(entity.id)]" id="entity.id"
+                <div v-on:click.prevent="onSelect(entity.id)" :class="['card eclm-card', isSelected(entity.id)]"
+                     id="entity.id"
                      style="max-width:250px;">
                     <img :src="entity.thumbnail.url" class="card-img-top" :alt="entity.name">
                     <div class="card-body">
-                        <h5 class="card-title">{{ entity.name }}
-                            <template v-if="entity.product">
-                                - {{entity.product.currency}}{{ entity.product.price.gross }}
+                        <h5 class="card-title" style="padding-bottom: 0px;">{{ entity.name }}</h5>
+                        <div class="eclm-badges-container">
+                            <template v-if="entity.milliliter">
+                            <span class="badge badge-pill badge-info eclm-badge">
+                                {{entity.milliliter}}ml
+                            </span>
                             </template>
-                        </h5>
+                            <template v-if="entity.product">
+                                <span class="badge badge-pill badge-primary">
+                                    {{entity.product.currency}}{{ entity.product.price.gross }}
+                                </span>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>

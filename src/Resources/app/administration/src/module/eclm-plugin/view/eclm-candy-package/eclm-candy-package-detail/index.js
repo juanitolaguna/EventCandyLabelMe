@@ -27,12 +27,15 @@ Component.register('eclm-candy-package-detail', {
 
     computed: {
         productOptions() {
+
             return this.products.map((product) => {
                 return {
                     value: product.id,
                     label: product.name
                 }
-            })
+            });
+
+
         },
         joinedCandyPackageRepository() {
             return this.repositoryFactory.create('eclm_candy_package');
@@ -87,8 +90,10 @@ Component.register('eclm-candy-package-detail', {
 
         getProducts() {
             if (this.joinedCandyPackage.productId !== null) {
+                console.log('getRelatedProductAndList')
                 this.getRelatedProductAndList();
             } else {
+                console.log('getProductList');
                 this.getProductList();
             }
         },
@@ -97,6 +102,8 @@ Component.register('eclm-candy-package-detail', {
             this.productRepository
                 .search(this.productCriteria, Shopware.Context.api)
                 .then((result) => {
+                    //clear results
+                    this.products = []
                     result.forEach((product) => {
                         this.products.push(product);
                     })
@@ -107,8 +114,17 @@ Component.register('eclm-candy-package-detail', {
             this.productRepository
                 .get(this.joinedCandyPackage.productId, Shopware.Context.api)
                 .then((result) => {
+                    //clear results
+                    this.products = []
                     this.products.push(result);
-                    this.getProductList();
+
+                    this.productRepository
+                        .search(this.productCriteria, Shopware.Context.api)
+                        .then((result) => {
+                            result.forEach((product) => {
+                                this.products.push(product);
+                            })
+                        });
                 });
         },
 

@@ -12,7 +12,12 @@
                 <ul class="list-group">
                     <li class="list-group-item"><strong>Event: </strong>{{ result.event.name}}</li>
                     <li class="list-group-item"><strong>Label: </strong>{{ result.label.name}}</li>
-                    <li class="list-group-item"><strong>Package: </strong>{{ result.eclm_package.name}}</li>
+                    <li class="list-group-item"><strong>Package: </strong>
+                        {{ result.eclm_package.name}}
+                        <span class="badge badge-pill badge-info eclm-badge">
+                                {{result.eclm_package.milliliter}}ml
+                        </span>
+                    </li>
                     <li class="list-group-item"><strong>Candy: </strong>{{ result.candy.name}}</li>
                 </ul>
             </div>
