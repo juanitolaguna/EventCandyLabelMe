@@ -121,12 +121,18 @@ class LabelMeApiController extends AbstractController
             Context::createDefaultContext()
         );
 
+
         $filter = function (EventEntity $event) {
-            return [
-                'id' => $event->getId(),
-                'name' => $event->getName(),
-                'thumbnails' => $event->getMedia()->getThumbnails()
-            ];
+            $media = $event->getMedia();
+            if (($media !== null) && ($media->getThumbnails() !== null)) {
+                return [
+                    'id' => $event->getId(),
+                    'name' => $event->getName(),
+                    'thumbnails' => $event->getMedia()->getThumbnails()
+                ];
+            }
+
+
         };
 
         $mapped = $entities->fmap($filter);
