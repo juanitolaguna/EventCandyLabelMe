@@ -205,7 +205,7 @@ class LabelMeApiController extends AbstractController
                 $packageAvailable = $cp->getPackage()->isActive();
             }
 
-            if ($cp->getProduct() !== null) {
+            if (($cp->getProduct() !== null) && ($cp->getProduct()->getAvailableStock() !== null)) {
                 $stock = $cp->getProduct()->getAvailableStock();
             }
 
@@ -261,7 +261,10 @@ class LabelMeApiController extends AbstractController
 
         $filter = function (CandyPackageEntity $cp) use ($context, $currencySymbol){
             $packageActive = $cp->getPackage()->isActive();
-            $productAvailable = $cp->getProduct()->getAvailableStock();
+            $productAvailable = 0;
+            if (($cp->getProduct() !== null) && ($cp->getProduct()->getAvailableStock() !== null)) {
+                $productAvailable = $cp->getProduct()->getAvailableStock();
+            }
 
             if ($packageActive && $productAvailable > 0) {
                 return [
