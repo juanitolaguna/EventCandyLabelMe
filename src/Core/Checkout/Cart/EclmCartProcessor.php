@@ -143,7 +143,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 $candy = $payload['candy']['name'];
                 $package = $payload['eclm_package']['name'];
                 $ml = $payload['eclm_package']['milliliter'];
-                $label = "{$event}, \n{$label}, \n{$candy}, \n{$package} | {$ml}ml";
+                $label = "{$event}, \n{$label}, \n{$candy}, \n{$package}, {$ml}ml";
                 $item->setLabel($label);
             }
 
