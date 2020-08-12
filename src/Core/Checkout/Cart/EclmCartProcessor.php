@@ -135,8 +135,8 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 //                    $label =  substr($label, 0, 7). "..." . substr($label, -7);
 //                }
 
-                if (strlen($label) >= 12) {
-                    $label = substr($label, 0, 12) . "...";
+                if (strlen($label) >= 23) {
+                    $label = substr($label, 0, 23) . "...";
                 }
 
 
