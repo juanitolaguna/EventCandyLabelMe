@@ -6,12 +6,23 @@
 
     <services>
 
+        <!-- Subscribers -->
+        <!-- #duplicate @event-candy-sets -->
         <service id="EventCandy\LabelMe\Subscriber\EclmStockUpdater">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="Shopware\Core\Content\Product\ProductDefinition"/>
             <argument type="service" id="Shopware\Core\Framework\Adapter\Cache\CacheClearer"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Cache\EntityCacheKeyGenerator"/>
+            <argument type="service"
+                      id="EventCandy\LabelMe\Subscriber\EclmStockUpdaterRelatedProducts"/>
+            <argument type="service" id="logger"/>
             <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- #duplicate @event-candy-sets -->
+        <service id="EventCandy\LabelMe\Subscriber\EclmStockUpdaterRelatedProducts">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <service id="EventCandy\LabelMe\Core\Content\Candy\CandyDefinition">
@@ -61,12 +72,20 @@
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
             <argument type="service" id="media.repository"/>
             <argument type="service" id="product.repository"/>
-            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface"/>
+            <argument type="service"
+                      id="Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+
 
 
             <!-- inject before product processor (5000) -->
             <tag name="shopware.cart.processor" priority="6000"/>
             <tag name="shopware.cart.collector" priority="6000"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\Core\Checkout\Cart\LineItemFactoryHandler\LabelMeLineItemFactory">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\PriceDefinitionFactory"/>
+            <tag name="shopware.cart.line_item.factory"/>
         </service>
 
         <!-- DemoDataService -->

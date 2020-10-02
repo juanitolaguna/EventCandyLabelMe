@@ -2,6 +2,7 @@
 
 namespace EventCandy\LabelMe\Core\Checkout\Cart;
 
+use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
@@ -22,6 +23,7 @@ use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryInformation;
 use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryTime;
@@ -64,6 +66,9 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      */
     private $priceDefinitionBuilder;
 
+    /** @var Connection */
+    private $connection;
+
 
     public const TYPE = 'event-candy-label-me';
     public const DATA_KEY = 'eclm-';
@@ -78,6 +83,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      * @param EntityRepositoryInterface $mediaRepository
      * @param EntityRepositoryInterface $productRepository
      * @param ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder
+     * @param Connection $connection
      */
     public function __construct(
         LoggerInterface $logger,
@@ -86,7 +92,8 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         QuantityPriceCalculator $quantityPriceCalculator,
         EntityRepositoryInterface $mediaRepository,
         EntityRepositoryInterface $productRepository,
-        ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder
+        ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder,
+        Connection $connection
 
     )
     {
@@ -97,6 +104,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         $this->mediaRepository = $mediaRepository;
         $this->productRepository = $productRepository;
         $this->priceDefinitionBuilder = $priceDefinitionBuilder;
+        $this->connection = $connection;
     }
 
 
@@ -109,8 +117,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             return;
         }
 
-//        $this->logger->log(100, 'collect label-me');
-
+        /** @var LineItem $item */
         foreach ($eclmItems as $item) {
             $payload = $item->getPayload();
 
@@ -177,7 +184,33 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                         $deliveryTime
                     ))
                 ->setQuantityInformation(new QuantityInformation());
+
+            $this->addRelatedProductsToPayload($item);
         }
+
+
+    }
+
+    private function addRelatedProductsToPayload(LineItem $lineItem)
+    {
+        $sqlSetProducts = 'select product_id, product_version_id, quantity from ec_product_product as pp
+                    where pp.set_product_id = :id;';
+
+        $rows = $this->connection->fetchAll(
+            $sqlSetProducts,
+            ['id' => Uuid::fromHexToBytes($lineItem->getReferencedId())]
+        );
+
+        $setProducts = [];
+        foreach ($rows as $row) {
+            $setProducts[] = [
+                'product_id' => Uuid::fromBytesToHex($row['product_id']),
+                'product_version_id' => Uuid::fromBytesToHex($row['product_version_id']),
+                'quantity' => $row['quantity']
+            ];
+        }
+
+        $lineItem->setPayload([self::TYPE => $setProducts]);
     }
 
 

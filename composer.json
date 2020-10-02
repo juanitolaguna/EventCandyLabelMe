@@ -4,6 +4,10 @@
     "type": "shopware-platform-plugin",
     "license": "MIT",
     "version": "1.0.0",
+    "require": {
+        "shopware/core": "6.3.*",
+        "event-candy/sets-plugin": "v1.0.0"
+    },
     "autoload": {
         "psr-4": {
             "EventCandy\\LabelMe\\": "src/"
