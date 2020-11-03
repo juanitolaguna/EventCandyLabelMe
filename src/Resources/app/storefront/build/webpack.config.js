@@ -2,11 +2,11 @@ const {resolve, join} = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 
-const dist = resolve(join(__dirname, '../../', 'storefront/dist/storefront/js'))
-console.log(dist);
+// const dist = resolve(join(__dirname, '../../', 'storefront/dist/storefront/js'))
+ console.log('custom webpack config');
 
 module.exports = ({config}) => {
-    console.log(resolve(join(__dirname, '../../', 'node_modules')));
+    console.log(config);
     return {
         module: {
             rules: [
@@ -25,14 +25,14 @@ module.exports = ({config}) => {
         ],
         resolveLoader: {
             modules: [
-                resolve(join(__dirname, '../../', 'node_modules')),
-                resolve(join(__dirname, '../../../../../../../../', 'vendor/shopware/platform/src/Storefront/Resources/app/storefront/node_modules')),
+                resolve(join(__dirname, '../', 'node_modules')),
+                resolve(join(__dirname, '../../../../../../../../', 'vendor/shopware/storefront/Resources/app/storefront/node_modules')),
             ]
         },
         resolve: {
             alias: {
-                'vue': resolve(join(__dirname, '../../', 'node_modules/vue')),
-            },
+                'vue': resolve(join(__dirname, '..', 'node_modules', 'vue'))
+            }
         }
     };
 }

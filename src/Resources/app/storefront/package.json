@@ -1,7 +1,7 @@
 {
   "name": "app",
   "version": "1.0.0",
-  "description": "",
+  "description": "juanitolaguna",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,9 @@
   "dependencies": {
     "vue": "^2.6.11",
     "vue-loader": "^15.9.3",
-    "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.44.1"
+    "vue-template-compiler": "^2.6.11"
+  },
+  "devDependencies": {
+    "webpack": "4.38.0"
   }
 }
