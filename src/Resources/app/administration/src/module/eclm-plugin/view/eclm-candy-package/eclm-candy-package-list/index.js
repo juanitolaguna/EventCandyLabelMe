@@ -65,6 +65,12 @@ Component.register('eclm-candy-package-list', {
                     routerLink: 'eclm.plugin.candyPackageDetail'
                 },
                 {
+                    property: 'gramm',
+                    label: 'Gramm',
+                    allowResize: true,
+                    routerLink: 'eclm.plugin.candyPackageDetail'
+                },
+                {
                     property: 'product.name',
                     label: 'Product',
                     allowResize: true,

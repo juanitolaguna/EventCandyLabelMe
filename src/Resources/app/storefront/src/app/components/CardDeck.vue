@@ -11,9 +11,9 @@
                     <div class="card-body">
                         <h5 class="card-title" style="padding-bottom: 0px;">{{ entity.name }}</h5>
                         <div class="eclm-badges-container">
-                            <template v-if="entity.milliliter">
+                            <template v-if="entity.gramm">
                             <span class="badge badge-pill badge-info eclm-badge">
-                                {{entity.milliliter}}ml
+                                {{entity.gramm}}<i>g</i>
                             </span>
                             </template>
                             <template v-if="entity.product">

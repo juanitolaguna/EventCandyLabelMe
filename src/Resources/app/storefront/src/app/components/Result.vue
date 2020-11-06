@@ -15,7 +15,7 @@
                     <li class="list-group-item"><strong>Package: </strong>
                         {{ result.eclm_package.name}}
                         <span class="badge badge-pill badge-info eclm-badge">
-                                {{result.eclm_package.milliliter}}ml
+                                {{result.eclm_package.gramm}}<i>g</i>
                         </span>
                     </li>
                     <li class="list-group-item"><strong>Candy: </strong>{{ result.candy.name}}</li>

@@ -12,6 +12,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\MappingEntityDefinition;
@@ -47,7 +48,10 @@ class CandyPackageDefinition extends EntityDefinition
                 ->addFlags(new Required() ),
 
             (new FkField('media_id', 'mediaId', MediaDefinition::class)),
+
             (new FkField('product_id', 'productId', ProductDefinition::class)),
+
+            ( new IntField( 'gramm', 'gramm' ) ),
 
             new ManyToOneAssociationField('candy', 'candy_id', CandyDefinition::class),
             new ManyToOneAssociationField('package', 'package_id', PackageDefinition::class),

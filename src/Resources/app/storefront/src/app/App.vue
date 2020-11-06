@@ -339,7 +339,7 @@
                         'id': e.id,
                         'name': e.name,
                         'thumbnail': thumbnail[0],
-                        'milliliter': e.milliliter ? e.milliliter : undefined,
+                        'gramm': e.gramm ? e.gramm : undefined,
                         'product': e.product ? e.product : undefined
                     }
                 })

@@ -19,7 +19,7 @@ class EventCandyLabelMe extends Plugin
     public function activate(ActivateContext $context): void
     {
 
-//        $this->demoDataService->generate($context->getContext());
+        $this->demoDataService->generate($context->getContext());
     }
 
 

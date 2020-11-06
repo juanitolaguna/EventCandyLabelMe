@@ -36,6 +36,27 @@ class CandyPackageEntity extends Entity
     protected $product;
 
     /**
+     * @var int
+     */
+    protected $gramm;
+
+    /**
+     * @return int
+     */
+    public function getGramm(): int
+    {
+        return $this->gramm;
+    }
+
+    /**
+     * @param int $gramm
+     */
+    public function setGramm(int $gramm): void
+    {
+        $this->gramm = $gramm;
+    }
+
+    /**
      * @return ProductEntity|null
      */
     public function getProduct(): ?ProductEntity
