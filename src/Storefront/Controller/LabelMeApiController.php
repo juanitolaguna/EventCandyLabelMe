@@ -183,14 +183,12 @@ class LabelMeApiController extends AbstractController
     {
 
 
-
         $criteria = new Criteria();
         $criteria
             ->addAssociation('candy')
             ->addAssociation('candy.media')
             ->addAssociation('package')
             ->addAssociation('product');
-
 
 
         $entities = $this->candyPackageRepository->search(
@@ -279,11 +277,17 @@ class LabelMeApiController extends AbstractController
             ->first();
         $currencySymbol = $currency->getSymbol();
 
-        $filter = function (CandyPackageEntity $cp) use ($context, $currencySymbol){
+        $filter = function (CandyPackageEntity $cp) use ($context, $currencySymbol) {
             $packageActive = $cp->getPackage()->isActive();
             $productAvailable = 0;
             if (($cp->getProduct() !== null) && ($cp->getProduct()->getAvailableStock() !== null)) {
-                $productAvailable = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
+                $keyIsTrue = array_key_exists('ec_is_set', $cp->getProduct()->getCustomFields())
+                    && $cp->getProduct()->getCustomFields()['ec_is_set'];
+                if ($keyIsTrue) {
+                    $productAvailable = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
+                } else {
+                    $productAvailable = $cp->getProduct()->getAvailableStock();
+                }
             }
 
             if ($packageActive && $productAvailable > 0) {
@@ -331,7 +335,6 @@ class LabelMeApiController extends AbstractController
     {
 //        /** @var RequestDataBag $lineItemData */
         $lineItemData = $requestDataBag->all();
-
 
 
         if (!$lineItemData['eclm_package']) {
