@@ -1,12 +1,11 @@
 <template>
   <div
       class="modal fade"
-       v-bind:class="{show: showModal}"
+       v-bind:class="{show: showModal, 'eclm-show-front-modal': showModal}"
        id="exampleModalCenter"
        tabindex="-1" role="dialog"
        aria-labelledby="exampleModalCenterTitle"
        aria-hidden="true"
-       style="display: block; background: #000000b3;"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">

@@ -120,7 +120,7 @@ export default {
       selectedPackage: '',
       selectedCandy: '',
 
-      config: null,
+      config: [],
     }
   },
 
@@ -330,7 +330,6 @@ export default {
 
     getStock() {
       this.httpClient.get(`store-api/v{version}/eclm/get-candies`, (response) => {
-        console.log(response);
         const res = JSON.parse(response);
         if (!res) {
           this.stock = false;
