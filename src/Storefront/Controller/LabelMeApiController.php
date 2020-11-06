@@ -283,7 +283,7 @@ class LabelMeApiController extends AbstractController
             $packageActive = $cp->getPackage()->isActive();
             $productAvailable = 0;
             if (($cp->getProduct() !== null) && ($cp->getProduct()->getAvailableStock() !== null)) {
-                $productAvailable = $cp->getProduct()->getAvailableStock();
+                $productAvailable = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
             }
 
             if ($packageActive && $productAvailable > 0) {
