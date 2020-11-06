@@ -5,6 +5,7 @@ namespace EventCandy\LabelMe\Storefront\Controller;
 use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
+use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
@@ -77,9 +78,10 @@ class LabelMeApiController extends AbstractController
     private $cartPersister;
 
     /**
-     * @var LoggerInterface
+     * Contains available Stock Calculation method.
+     * @var ProductListingSubscriber
      */
-    private $logger;
+    private $productListingSubscriber;
 
 
     public function __construct(
@@ -91,7 +93,7 @@ class LabelMeApiController extends AbstractController
         SystemConfigService $systemConfigService,
         CartService $cartService,
         CartPersister $cartPersister,
-        LoggerInterface $logger
+        ProductListingSubscriber $productListingSubscriber
     )
     {
         $this->eventRepository = $eventRepository;
@@ -102,7 +104,7 @@ class LabelMeApiController extends AbstractController
         $this->systemConfigService = $systemConfigService;
         $this->cartService = $cartService;
         $this->cartPersister = $cartPersister;
-        $this->logger = $logger;
+        $this->productListingSubscriber = $productListingSubscriber;
     }
 
 
@@ -118,7 +120,7 @@ class LabelMeApiController extends AbstractController
 
         $entities = $this->eventRepository->search(
             $criteria,
-            Context::createDefaultContext()
+            $context
         );
 
 
@@ -193,36 +195,48 @@ class LabelMeApiController extends AbstractController
 
         $entities = $this->candyPackageRepository->search(
             $criteria,
-            Context::createDefaultContext()
+            $context
         );
 
 
-        $filter = function (CandyPackageEntity $cp) {
+        $filter = function (CandyPackageEntity $cp) use ($context) {
 
             $candyActive = false;
             $packageAvailable = false;
-            $stock = false;
+            $stock = 0;
 
             if ($cp->getCandy() !== null) {
                 $candyActive = $cp->getCandy()->isActive();
             }
 
+
             if ($cp->getPackage() !== null) {
                 $packageAvailable = $cp->getPackage()->isActive();
             }
 
+
             if (($cp->getProduct() !== null) && ($cp->getProduct()->getAvailableStock() !== null)) {
-                $stock = $cp->getProduct()->getAvailableStock();
+
+                $keyIsTrue = array_key_exists('ec_is_set', $cp->getProduct()->getCustomFields())
+                    && $cp->getProduct()->getCustomFields()['ec_is_set'];
+
+                if ($keyIsTrue) {
+                    $stock = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
+                } else {
+                    $stock = $cp->getProduct()->getAvailableStock();
+                }
             }
 
 
-            if ($candyActive && $packageAvailable && $stock) {
+            if ($candyActive && $packageAvailable && $stock > 0) {
                 return [
                     'id' => $cp->getCandy()->getId(),
                     'name' => $cp->getCandy()->getName(),
-                    'thumbnails' => $cp->getCandy()->getMedia()->getThumbnails()
+                    'thumbnails' => $cp->getCandy()->getMedia()->getThumbnails(),
+                    'availableStock' => $stock
                 ];
             }
+
         };
 
         $mapped = $entities->fmap($filter);
@@ -319,7 +333,6 @@ class LabelMeApiController extends AbstractController
         $lineItemData = $requestDataBag->all();
 
 
-//        $this->logger->log(100, '$lineItemData from request Bag', [$lineItemData['event']]);
 
         if (!$lineItemData['eclm_package']) {
             throw new MissingRequestParameterException('Bad Payload');
@@ -347,10 +360,6 @@ class LabelMeApiController extends AbstractController
 
 
         return $this->redirectToRoute('frontend.cart.offcanvas');
-
-//        return new RedirectResponse('frontent.cart.offcanvas');
-
-//        return new JsonResponse($lineItemData);
     }
 
 

@@ -4,6 +4,7 @@ namespace EventCandy\LabelMe\Core\Checkout\Cart;
 
 use Doctrine\DBAL\Connection;
 use ErrorException;
+use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
@@ -70,6 +71,12 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
     /** @var Connection */
     private $connection;
 
+    /**
+     * Contains available Stock Calculation method.
+     * @var ProductListingSubscriber
+     */
+    private $productListingSubscriber;
+
 
     public const TYPE = 'event-candy-label-me';
     public const DATA_KEY = 'eclm-';
@@ -85,6 +92,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      * @param EntityRepositoryInterface $productRepository
      * @param ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder
      * @param Connection $connection
+     * @param ProductListingSubscriber $productListingSubscriber
      */
     public function __construct(
         LoggerInterface $logger,
@@ -94,7 +102,8 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         EntityRepositoryInterface $mediaRepository,
         EntityRepositoryInterface $productRepository,
         ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder,
-        Connection $connection
+        Connection $connection,
+        ProductListingSubscriber $productListingSubscriber
 
     )
     {
@@ -106,6 +115,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         $this->productRepository = $productRepository;
         $this->priceDefinitionBuilder = $priceDefinitionBuilder;
         $this->connection = $connection;
+        $this->productListingSubscriber = $productListingSubscriber;
     }
 
 
@@ -123,6 +133,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $payload = $item->getPayload();
 
             $productId = $payload['eclm_package']['product']['id'];
+
 
             $item->setReferencedId($productId);
 
@@ -150,8 +161,8 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
                 $candy = $payload['candy']['name'];
                 $package = $payload['eclm_package']['name'];
-                $ml = $payload['eclm_package']['milliliter'];
-                $label = "{$event}, \n{$label}, \n{$candy}, \n{$package}, {$ml}ml";
+                $gramm = $payload['eclm_package']['gramm'];
+                $label = "{$event}, \n{$label}, \n{$candy}, \n{$package}, {$gramm}g";
                 $item->setLabel($label);
             }
 
@@ -173,6 +184,27 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 $deliveryTime = DeliveryTime::createFromEntity($deliveryTime);
             }
 
+            if (($product !== null) && ($product->getAvailableStock() !== null)) {
+
+                $keyIsTrue = array_key_exists('ec_is_set', $product->getCustomFields())
+                    && $product->getCustomFields()['ec_is_set'];
+
+                if ($keyIsTrue) {
+                    $stock = $this->productListingSubscriber->getAvailableStock($product->getId(), $context->getContext());
+                } else {
+                    $stock = $product->getAvailableStock();
+                }
+            }
+
+            $minPurchase = $product->getMinPurchase() !== null ? $product->getMinPurchase() : 1;
+            $purchaseSteps = $product->getPurchaseSteps() !== null ? $product->getPurchaseSteps() : 1;
+
+            $quantityInformation = new QuantityInformation();
+            $quantityInformation
+                ->setMaxPurchase($stock)
+                ->setMinPurchase($minPurchase)
+                ->setPurchaseSteps($purchaseSteps);
+
 
             $item->setStackable(true)
                 ->setRemovable(true)
@@ -184,7 +216,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                         $product->getRestockTime(),
                         $deliveryTime
                     ))
-                ->setQuantityInformation(new QuantityInformation());
+                ->setQuantityInformation($quantityInformation);
 
             $this->addRelatedProductsToPayload($item);
         }

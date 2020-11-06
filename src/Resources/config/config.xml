@@ -81,4 +81,30 @@
             <defaultValue>&lt;h3&gt;Deine Auswahl: &lt;/h3&gt;</defaultValue>
         </component>
     </card>
+
+    <card>
+        <title>Intro Modal</title>
+        <input-field type="bool">
+            <name>introModalActive</name>
+            <label>Active</label>
+            <label lang="de-DE">Aktiviert</label>
+            <defaultValue>true</defaultValue>
+        </input-field>
+        <input-field>
+            <name>introModalCTA</name>
+            <label>Call to action button</label>
+            <placeholder>Was soll auf dem button stehen?</placeholder>
+            <defaultValue>OK</defaultValue>
+        </input-field>
+        <component name="sw-text-editor">
+            <name>introModal</name>
+            <label>Intro Modal</label>
+            <placeholder>Schreibe hier was...</placeholder>
+            <defaultValue>
+                &lt;h3&gt;Unser Konfigurator ist ein komplexes System, und kann nur von Profis bedient werden! &lt;/h3&gt;
+                &lt;p&gt;Wass kommt nach Fizz?&lt;/p&gt;
+                &lt;p&gt;Keine Ahnung? Dann lass lieber dein Enkelkind hier einkaufen!&lt;/p&gt;
+            </defaultValue>
+        </component>
+    </card>
 </config>
