@@ -39,12 +39,7 @@ export default {
 
   computed: {
     showModal() {
-      console.log(localStorage['labelMeModalClicked']);
-      console.log(localStorage['labelMeModalClicked'] === undefined);
-      console.log(this.introModalActive);
-
       const storageNull = localStorage['labelMeModalClicked'] === undefined;
-      console.log(storageNull && this.introModalActive);
       return storageNull && this.introModalActive;
     }
   }
