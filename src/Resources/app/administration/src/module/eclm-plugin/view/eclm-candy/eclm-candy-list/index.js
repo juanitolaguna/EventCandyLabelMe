@@ -42,6 +42,13 @@ Component.register('eclm-candy-list', {
                 allowResize: true,
                 inlineEdit: 'boolean',
                 align: 'center'
+            }, {
+                property: 'position',
+                dataIndex: 'position',
+                label: 'Position',
+                allowResize: true,
+                inlineEdit: 'number',
+                align: 'center'
             }]
         }
     },

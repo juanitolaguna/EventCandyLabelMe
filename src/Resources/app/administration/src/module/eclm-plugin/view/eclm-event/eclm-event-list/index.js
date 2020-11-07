@@ -41,7 +41,15 @@ Component.register('eclm-event-list', {
                 allowResize: true,
                 inlineEdit: 'boolean',
                 align: 'center'
-            }]
+            }, {
+                property: 'position',
+                dataIndex: 'position',
+                label: 'Position',
+                allowResize: true,
+                inlineEdit: 'number',
+                align: 'center'
+            }
+            ]
         },
         repository() {
             return this.repositoryFactory.create('eclm_event');

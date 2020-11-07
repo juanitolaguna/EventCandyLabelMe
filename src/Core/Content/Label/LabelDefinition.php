@@ -10,6 +10,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
@@ -44,6 +45,8 @@ class LabelDefinition extends EntityDefinition
                 ->addFlags(new Required()),
 
             (new BoolField('active', 'active')),
+
+            ( new IntField( 'position', 'position' ) ),
 
             new FkField('media_id', 'mediaId', MediaDefinition::class),
 

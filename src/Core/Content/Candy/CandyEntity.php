@@ -37,6 +37,29 @@ class CandyEntity extends Entity {
      */
     protected $products;
 
+
+    /**
+     * @var int
+     */
+    protected $position;
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     */
+    public function setPosition(int $position): void
+    {
+        $this->position = $position;
+    }
+
+
     /**
      * @return ProductCollection|null
      */

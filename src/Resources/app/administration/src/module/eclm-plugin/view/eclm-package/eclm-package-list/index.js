@@ -40,13 +40,21 @@ Component.register('eclm-package-list', {
                 dataIndex: 'milliliters',
                 label: 'Milliliter',
                 inlineEdit: 'number',
-                allowResize: true
+                allowResize: true,
+                align: 'center'
             },{
                 property: 'active',
                 dataIndex: 'active',
                 label: 'Active',
                 allowResize: true,
                 inlineEdit: 'boolean',
+                align: 'center'
+            }, {
+                property: 'position',
+                dataIndex: 'position',
+                label: 'Position',
+                allowResize: true,
+                inlineEdit: 'number',
                 align: 'center'
             }
             ]

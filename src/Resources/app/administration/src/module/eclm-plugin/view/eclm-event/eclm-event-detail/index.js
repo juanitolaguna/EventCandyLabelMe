@@ -47,6 +47,13 @@ Component.register('eclm-event-detail', {
                 allowResize: true,
                 inlineEdit: 'boolean',
                 align: 'center'
+            }, {
+                property: 'position',
+                dataIndex: 'position',
+                label: 'Position',
+                allowResize: true,
+                inlineEdit: 'number',
+                align: 'center'
             }]
         }
     },

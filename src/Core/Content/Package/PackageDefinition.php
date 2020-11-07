@@ -52,6 +52,8 @@ class PackageDefinition extends EntityDefinition
 
             (new BoolField('active', 'active')),
 
+            ( new IntField( 'position', 'position' ) ),
+
             new FkField('media_id', 'mediaId', MediaDefinition::class),
 
             new ManyToOneAssociationField(
