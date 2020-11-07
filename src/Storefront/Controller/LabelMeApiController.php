@@ -17,6 +17,7 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -116,7 +117,8 @@ class LabelMeApiController extends AbstractController
         $criteria = new Criteria();
         $criteria
             ->addFilter(new EqualsFilter('active', true))
-            ->addAssociation('media');
+            ->addAssociation('media')
+            ->addSorting(new FieldSorting('position', FieldSorting::DESCENDING));
 
         $entities = $this->eventRepository->search(
             $criteria,
@@ -151,7 +153,8 @@ class LabelMeApiController extends AbstractController
         $criteria
             ->addFilter(new EqualsFilter('eventId', $id))
             ->addFilter(new EqualsFilter('active', true))
-            ->addAssociation('media');
+            ->addAssociation('media')
+            ->addSorting(new FieldSorting('position', FieldSorting::DESCENDING));
 
 
         $entities = $this->labelRepository->search(
@@ -188,7 +191,8 @@ class LabelMeApiController extends AbstractController
             ->addAssociation('candy')
             ->addAssociation('candy.media')
             ->addAssociation('package')
-            ->addAssociation('product');
+            ->addAssociation('product')
+            ->addSorting(new FieldSorting('candy.position', FieldSorting::DESCENDING));
 
 
         $entities = $this->candyPackageRepository->search(
@@ -261,10 +265,12 @@ class LabelMeApiController extends AbstractController
     public function getPackages(string $id, Request $request, Context $context): JsonResponse
     {
         $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('candyId', $id));
-        $criteria->addAssociation('package');
-        $criteria->addAssociation('media');
-        $criteria->addAssociation('product');
+        $criteria
+            ->addFilter(new EqualsFilter('candyId', $id))
+            ->addAssociation('package')
+            ->addAssociation('media')
+            ->addAssociation('product')
+            ->addSorting(new FieldSorting('package.position', FieldSorting::DESCENDING));
 
         $entities = $this->candyPackageRepository->search(
             $criteria,
