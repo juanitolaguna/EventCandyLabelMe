@@ -5,6 +5,7 @@ namespace EventCandy\LabelMe\Core\Checkout\Cart;
 use Doctrine\DBAL\Connection;
 use ErrorException;
 use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
+use EventCandy\Sets\Utils;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
@@ -137,6 +138,14 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
             $item->setReferencedId($productId);
 
+            if (!isset($payload['firstRun'])) {
+                $item->setQuantity(intval($payload['selectedQuantity']));
+                $payload['firstRun'] = true;
+                $item->setPayload($payload);
+            }
+
+
+
             /** @var ProductEntity $product */
             $product = $this->productRepository
                 ->search(new Criteria([$productId]), $context->getContext())->first();
@@ -206,8 +215,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 ->setPurchaseSteps($purchaseSteps);
 
 
-            $item->setStackable(true)
-                ->setRemovable(true)
+            $item->setRemovable(true)
                 ->setDeliveryInformation(
                     new DeliveryInformation(
                         $product->getStock(),

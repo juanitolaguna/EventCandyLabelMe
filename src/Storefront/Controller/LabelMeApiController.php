@@ -2,6 +2,7 @@
 
 namespace EventCandy\LabelMe\Storefront\Controller;
 
+use ErrorException;
 use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
@@ -297,12 +298,17 @@ class LabelMeApiController extends AbstractController
             }
 
             if ($packageActive && $productAvailable > 0) {
+
                 return [
                     'cp_id' => $cp->getId(),
                     'id' => $cp->getPackage()->getId(),
                     'name' => $cp->getPackage()->getName(),
                     'gramm' => $cp->getGramm(),
                     'thumbnails' => $cp->getMedia()->getThumbnails(),
+                    'availableStock' => $productAvailable,
+                    'purchaseSteps' => $cp->getProduct()->getPurchaseSteps(),
+                    'minimalQuantity' => $cp->getProduct()->getMinPurchase(),
+                    'maximalQuantity' => $cp->getProduct()->getMaxPurchase(),
                     'product' => [
                         'id' => $cp->getProduct()->getId(),
                         'name' => $cp->getProduct()->getName(),
@@ -358,9 +364,11 @@ class LabelMeApiController extends AbstractController
             );
 
             $lineItem->setPayload($lineItemData);
+            $lineItem->setStackable(true);
 
             $this->cartService->add($cart, $lineItem, $salesChannelContext);
             $this->cartPersister->save($cart, $salesChannelContext);
+
 
 
         } catch (Exception $exception) {
@@ -370,6 +378,20 @@ class LabelMeApiController extends AbstractController
 
         return $this->redirectToRoute('frontend.cart.offcanvas');
     }
+
+    /**
+     * @Route("/store-api/v{version}/eclm/get-available-stock/{id}", name="api.action.eclm.get-available-stock", methods={"GET"})
+     * @param string $id
+     * @param Request $request
+     * @param Context $context
+     * @return JsonResponse
+     */
+    public function getStock(string $id, Request $request, Context $context): JsonResponse
+    {
+        $availableStock = $this->productListingSubscriber->getAvailableStock($id, $context);
+        return new JsonResponse($availableStock);
+    }
+
 
 
 }

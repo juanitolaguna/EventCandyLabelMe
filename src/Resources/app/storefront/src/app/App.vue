@@ -350,7 +350,11 @@ export default {
           'name': e.name,
           'thumbnail': thumbnail[0],
           'gramm': e.gramm ? e.gramm : undefined,
-          'product': e.product ? e.product : undefined
+          'product': e.product ? e.product : undefined,
+          'availableStock': e.availableStock ? e.availableStock : undefined,
+          'purchaseSteps' : e.purchaseSteps ? e.purchaseSteps : 1,
+          'minimalQuantity' : e.minimalQuantity ? e.minimalQuantity : undefined,
+          'maximalQuantity' : e.maximalQuantity ? e.maximalQuantity :undefined
         }
       })
     },
