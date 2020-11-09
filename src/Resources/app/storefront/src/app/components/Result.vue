@@ -97,14 +97,13 @@ export default {
       // delete result.eclm_package.thumbnails;
 
       console.log(JSON.stringify(result));
-      return this.httpClient.post('store-api/v{version}/eclm/add-line-item', JSON.stringify(result),
+      return this.httpClient.post(
+          'store-api/v{version}/eclm/add-line-item',
+          JSON.stringify(result),
           this.onPost);
-
     },
 
     onPost(res) {
-      this.availableStock = this.availableStock - this.selectedQuantity;
-      this.selectedQuantity = 1;
       // console.log(res)
       // const cartWidgetEl = DomAccess.querySelector(this.cartEl, '[data-cart-widget]');
       // const cartWidgetInstance = this.pluginManager.getPluginInstanceFromElement(cartWidgetEl, 'CartWidget');

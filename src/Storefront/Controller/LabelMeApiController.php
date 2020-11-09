@@ -355,12 +355,12 @@ class LabelMeApiController extends AbstractController
 
 
         try {
-            $id = Uuid::randomHex();
+            $id = $lineItemData['eclm_package']['product']['id'];
             $lineItem = new LineItem(
-                $id,
+                'label-me-' . $id,
                 'event-candy-label-me',
                 $id,
-                1
+                intval($lineItemData['selectedQuantity'])
             );
 
             $lineItem->setPayload($lineItemData);
@@ -370,11 +370,9 @@ class LabelMeApiController extends AbstractController
             $this->cartPersister->save($cart, $salesChannelContext);
 
 
-
         } catch (Exception $exception) {
             return new JsonResponse($exception);
         }
-
 
         return $this->redirectToRoute('frontend.cart.offcanvas');
     }
@@ -392,6 +390,47 @@ class LabelMeApiController extends AbstractController
         return new JsonResponse($availableStock);
     }
 
+
+    private function traceErrors(Cart $cart): bool
+    {
+        if ($cart->getErrors()->count() <= 0) {
+            return false;
+        }
+        $this->addCartErrors($cart);
+
+        $cart->getErrors()->clear();
+
+        return true;
+    }
+
+    protected function trans(string $snippet, array $parameters = []): string
+    {
+        return $this->container
+            ->get('translator')
+            ->trans($snippet, $parameters);
+    }
+
+    protected function addCartErrors(Cart $cart): void
+    {
+        $groups = [
+            'info' => $cart->getErrors()->getNotices(),
+            'warning' => $cart->getErrors()->getWarnings(),
+            'danger' => $cart->getErrors()->getErrors(),
+        ];
+
+        foreach ($groups as $type => $errors) {
+            foreach ($errors as $error) {
+                $parameters = [];
+                foreach ($error->getParameters() as $key => $value) {
+                    $parameters['%' . $key . '%'] = $value;
+                }
+
+                $message = $this->trans('checkout.' . $error->getMessageKey(), $parameters);
+
+                $this->addFlash($type, $message);
+            }
+        }
+    }
 
 
 }

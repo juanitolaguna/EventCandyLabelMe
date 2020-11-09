@@ -22,6 +22,7 @@ use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
 use Shopware\Core\Checkout\Cart\Tax\Struct\CalculatedTaxCollection;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
 use Shopware\Core\Content\Media\MediaEntity;
+use Shopware\Core\Content\Product\Cart\ProductStockReachedError;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
@@ -134,17 +135,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $payload = $item->getPayload();
 
             $productId = $payload['eclm_package']['product']['id'];
-
-
             $item->setReferencedId($productId);
-
-            if (!isset($payload['firstRun'])) {
-                $item->setQuantity(intval($payload['selectedQuantity']));
-                $payload['firstRun'] = true;
-                $item->setPayload($payload);
-            }
-
-
 
             /** @var ProductEntity $product */
             $product = $this->productRepository
@@ -156,23 +147,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
             //setLabel
             if (!$item->getLabel()) {
-                $event = $payload['event']['name'];
-                $label = $payload['label']['name'];
-
-//                if (strlen($label) >= 15) {
-//                    $label =  substr($label, 0, 7). "..." . substr($label, -7);
-//                }
-
-                if (strlen($label) >= 23) {
-                    $label = substr($label, 0, 23) . "...";
-                }
-
-
-                $candy = $payload['candy']['name'];
-                $package = $payload['eclm_package']['name'];
-                $gramm = $payload['eclm_package']['gramm'];
-                $label = "{$event}, \n{$label}, \n{$candy}, \n{$package}, {$gramm}g";
-                $item->setLabel($label);
+                $item->setLabel($this->getProductName($payload));
             }
 
             //set image
@@ -263,7 +238,23 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             return;
         }
 
+
         foreach ($eclmItems as $item) {
+            $payload = $item->getPayload()['eclm_package'];
+
+            $availableStock = $this->productListingSubscriber->getAvailableStock($payload['product']['id'], $context->getContext());
+            if ($availableStock < $item->getQuantity()) {
+                $item->setQuantity($availableStock);
+
+//                $toCalculate->addErrors(
+//                    new ProductStockReachedError(
+//                        $payload['product']['id'],
+//                        $this->getProductName($item->getPayload()),
+//                        $availableStock)
+//                );
+            }
+
+
             $priceDefinition = $item->getPriceDefinition();
             if ($priceDefinition === null || !$priceDefinition instanceof QuantityPriceDefinition) {
                 throw new \RuntimeException(sprintf('Product "%s" has invalid price definition', $item->getLabel()));
@@ -273,7 +264,27 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $toCalculate->add($item);
         }
 
+    }
 
+    private function getProductName(array $payload) :string
+    {
+        $event = $payload['event']['name'];
+        $label = $payload['label']['name'];
+
+//                if (strlen($label) >= 15) {
+//                    $label =  substr($label, 0, 7). "..." . substr($label, -7);
+//                }
+
+        if (strlen($label) >= 23) {
+            $label = substr($label, 0, 23) . "...";
+        }
+
+        $candy = $payload['candy']['name'];
+        $package = $payload['eclm_package']['name'];
+        $gramm = $payload['eclm_package']['gramm'];
+        $label = "{$event}, \n{$label}, \n{$candy}, \n{$package}, {$gramm}g";
+
+        return $label;
     }
 
 }
