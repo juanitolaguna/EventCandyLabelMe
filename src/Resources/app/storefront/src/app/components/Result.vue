@@ -105,7 +105,6 @@ export default {
       //remove unused data
       // delete result.eclm_package.thumbnails;
 
-      console.log(JSON.stringify(result));
       return this.httpClient.post(
           'store-api/v{version}/eclm/add-line-item',
           JSON.stringify(result),
