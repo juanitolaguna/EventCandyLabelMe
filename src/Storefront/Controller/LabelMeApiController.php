@@ -226,7 +226,10 @@ class LabelMeApiController extends AbstractController
                 if ($keyIsTrue) {
                     $stock = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
                 } else {
-                    $stock = $cp->getProduct()->getAvailableStock();
+                    //turn off normal products
+                    //$stock = $cp->getProduct()->getAvailableStock();
+                    $stock = 0;
+
                 }
             }
 
@@ -293,7 +296,9 @@ class LabelMeApiController extends AbstractController
                 if ($keyIsTrue) {
                     $productAvailable = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
                 } else {
+                    //turn off normal products
                     $productAvailable = $cp->getProduct()->getAvailableStock();
+                    $productAvailable = 0;
                 }
             }
 
