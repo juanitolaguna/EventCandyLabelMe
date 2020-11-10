@@ -180,8 +180,8 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 }
             }
 
-            $minPurchase = $product->getMinPurchase() !== null ? $product->getMinPurchase() : 1;
-            $purchaseSteps = $product->getPurchaseSteps() !== null ? $product->getPurchaseSteps() : 1;
+            $minPurchase = $product->getMinPurchase() ?? 1;
+            $purchaseSteps = $product->getPurchaseSteps() ?? 1;
 
             $quantityInformation = new QuantityInformation();
             $quantityInformation

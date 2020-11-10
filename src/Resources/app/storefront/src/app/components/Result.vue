@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       cartEl: null,
-      selectedQuantity: 1,
+      selectedQuantity: this.result.eclm_package.minimalQuantity,
       availableStock: 1
     }
   },

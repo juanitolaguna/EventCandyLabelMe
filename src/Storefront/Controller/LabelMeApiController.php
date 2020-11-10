@@ -345,7 +345,7 @@ class LabelMeApiController extends AbstractController
      */
     public function addLineItems(Cart $cart, RequestDataBag $requestDataBag, Request $request, SalesChannelContext $salesChannelContext): Response
     {
-//        /** @var RequestDataBag $lineItemData */
+
         $lineItemData = $requestDataBag->all();
 
 
@@ -354,14 +354,18 @@ class LabelMeApiController extends AbstractController
         }
 
 
+
         try {
+            //throw new ErrorException('bug');
             $id = $lineItemData['eclm_package']['product']['id'];
+
             $lineItem = new LineItem(
-                'label-me-' . $id,
+                $id,
                 'event-candy-label-me',
                 $id,
                 intval($lineItemData['selectedQuantity'])
             );
+
 
             $lineItem->setPayload($lineItemData);
             $lineItem->setStackable(true);
@@ -371,7 +375,7 @@ class LabelMeApiController extends AbstractController
 
 
         } catch (Exception $exception) {
-            return new JsonResponse($exception);
+            return new JsonResponse($exception->getMessage() );
         }
 
         return $this->redirectToRoute('frontend.cart.offcanvas');
@@ -388,48 +392,6 @@ class LabelMeApiController extends AbstractController
     {
         $availableStock = $this->productListingSubscriber->getAvailableStock($id, $context);
         return new JsonResponse($availableStock);
-    }
-
-
-    private function traceErrors(Cart $cart): bool
-    {
-        if ($cart->getErrors()->count() <= 0) {
-            return false;
-        }
-        $this->addCartErrors($cart);
-
-        $cart->getErrors()->clear();
-
-        return true;
-    }
-
-    protected function trans(string $snippet, array $parameters = []): string
-    {
-        return $this->container
-            ->get('translator')
-            ->trans($snippet, $parameters);
-    }
-
-    protected function addCartErrors(Cart $cart): void
-    {
-        $groups = [
-            'info' => $cart->getErrors()->getNotices(),
-            'warning' => $cart->getErrors()->getWarnings(),
-            'danger' => $cart->getErrors()->getErrors(),
-        ];
-
-        foreach ($groups as $type => $errors) {
-            foreach ($errors as $error) {
-                $parameters = [];
-                foreach ($error->getParameters() as $key => $value) {
-                    $parameters['%' . $key . '%'] = $value;
-                }
-
-                $message = $this->trans('checkout.' . $error->getMessageKey(), $parameters);
-
-                $this->addFlash($type, $message);
-            }
-        }
     }
 
 
