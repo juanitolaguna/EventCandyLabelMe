@@ -1,5 +1,10 @@
 .eclm-container {
     margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.eclm-container .card-deck .card {
+    margin-bottom:2em;
 }
 
 //modal
@@ -57,6 +62,12 @@
 .card-img-top {
     border-radius: 5px;
 }
+
+.card-result .first {
+    width: 90%;
+    margin:auto;
+}
+
 
 .eclm-badges-container {
     display: flex;

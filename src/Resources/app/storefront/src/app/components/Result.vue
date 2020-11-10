@@ -20,9 +20,9 @@
         <br>
         <QuantitySelect
             :availableStock="availableStock"
-            :minimalQuantity="result.eclm_package.minimalQuantity"
-            :maximalQuantity="result.eclm_package.maximalQuantity"
-            :purchaseSteps="result.eclm_package.purchaseSteps"
+            :minimalQuantity="minimalQuantity"
+            :maximalQuantity="this.result.eclm_package.maximalQuantity"
+            :purchaseSteps="purchaseSteps"
         />
         <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block;">In den
           Warenkorb
@@ -35,11 +35,11 @@
       </div>
       <div class="col-md-6">
         <div class="card card-result" style="max-width:200px;">
-          <img :src="labelImage" class="card-img-top" :alt="result.label.name">
+          <img :src="labelImage" class="card-img-top first" :alt="result.label.name">
         </div>
 
         <div class="card card-result" style="max-width:200px;">
-          <img :src="packageImage" class="card-img-top" :alt="result.eclm_package.name">
+          <img :src="packageImage" class="card-img-top second" :alt="result.eclm_package.name">
 
         </div>
       </div>
@@ -68,6 +68,15 @@ export default {
   props: ['result', 'header'],
 
   computed: {
+
+    minimalQuantity() {
+      return this.result.eclm_package.minimalQuantity ? this.result.eclm_package.minimalQuantity : 1;
+    },
+
+    purchaseSteps() {
+      return this.result.eclm_package.purchaseSteps ? this.result.eclm_package.purchaseSteps : 1;
+    },
+
     packageImage() {
       const thumbnail = this.result.eclm_package.thumbnails.filter((e) => e.width === 400)[0];
       return thumbnail.url;

@@ -25,12 +25,12 @@ export default {
     numbers() {
       let maxQuantity = 1
       if (this.maximalQuantity !== null) {
-        maxQuantity = min(this.availableStock, this.maximalQuantity);
+        maxQuantity = Math.min(this.availableStock, this.maximalQuantity);
       } else {
         maxQuantity = this.availableStock;
       }
 
-      let minQuantity = this.minimalQuantity !== null ? this.minimalQuantity : 1;
+      let minQuantity = this.minimalQuantity;
 
       let numbers = [];
 

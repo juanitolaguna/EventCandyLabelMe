@@ -243,16 +243,23 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $payload = $item->getPayload()['eclm_package'];
 
             $availableStock = $this->productListingSubscriber->getAvailableStock($payload['product']['id'], $context->getContext());
+
+            if ($payload['maximalQuantity']) {
+                $availableStock = $availableStock > $payload['maximalQuantity'] ? $payload['maximalQuantity'] : $availableStock;
+            }
+
+
             if ($availableStock < $item->getQuantity()) {
                 $item->setQuantity($availableStock);
-
-//                $toCalculate->addErrors(
-//                    new ProductStockReachedError(
-//                        $payload['product']['id'],
-//                        $this->getProductName($item->getPayload()),
-//                        $availableStock)
-//                );
             }
+
+
+            $fixedQuantity = $this->fixQuantity($payload['minimalQuantity'] ?? 1, $item->getQuantity(), $payload['purchaseSteps'] ?? 1);
+            if ($item->getQuantity() !== $fixedQuantity) {
+                $item->setQuantity($fixedQuantity);
+            }
+
+
 
 
             $priceDefinition = $item->getPriceDefinition();
@@ -285,6 +292,11 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         $label = "{$event}, \n{$label}, \n{$candy}, \n{$package}, {$gramm}g";
 
         return $label;
+    }
+
+    private function fixQuantity(int $min, int $current, int $steps): int
+    {
+        return (int) (floor(($current - $min) / $steps) * $steps + $min);
     }
 
 }
