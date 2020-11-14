@@ -137,10 +137,13 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $productId = $payload['eclm_package']['product']['id'];
             $item->setReferencedId($productId);
 
+
+
             /** @var ProductEntity $product */
             $product = $this->productRepository
                 ->search(new Criteria([$productId]), $context->getContext())->first();
 
+            $item->setPayload(['productNumber' => $product->getProductNumber()]);
 
             $prices = $this->priceDefinitionBuilder->build($product, $context, $item->getQuantity());
             $item->setPriceDefinition($prices->getQuantityPrice());
@@ -201,25 +204,41 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                     ))
                 ->setQuantityInformation($quantityInformation);
 
-            $this->addRelatedProductsToPayload($item);
+            $this->addRelatedProductsToPayload($item, $context);
         }
 
 
     }
 
-    private function addRelatedProductsToPayload(LineItem $lineItem)
+    private function addRelatedProductsToPayload(LineItem $lineItem, SalesChannelContext $context)
     {
-        $sqlSetProducts = 'select product_id, product_version_id, quantity from ec_product_product as pp
-                    where pp.set_product_id = :id;';
+        $sqlSetProducts = 'select
+                            	pp.product_version_id,
+                            	pp.product_id,
+                            	pp.quantity,
+                            	pt.name,
+                            	p.product_number
+                            from
+                            	ec_product_product as pp
+                            	left join product_translation pt on pp.product_id = pt.product_id
+                            	left join product p on pp.product_id = p.id
+                            where
+                            	pp.set_product_id = :id
+                            	and pt.language_id = :languageId';
 
         $rows = $this->connection->fetchAll(
             $sqlSetProducts,
-            ['id' => Uuid::fromHexToBytes($lineItem->getReferencedId())]
+            [
+                'id' => Uuid::fromHexToBytes($lineItem->getReferencedId()),
+                'languageId' => Uuid::fromHexToBytes($context->getContext()->getLanguageId())
+            ]
         );
 
         $setProducts = [];
         foreach ($rows as $row) {
             $setProducts[] = [
+                'product_number' => $row['product_number'],
+                'name' => $row['name'],
                 'product_id' => Uuid::fromBytesToHex($row['product_id']),
                 'product_version_id' => Uuid::fromBytesToHex($row['product_version_id']),
                 'quantity' => $row['quantity']

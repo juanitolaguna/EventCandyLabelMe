@@ -7,6 +7,7 @@ use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
 use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
+use EventCandy\Sets\Utils;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
@@ -362,7 +363,19 @@ class LabelMeApiController extends AbstractController
 
         try {
             //throw new ErrorException('bug');
-            $id = $lineItemData['eclm_package']['product']['id'];
+            $productId = $lineItemData['eclm_package']['product']['id'];
+            $labelId = $lineItemData['label']['id'];
+
+//            Utils::log(print_r($lineItemData, true));
+//            $mid1 = preg_replace('/...(.*).../', '$1', $productId);
+//            $mid2 = preg_replace('/...(.*).../', '$1', $labelId);
+//
+//            $id = $mid1 . $mid2;
+            $id = $productId;
+
+
+
+
 
             $lineItem = new LineItem(
                 $id,
