@@ -16,8 +16,8 @@
     "extra": {
         "shopware-plugin-class": "EventCandy\\LabelMe\\EventCandyLabelMe",
         "label": {
-            "de-DE": "LabelMe plugin",
-            "en-GB": "LabelMe plugin"
+            "de-DE": "EventCandy LabelMe",
+            "en-GB": "EventCandy LabelMe"
         }
     }
 }

@@ -32,9 +32,9 @@ class EventCandyLabelMe extends Plugin
 
     public function uninstall(UninstallContext $uninstallContext): void
     {
-//        if ($uninstallContext->keepUserData()) {
-//            return;
-//        }
+        if ($uninstallContext->keepUserData()) {
+            return;
+        }
 
         $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_label');
         $this->container->get(Connection::class)->exec('DROP TABLE IF EXISTS eclm_event');

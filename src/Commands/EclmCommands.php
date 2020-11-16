@@ -140,7 +140,7 @@ class EclmCommands extends Command
         imagepng($image, $savePath);
     }
 
-    private function tinker(InputInterface $input, OutputInterface $output)
+    private function tinkerX(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Tinker...');
         $payload = [];
@@ -172,6 +172,17 @@ class EclmCommands extends Command
         }
 
         $output->writeln(print_r($payload));
+    }
+
+    private function tinker(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln('Tinker...');
+
+        $sql = 'select * from `ec_packlist_data` order by `created_at` desc';
+
+        $result = $this->connection->fetchAll($sql);
+
+        $output->writeln(print_r($result, true));
     }
 
     private function generateUuids(InputInterface $input, OutputInterface $output)
