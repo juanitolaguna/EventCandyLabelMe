@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use ErrorException;
 use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
 use EventCandy\Sets\Utils;
+use OpenApi\Util;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
@@ -132,11 +133,11 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
         /** @var LineItem $item */
         foreach ($eclmItems as $item) {
+
             $payload = $item->getPayload();
 
             $productId = $payload['eclm_package']['product']['id'];
             $item->setReferencedId($productId);
-
 
 
             /** @var ProductEntity $product */
@@ -257,6 +258,17 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             return;
         }
 
+        $occurrences = [];
+        //count same candy package products
+        foreach ($eclmItems as $item) {
+            $id = $item->getId();
+            $productId = $item->getPayload()['eclm_package']['product']['id'];
+            if (array_key_exists($productId, $occurrences)) {
+                $occurrences[$productId][] = [$id, $item->getQuantity(), $item->isModified()];
+            } else {
+                $occurrences[$productId] = [[$id, $item->getQuantity(), $item->isModified()]];
+            }
+        }
 
         foreach ($eclmItems as $item) {
             $payload = $item->getPayload()['eclm_package'];
@@ -278,8 +290,16 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 $item->setQuantity($fixedQuantity);
             }
 
+            $sameProduct = count($occurrences[$payload['product']['id']]);
 
-
+            $possibleQuantity = floor($availableStock / $sameProduct);
+            if ($item->getQuantity() > $possibleQuantity) {
+                $item->getQuantityInformation()->setMaxPurchase((int) $possibleQuantity);
+                $item->setQuantity((int) $possibleQuantity);
+                $toCalculate->addErrors(
+                    new ProductStockReachedError($item->getId(), (string) $item->getLabel(), (int) $possibleQuantity)
+                );
+            }
 
             $priceDefinition = $item->getPriceDefinition();
             if ($priceDefinition === null || !$priceDefinition instanceof QuantityPriceDefinition) {
@@ -292,7 +312,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
     }
 
-    private function getProductName(array $payload) :string
+    private function getProductName(array $payload): string
     {
         $event = $payload['event']['name'];
         $label = $payload['label']['name'];
@@ -315,7 +335,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
     private function fixQuantity(int $min, int $current, int $steps): int
     {
-        return (int) (floor(($current - $min) / $steps) * $steps + $min);
+        return (int)(floor(($current - $min) / $steps) * $steps + $min);
     }
 
 }

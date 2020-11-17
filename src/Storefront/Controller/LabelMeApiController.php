@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartPersister;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
+use Shopware\Core\Checkout\Cart\SalesChannel\CartResponse;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Content\Product\Aggregate\ProductPrice\ProductPriceEntity;
 use Shopware\Core\Framework\Context;
@@ -354,28 +355,18 @@ class LabelMeApiController extends AbstractController
 
         $lineItemData = $requestDataBag->all();
 
-
         if (!$lineItemData['eclm_package']) {
             throw new MissingRequestParameterException('Bad Payload');
         }
 
-
-
         try {
-            //throw new ErrorException('bug');
             $productId = $lineItemData['eclm_package']['product']['id'];
             $labelId = $lineItemData['label']['id'];
 
-//            Utils::log(print_r($lineItemData, true));
-//            $mid1 = preg_replace('/...(.*).../', '$1', $productId);
-//            $mid2 = preg_replace('/...(.*).../', '$1', $labelId);
-//
-//            $id = $mid1 . $mid2;
-            $id = $productId;
+            $mid1 = preg_replace('/...(.*).../', '$1', $productId);
+            $mid2 = preg_replace('/...(.*).../', '$1', $labelId);
 
-
-
-
+            $id = $mid1 . $mid2;
 
             $lineItem = new LineItem(
                 $id,
@@ -384,18 +375,15 @@ class LabelMeApiController extends AbstractController
                 intval($lineItemData['selectedQuantity'])
             );
 
-
             $lineItem->setPayload($lineItemData);
             $lineItem->setStackable(true);
 
             $this->cartService->add($cart, $lineItem, $salesChannelContext);
             $this->cartPersister->save($cart, $salesChannelContext);
 
-
         } catch (Exception $exception) {
-            return new JsonResponse($exception->getMessage() );
+            return new JsonResponse($exception->getMessage());
         }
-
         return $this->redirectToRoute('frontend.cart.offcanvas');
     }
 
@@ -411,6 +399,5 @@ class LabelMeApiController extends AbstractController
         $availableStock = $this->productListingSubscriber->getAvailableStock($id, $context);
         return new JsonResponse($availableStock);
     }
-
 
 }
