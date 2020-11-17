@@ -292,9 +292,11 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
             $sameProduct = count($occurrences[$payload['product']['id']]);
 
+
             $possibleQuantity = floor($availableStock / $sameProduct);
+            $item->getQuantityInformation()->setMaxPurchase((int) $possibleQuantity);
+
             if ($item->getQuantity() > $possibleQuantity) {
-                $item->getQuantityInformation()->setMaxPurchase((int) $possibleQuantity);
                 $item->setQuantity((int) $possibleQuantity);
                 $toCalculate->addErrors(
                     new ProductStockReachedError($item->getId(), (string) $item->getLabel(), (int) $possibleQuantity)
