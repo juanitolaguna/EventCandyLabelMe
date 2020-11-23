@@ -178,9 +178,11 @@ class EclmCommands extends Command
     {
         $output->writeln('Tinker...');
 
-        $sql = 'select * from `ec_packlist_data` order by `created_at` desc';
+//        $sql = 'select * from `ec_packlist_data` order by `created_at` desc';
+//        $result = $this->connection->fetchAll($sql);
 
-        $result = $this->connection->fetchAll($sql);
+        $sql = "select count(*) from eclm_event";
+        $result = $this->connection->fetchArray($sql);
 
         $output->writeln(print_r($result, true));
     }

@@ -19,7 +19,16 @@ class EventCandyLabelMe extends Plugin
     public function activate(ActivateContext $context): void
     {
 
-        //$this->demoDataService->generate($context->getContext());
+        $connection = $this->container->get(Connection::class);
+
+        $sql = "select count(*) from eclm_event";
+        $result = $connection->fetchArray($sql);
+        // data should exist, quit migration
+        if ($result[0] != 0) {
+            return;
+        }
+
+        $this->demoDataService->generate($context->getContext());
     }
 
 
