@@ -1,4 +1,5 @@
 import template from './eclm-candy-package-list.html.twig';
+import './eclm-candy-package-list.scss'
 
 const {Component} = Shopware;
 const {Criteria} = Shopware.Data;

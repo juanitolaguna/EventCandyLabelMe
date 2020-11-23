@@ -1,10 +1,10 @@
-<sw-card :large="false">
+<sw-card :large="false" class="joined-candy-package-list">
 
 {#<template #title>#}
 {#    {{ candyPackageRelations }}#}
 {#</template>#}
 
-    <template #grid>
+    <template #grid >
         <sw-entity-listing
             v-if="joinedCandyPackages"
             :items="joinedCandyPackages"
