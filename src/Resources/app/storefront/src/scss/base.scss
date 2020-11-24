@@ -5,6 +5,7 @@
 
 .eclm-container .card-deck .card {
     margin-bottom:2em;
+    box-sizing: content-box;
 }
 
 //modal
@@ -24,12 +25,29 @@
     float: none; /* Added */
     border-radius: 6px;
     border: none;
+    max-width: 300px;
 
     -webkit-box-shadow: 1px 1px 8px 0px rgba(161, 161, 161, 1);
     -moz-box-shadow: 1px 1px 8px 0px rgba(161, 161, 161, 1);
     box-shadow: 1px 1px 8px 0px rgba(161, 161, 161, 1);
     transition: box-shadow 0.2s, -moz-box-shadow 0.2s, -webkit-box-shadow 0.2s;
 }
+
+.eclm-card .card-image-top-wrapper {
+    width: inherit;
+    min-height: 300px;
+    max-height: 300px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.eclm-card .card-img-top {
+    border-radius: 5px;
+    width: 100%;
+    display: block;
+}
+
 
 .card-result {
     -webkit-box-shadow: none;
@@ -59,13 +77,23 @@
     text-align: center;
 }
 
-.card-img-top {
-    border-radius: 5px;
+.card-result .first {
+    width: 60%;
+    margin:auto;
+    z-index: 99;
+    transition: transform 3s;
+    transform-style: preserve-3d;
 }
 
-.card-result .first {
-    width: 90%;
-    margin:auto;
+
+.card-result .first:hover {
+    transform: translateY(150px) rotateX(89deg);
+}
+
+
+.card-result .second {
+    margin-top: -70px;
+
 }
 
 

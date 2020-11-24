@@ -5,40 +5,52 @@
         <div class="result-title" v-html="header"></div>
         <br>
         <ul class="list-group">
-          <li class="list-group-item"><strong>Event: </strong>{{ result.event.name }}</li>
-          <li class="list-group-item"><strong>Label: </strong>{{ result.label.name }}</li>
-          <li class="list-group-item"><strong>Package: </strong>
+          <li class="list-group-item"><strong>{{ config.eventName }}: </strong>{{ result.event.name }}</li>
+          <li class="list-group-item"><strong>{{ config.labelName }}: </strong>{{ result.label.name }}</li>
+          <li class="list-group-item"><strong>{{ config.candyName }}: </strong>{{ result.candy.name }}</li>
+          <li class="list-group-item"><strong>{{ config.packageName }}: </strong>
             {{ result.eclm_package.name }}
-            <span class="badge badge-pill badge-info eclm-badge">
+            <span class="badge badge-pill badge-info eclm-badge" v-if="result.eclm_package.gramm">
                                 {{ result.eclm_package.gramm }}<i>g</i>
             </span>
           </li>
-
-          <li class="list-group-item"><strong>Candy: </strong>{{ result.candy.name }}</li>
         </ul>
 
         <br>
-        <QuantitySelect
-            :availableStock="availableStock"
-            :minimalQuantity="minimalQuantity"
-            :maximalQuantity="this.result.eclm_package.maximalQuantity"
-            :purchaseSteps="purchaseSteps"
-        />
-        <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block;">In den
-          Warenkorb
-        </button>
-        <span style="font-size: large">
-          <strong>
-          &nbsp; {{ result.eclm_package.product.currency }}{{ result.eclm_package.product.price.gross }}
-          </strong> / Stück
-        </span>
+        <div style="display: flex">
+          <div style="display: inline-block; margin-right: 1em;">
+            <QuantitySelect
+                :availableStock="availableStock"
+                :minimalQuantity="minimalQuantity"
+                :maximalQuantity="this.result.eclm_package.maximalQuantity"
+                :purchaseSteps="purchaseSteps"
+            />
+            <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block;">In
+              den
+              Warenkorb
+            </button>
+          </div>
+
+          <div style="font-size: large; display: inline-block;">
+            <strong>
+              {{ result.eclm_package.product.currency }}{{ result.eclm_package.product.price.gross }}
+            </strong> / Stück
+            <p class="product-price-unit" v-if="referenceUnitPriceAvailable">
+              <span class="price-unit-reference">
+                {{ product.currency }}{{ referenceUnitPrice }} / {{ product.referenceUnit }} {{ product.unitName }}
+              </span>
+            </p>
+          </div>
+
+        </div>
+
       </div>
       <div class="col-md-6">
-        <div class="card card-result" style="max-width:200px;">
+        <div class="card card-result" style="max-width:350px;">
           <img :src="labelImage" class="card-img-top first" :alt="result.label.name">
         </div>
 
-        <div class="card card-result" style="max-width:200px;">
+        <div class="card card-result" style="max-width:350px;">
           <img :src="packageImage" class="card-img-top second" :alt="result.eclm_package.name">
 
         </div>
@@ -65,9 +77,23 @@ export default {
     }
   },
 
-  props: ['result', 'header'],
+  props: ['result', 'header', 'config'],
 
   computed: {
+
+    product() {
+      return this.result.eclm_package.product;
+    },
+
+    referenceUnitPriceAvailable() {
+      const prod = this.result.eclm_package.product;
+      return prod.unitName && prod.purchaseUnit && prod.referenceUnit;
+    },
+
+    referenceUnitPrice() {
+      const product = this.result.eclm_package.product;
+      return ((product.price.gross / product.purchaseUnit) * product.referenceUnit).toFixed(2);
+    },
 
     minimalQuantity() {
       return this.result.eclm_package.minimalQuantity ? this.result.eclm_package.minimalQuantity : 1;

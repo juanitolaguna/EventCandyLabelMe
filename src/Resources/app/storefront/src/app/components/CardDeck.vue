@@ -6,11 +6,14 @@
       <div v-for="entity in entities">
         <div v-on:click.prevent="onSelect(entity.id)" :class="['card eclm-card', isSelected(entity.id)]"
              id="entity.id"
-             style="max-width:250px;">
-          <img :src="entity.thumbnail.url" class="card-img-top" :alt="entity.name">
+        >
+          <div class="card-image-top-wrapper" style="width: inherit">
+            <img :src="entity.thumbnail.url" class="card-img-top" :alt="entity.name">
+          </div>
+
           <div class="card-body">
             <h5 class="card-title card-title-label-me" style="padding-bottom: 0px;">
-                                        {{ entity.name }}
+              {{ entity.name }}
             </h5>
             <div class="eclm-badges-container">
               <template v-if="entity.gramm">
@@ -19,9 +22,9 @@
                             </span>
               </template>
               <template v-if="entity.product">
-                                <span class="badge badge-pill badge-primary">
-                                    {{ entity.product.currency }}{{ entity.product.price.gross }}
-                                </span>
+                <span class="badge badge-pill badge-primary">
+                  {{ entity.product.currency }}{{ entity.product.price.gross }}
+                </span>
               </template>
             </div>
           </div>

@@ -40,7 +40,8 @@ export default {
   computed: {
     showModal() {
       const storageNull = localStorage['labelMeModalClicked'] === undefined;
-      return storageNull && this.introModalActive;
+      // return storageNull && this.introModalActive;
+      return this.introModalActive;
     }
   }
 

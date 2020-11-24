@@ -73,7 +73,10 @@
             v-if="currentComponent === 'result'
                     && !loading"
             :result="eclmResult"
-            :header="config.comboHeader"/>
+            :header="config.comboHeader"
+            :config="config"
+
+        />
         />
       </transition>
     </div>

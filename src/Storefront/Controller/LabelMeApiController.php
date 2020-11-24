@@ -13,9 +13,13 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartPersister;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
+use Shopware\Core\Checkout\Cart\Price\PriceRounding;
+use Shopware\Core\Checkout\Cart\Price\ReferencePriceCalculator;
+use Shopware\Core\Checkout\Cart\Price\Struct\ReferencePrice;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartResponse;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Content\Product\Aggregate\ProductPrice\ProductPriceEntity;
+use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilder;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -275,7 +279,7 @@ class LabelMeApiController extends AbstractController
             ->addFilter(new EqualsFilter('candyId', $id))
             ->addAssociation('package')
             ->addAssociation('media')
-            ->addAssociation('product')
+            ->addAssociation('product.unit')
             ->addSorting(new FieldSorting('package.position', FieldSorting::DESCENDING));
 
         $entities = $this->candyPackageRepository->search(
@@ -306,6 +310,10 @@ class LabelMeApiController extends AbstractController
 
             if ($packageActive && $productAvailable > 0) {
 
+                $product = $cp->getProduct();
+                $unit = $product->getUnit() ?? '';
+                $unitName = $unit ? $unit->getName() : '';
+
                 return [
                     'cp_id' => $cp->getId(),
                     'id' => $cp->getPackage()->getId(),
@@ -313,14 +321,17 @@ class LabelMeApiController extends AbstractController
                     'gramm' => $cp->getGramm(),
                     'thumbnails' => $cp->getMedia()->getThumbnails(),
                     'availableStock' => $productAvailable,
-                    'purchaseSteps' => $cp->getProduct()->getPurchaseSteps(),
-                    'minimalQuantity' => $cp->getProduct()->getMinPurchase(),
-                    'maximalQuantity' => $cp->getProduct()->getMaxPurchase(),
+                    'purchaseSteps' => $product->getPurchaseSteps(),
+                    'minimalQuantity' => $product->getMinPurchase(),
+                    'maximalQuantity' => $product->getMaxPurchase(),
                     'product' => [
-                        'id' => $cp->getProduct()->getId(),
-                        'name' => $cp->getProduct()->getName(),
-                        'price' => $cp->getProduct()->getCurrencyPrice($context->getCurrencyId()),
-                        'currency' => $currencySymbol
+                        'id' => $product->getId(),
+                        'name' => $product->getName(),
+                        'price' => $product->getCurrencyPrice($context->getCurrencyId()),
+                        'currency' => $currencySymbol,
+                        'purchaseUnit' => $product->getPurchaseUnit() ?? '',
+                        'referenceUnit' => $product->getReferenceUnit() ?? '',
+                        'unitName' => $unitName
                     ]
                 ];
             }
