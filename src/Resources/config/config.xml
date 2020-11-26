@@ -107,4 +107,17 @@
             </defaultValue>
         </component>
     </card>
+
+    <card>
+        <title>Images</title>
+        <input-field>
+            <name>arrowText</name>
+            <label>Text über dem Pfeil</label>
+            <defaultValue>Den kleben wir für dich drauf!</defaultValue>
+        </input-field>
+        <component name="sw-media-field">
+            <name>arrowImage</name>
+            <label>Wird im Konfigurator am ende der Auswahl eingeblendet.</label>
+        </component>
+    </card>
 </config>

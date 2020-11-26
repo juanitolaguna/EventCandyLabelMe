@@ -5,11 +5,11 @@
 
     <template #smart-bar-actions>
         <sw-button-process
-            variant="primary"
-            @click="onClickSave"
-            @process-finish="saveFinish"
-            :isLoading="isLoading"
-            :processSuccess="processSuccess">
+                variant="primary"
+                @click="onClickSave"
+                @process-finish="saveFinish"
+                :isLoading="isLoading"
+                :processSuccess="processSuccess">
             Save
         </sw-button-process>
         <sw-button :routerLink="{ name: 'eclm.plugin.index.package' }">
@@ -22,23 +22,37 @@
             <sw-card v-if="package" :large="false">
                 <sw-text-field :label="$t('eclm.packageDetail.name')" v-model="package.name"></sw-text-field>
                 <sw-checkbox-field :label="$t('eclm.candyDetail.active')" v-model="package.active"></sw-checkbox-field>
-                <sw-number-field  numberType="float" :label="$t('eclm.packageDetail.milliliters')" v-model="package.milliliters" validation="required"></sw-number-field>
+
+                <sw-select-field v-model="package.packageType"
+                                 :label="$tc('eclm.packageDetail.packageType')">
+
+                    <option value="">Default</option>
+                    <option value="bucket">Bucket</option>
+                    <option value="bag">Bag</option>
+                    <option value="globy">Globy</option>
+                </sw-select-field>
+
+                <sw-select-number-field v-model="package.cssSize" :label="$t('eclm.packageDetail.cssSize')">
+                    <option v-for="n in 100" :value="n">{{ n }}%</option>
+                </sw-select-number-field>
+
                 <eclm-media-field
-                    v-model="package.mediaId"
-                    :showUploadField="false"
-                    :showControls="false"
-                    @media-id-change="onMediaSelect"
-                    :mediaFolderName="'Event Candy'">
+                        label="Package Image (not used)"
+                        v-model="package.mediaId"
+                        :showUploadField="false"
+                        :showControls="false"
+                        @media-id-change="onMediaSelect"
+                        :mediaFolderName="'Event Candy'">
                 </eclm-media-field>
             </sw-card>
 
-{#            <sw-card v-if="package" :large="false">#}
-{#                <sw-entity-many-to-many-select#}
-{#                    :localMode="package.isNew()"#}
-{#                    :label="'Candies'"#}
-{#                    v-model="package.candies">#}
-{#                </sw-entity-many-to-many-select>#}
-{#            </sw-card>#}
+            {# <sw-card v-if="package" :large="false"> #}
+            {# <sw-entity-many-to-many-select #}
+            {# :localMode="package.isNew()" #}
+            {# :label="'Candies'" #}
+            {# v-model="package.candies"> #}
+            {# </sw-entity-many-to-many-select> #}
+            {# </sw-card> #}
 
         </sw-card-view>
     </template>

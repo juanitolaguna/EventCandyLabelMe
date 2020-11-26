@@ -47,12 +47,16 @@ class PackageDefinition extends EntityDefinition
             (new StringField('name', 'name'))
                 ->addFlags(new Required()),
 
-            ( new IntField( 'milliliters', 'milliliters' ) )
-                ->addFlags( new Required() ),
+            (new IntField('milliliters', 'milliliters'))
+                ->addFlags(new Required()),
 
             (new BoolField('active', 'active')),
 
-            ( new IntField( 'position', 'position' ) ),
+            (new IntField('position', 'position')),
+
+            (new IntField('css_size', 'cssSize')),
+
+            (new StringField('package_type', 'packageType')),
 
             new FkField('media_id', 'mediaId', MediaDefinition::class),
 

@@ -8,7 +8,7 @@
              id="entity.id"
         >
           <div class="card-image-top-wrapper" style="width: inherit">
-            <img :src="entity.thumbnail.url" class="card-img-top" :alt="entity.name">
+            <img :src="entity.thumbnail.url" class="card-img-top" :alt="entity.name" :style="{width: entity.cssSize + '%'}">
           </div>
 
           <div class="card-body">

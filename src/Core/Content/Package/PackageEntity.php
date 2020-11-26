@@ -35,6 +35,48 @@ class PackageEntity extends Entity
     protected $position;
 
     /**
+     * @var int|null
+     */
+    protected $cssSize;
+
+    /**
+     * @var string|null
+     */
+    protected $packageType;
+
+    /**
+     * @return string|null
+     */
+    public function getPackageType(): ?string
+    {
+        return $this->packageType;
+    }
+
+    /**
+     * @param string|null $packageType
+     */
+    public function setPackageType(?string $packageType): void
+    {
+        $this->packageType = $packageType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCssSize(): ?int
+    {
+        return $this->cssSize;
+    }
+
+    /**
+     * @param int|null $cssSize
+     */
+    public function setCssSize(?int $cssSize): void
+    {
+        $this->cssSize = $cssSize;
+    }
+
+    /**
      * @return int
      */
     public function getPosition(): int

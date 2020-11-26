@@ -24,6 +24,7 @@
                 :minimalQuantity="minimalQuantity"
                 :maximalQuantity="this.result.eclm_package.maximalQuantity"
                 :purchaseSteps="purchaseSteps"
+                style="margin-bottom: 1em;"
             />
             <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block;">In
               den
@@ -45,12 +46,22 @@
         </div>
 
       </div>
-      <div class="col-md-6">
-        <div class="card card-result" style="max-width:350px;">
-          <img :src="labelImage" class="card-img-top first" :alt="result.label.name">
+
+      <div class="col-md-6" :class="[type + '-type']" @click="toggleAnimation">
+
+        <div class="arrow-image" :class="[type + '-arrow-image']" v-if="config.arrowUrl && config.arrowText">
+          <h5>{{ config.arrowText }}</h5>
+          <img :src="config.arrowUrl" alt="arrow">
         </div>
 
-        <div class="card card-result" style="max-width:350px;">
+        <div class="card card-result">
+          <img ref="imageFirst" :src="labelImage"
+               class="card-img-top first"
+               :alt="result.label.name"
+          >
+        </div>
+
+        <div class="card card-result">
           <img :src="packageImage" class="card-img-top second" :alt="result.eclm_package.name">
 
         </div>
@@ -117,6 +128,10 @@ export default {
     },
     pluginManager() {
       return window.PluginManager
+    },
+
+    type() {
+      return this.result.eclm_package.packageType;
     }
   },
 
@@ -145,8 +160,32 @@ export default {
       const offCanvasCartEl = DomAccess.querySelector(document, '[data-offcanvas-cart]');
       const offCanvasCartInstance = this.pluginManager.getPluginInstanceFromElement(offCanvasCartEl, 'OffCanvasCart');
       offCanvasCartInstance.openOffCanvas(window.router['frontend.cart.offcanvas'], false);
+    },
 
+    toggleAnimation() {
+      if (this.type === 'bucket' || this.type === 'globy') {
+        this.$refs.imageFirst.classList.add(this.type + "-js-animation");
 
+        setTimeout(() => {
+          this.$refs.imageFirst.classList.remove(this.type + "-js-animation");
+        }, 6500);
+      }
+    },
+
+    addRefClass() {
+      if (this.type === 'bag') {
+        this.$refs.imageFirst.classList.add(this.type + "-js-animation");
+      }
+
+      if (this.type === 'bucket' || this.type === 'globy') {
+        setTimeout(() => {
+          this.$refs.imageFirst.classList.add(this.type + "-js-animation");
+        }, 3000);
+
+        setTimeout(() => {
+          this.$refs.imageFirst.classList.remove(this.type + "-js-animation");
+        }, 9500);
+      }
     }
   },
 
@@ -158,6 +197,10 @@ export default {
     bus.$on('quantity-selected', (quantity) => {
       this.selectedQuantity = quantity;
     })
+  },
+
+  mounted() {
+    this.addRefClass()
   }
 }
 </script>

@@ -18,6 +18,7 @@ use Shopware\Core\Checkout\Cart\Price\ReferencePriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\ReferencePrice;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartResponse;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Content\Product\Aggregate\ProductPrice\ProductPriceEntity;
 use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilder;
 use Shopware\Core\Framework\Context;
@@ -71,6 +72,11 @@ class LabelMeApiController extends AbstractController
     private $currencyRepository;
 
     /**
+     * @var EntityRepositoryInterface
+     */
+    private $mediaRepository;
+
+    /**
      * @var SystemConfigService
      */
     private $systemConfigService;
@@ -98,6 +104,7 @@ class LabelMeApiController extends AbstractController
         EntityRepositoryInterface $candyRepository,
         EntityRepositoryInterface $candyPackageRepository,
         EntityRepositoryInterface $currencyRepository,
+        EntityRepositoryInterface $mediaRepository,
         SystemConfigService $systemConfigService,
         CartService $cartService,
         CartPersister $cartPersister,
@@ -109,6 +116,7 @@ class LabelMeApiController extends AbstractController
         $this->candyRepository = $candyRepository;
         $this->candyPackageRepository = $candyPackageRepository;
         $this->currencyRepository = $currencyRepository;
+        $this->mediaRepository = $mediaRepository;
         $this->systemConfigService = $systemConfigService;
         $this->cartService = $cartService;
         $this->cartPersister = $cartPersister;
@@ -318,6 +326,8 @@ class LabelMeApiController extends AbstractController
                     'cp_id' => $cp->getId(),
                     'id' => $cp->getPackage()->getId(),
                     'name' => $cp->getPackage()->getName(),
+                    'cssSize' => $cp->getPackage()->getCssSize(),
+                    'packageType' => $cp->getPackage()->getPackageType(),
                     'gramm' => $cp->getGramm(),
                     'thumbnails' => $cp->getMedia()->getThumbnails(),
                     'availableStock' => $productAvailable,
@@ -352,6 +362,17 @@ class LabelMeApiController extends AbstractController
     {
 //        $name = $this->container->get('EventCandy\LabelMe\EventCandyLabelMe')->getName();
         $config = $this->systemConfigService->get('EventCandyLabelMe.config');
+
+        if (key_exists('arrowImage', $config)) {
+            $id = $config['arrowImage'];
+            $criteria = new Criteria();
+            $criteria->addFilter(new EqualsFilter('id', $id));
+
+            /** @var MediaEntity $arrowEntity */
+            $arrowEntity = $this->mediaRepository->search($criteria, $context)->first();
+            $config['arrowUrl'] = $arrowEntity ? $arrowEntity->getUrl() : 'noimage';
+        }
+
         return new JsonResponse($config);
     }
 

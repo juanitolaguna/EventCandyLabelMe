@@ -43,6 +43,11 @@ Component.register('eclm-package-detail', {
 
     methods: {
 
+        getIteger(n) {
+           return parseInt(n);
+        },
+
+
         getImage(mediaId) {
             if (mediaId) {
                 this.mediaRepository = this.repositoryFactory.create('media');

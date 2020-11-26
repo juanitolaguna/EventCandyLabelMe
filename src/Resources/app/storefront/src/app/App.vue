@@ -357,7 +357,10 @@ export default {
           'availableStock': e.availableStock ? e.availableStock : undefined,
           'purchaseSteps' : e.purchaseSteps ? e.purchaseSteps : 1,
           'minimalQuantity' : e.minimalQuantity ? e.minimalQuantity : undefined,
-          'maximalQuantity' : e.maximalQuantity ? e.maximalQuantity :undefined
+          'maximalQuantity' : e.maximalQuantity ? e.maximalQuantity : undefined,
+          'cssSize': e.cssSize ? e.cssSize : undefined,
+          'packageType': e.packageType ? e.packageType : undefined
+
         }
       })
     },
