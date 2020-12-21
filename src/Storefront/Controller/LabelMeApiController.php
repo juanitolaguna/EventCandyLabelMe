@@ -20,6 +20,7 @@ use Shopware\Core\Checkout\Cart\SalesChannel\CartResponse;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Content\Product\Aggregate\ProductPrice\ProductPriceEntity;
+use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilder;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
@@ -39,6 +40,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @RouteScope(scopes={"store-api"})
@@ -97,6 +99,11 @@ class LabelMeApiController extends AbstractController
      */
     private $productListingSubscriber;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
 
     public function __construct(
         EntityRepositoryInterface $eventRepository,
@@ -108,7 +115,8 @@ class LabelMeApiController extends AbstractController
         SystemConfigService $systemConfigService,
         CartService $cartService,
         CartPersister $cartPersister,
-        ProductListingSubscriber $productListingSubscriber
+        ProductListingSubscriber $productListingSubscriber,
+        TranslatorInterface $translator
     )
     {
         $this->eventRepository = $eventRepository;
@@ -121,6 +129,7 @@ class LabelMeApiController extends AbstractController
         $this->cartService = $cartService;
         $this->cartPersister = $cartPersister;
         $this->productListingSubscriber = $productListingSubscriber;
+        $this->translator = $translator;
     }
 
 
@@ -322,6 +331,8 @@ class LabelMeApiController extends AbstractController
                 $unit = $product->getUnit() ?? '';
                 $unitName = $unit ? $unit->getName() : '';
 
+                $dataSheetUrl = $this->getDataSheetUrl($cp->getProduct(), $context) ?? '';
+
                 return [
                     'cp_id' => $cp->getId(),
                     'id' => $cp->getPackage()->getId(),
@@ -341,7 +352,8 @@ class LabelMeApiController extends AbstractController
                         'currency' => $currencySymbol,
                         'purchaseUnit' => $product->getPurchaseUnit() ?? '',
                         'referenceUnit' => $product->getReferenceUnit() ?? '',
-                        'unitName' => $unitName
+                        'unitName' => $unitName,
+                        'dataSheetUrl' => $dataSheetUrl
                     ]
                 ];
             }
@@ -360,8 +372,9 @@ class LabelMeApiController extends AbstractController
      */
     public function getPluginConfig(Request $request, Context $context): JsonResponse
     {
-//        $name = $this->container->get('EventCandy\LabelMe\EventCandyLabelMe')->getName();
+
         $config = $this->systemConfigService->get('EventCandyLabelMe.config');
+        $utilsConfig = $this->systemConfigService->get('EventCandyUtils.config');
 
         if (key_exists('arrowImage', $config)) {
             $id = $config['arrowImage'];
@@ -372,6 +385,12 @@ class LabelMeApiController extends AbstractController
             $arrowEntity = $this->mediaRepository->search($criteria, $context)->first();
             $config['arrowUrl'] = $arrowEntity ? $arrowEntity->getUrl() : 'noimage';
         }
+
+        // Get Data from Utils Plugin if exists
+        $config['utilsPlugin'] = $utilsConfig;
+        //Get Translations
+        $config['translations']['dataSheet'] = $this->translator->trans('ecUtils.product.dataSheet');
+        $config['translations']['dataSheetTooltip'] = $this->translator->trans('ecUtils.product.dataSheetTooltip');
 
         return new JsonResponse($config);
     }
@@ -430,6 +449,22 @@ class LabelMeApiController extends AbstractController
     {
         $availableStock = $this->productListingSubscriber->getAvailableStock($id, $context);
         return new JsonResponse($availableStock);
+    }
+
+    private function getDataSheetUrl(ProductEntity $product, Context $context)
+    {
+        $keyIsTrue = array_key_exists('ec_product_data_pdf', $product->getCustomFields())
+            && $product->getCustomFields()['ec_product_data_pdf'];
+        if ($keyIsTrue) {
+            $mediaId = $product->getCustomFields()['ec_product_data_pdf'];
+            $criteria = new Criteria();
+            $criteria->addFilter(new EqualsFilter('id', $mediaId));
+
+            /** @var MediaEntity $result */
+            $result = $this->mediaRepository->search($criteria, $context)->first();
+
+            return $result->getUrl();
+        }
     }
 
 }

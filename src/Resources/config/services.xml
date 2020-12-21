@@ -69,6 +69,7 @@
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
             <argument type="service" id="EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber"/>
+            <argument type="service" id="translator" on-invalid="null" />
         </service>
 
         <service id="EventCandy\LabelMe\Core\Checkout\Cart\EclmCartProcessor" public="true">
