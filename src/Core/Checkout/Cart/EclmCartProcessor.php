@@ -166,7 +166,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             }
 
 
-            $item->setDescription('This is dummy description!');
+            $item->setDescription('');
 
             $deliveryTime = $product->getDeliveryTime();
             if ($deliveryTime !== null) {
