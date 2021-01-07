@@ -3,11 +3,12 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 
 // const dist = resolve(join(__dirname, '../../', 'storefront/dist/storefront/js'))
- console.log('custom webpack config');
+console.log('custom webpack config');
 
 module.exports = ({config}) => {
     console.log(config);
     return {
+        mode: 'production',
         module: {
             rules: [
                 {
@@ -30,9 +31,9 @@ module.exports = ({config}) => {
             ]
         },
         resolve: {
-            alias: {
-                'vue': resolve(join(__dirname, '..', 'node_modules', 'vue'))
-            }
+            modules: [
+                resolve(join(__dirname, '../', 'node_modules')),
+            ]
         }
     };
 }
