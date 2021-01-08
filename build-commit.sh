@@ -16,6 +16,6 @@ docker cp shopware:/var/www/html/custom/plugins/EventCandyLabelMe/src/Resources/
 timestamp=$(date +%m-%d-%Y-%s)
 git add .
 git commit -m "build${timestamp}"
-git push origin main
+git push origin master
 
 
