@@ -31,9 +31,9 @@ module.exports = ({config}) => {
             ]
         },
         resolve: {
-            modules: [
-                resolve(join(__dirname, '../', 'node_modules')),
-            ]
+            alias: {
+                'vue': resolve(join(__dirname, '..', 'node_modules', 'vue'))
+            }
         }
     };
 }

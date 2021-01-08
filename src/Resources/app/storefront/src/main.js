@@ -1,4 +1,4 @@
-import Vue from 'vue/dist/vue.esm.browser.min.js';
+import Vue from 'vue/dist/vue.min.js';
 import App from "./app/App.vue";
 import EventCandyLabelMe from "./script/event-candy-label-me.plugin"
 
