@@ -250,7 +250,7 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         $lineItem->setPayload([self::TYPE => $setProducts]);
 
         // format setProducts as a string
-        $lineItem->setPayload(['line_item_set_product' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit...']);
+        $lineItem->setPayload(['line_item_sub_products' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit...']);
 
     }
 
