@@ -248,6 +248,10 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         }
 
         $lineItem->setPayload([self::TYPE => $setProducts]);
+
+        // format setProducts as a string
+        $lineItem->setPayload(['line_item_set_product' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit...']);
+
     }
 
 
@@ -295,12 +299,12 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
 
             $possibleQuantity = floor($availableStock / $sameProduct);
-            $item->getQuantityInformation()->setMaxPurchase((int) $possibleQuantity);
+            $item->getQuantityInformation()->setMaxPurchase((int)$possibleQuantity);
 
             if ($item->getQuantity() > $possibleQuantity) {
-                $item->setQuantity((int) $possibleQuantity);
+                $item->setQuantity((int)$possibleQuantity);
                 $toCalculate->addErrors(
-                    new ProductStockReachedError($item->getId(), (string) $item->getLabel(), (int) $possibleQuantity)
+                    new ProductStockReachedError($item->getId(), (string)$item->getLabel(), (int)$possibleQuantity)
                 );
             }
 
