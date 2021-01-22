@@ -15,6 +15,7 @@
     },
     "extra": {
         "shopware-plugin-class": "EventCandy\\LabelMe\\EventCandyLabelMe",
+        "plugin-icon": "src/Resources/config/plugin.png",
         "label": {
             "de-DE": "EventCandy LabelMe",
             "en-GB": "EventCandy LabelMe"
