@@ -10,6 +10,21 @@
             <placeholder>Event</placeholder>
             <defaultValue>Thema</defaultValue>
         </input-field>
+
+        <input-field>
+            <name>firstLineEventCSS</name>
+            <label>Erste Zeile CSS</label>
+            <placeholder>Bestimme die Farbe der ersten Zeile z.B #000000</placeholder>
+            <defaultValue>#000000</defaultValue>
+        </input-field>
+
+        <input-field>
+            <name>secondLineEventCSS</name>
+            <label>Zweite Zeile CSS</label>
+            <placeholder>Bestimme die Farbe der zweiten Zeile z.B #000000</placeholder>
+            <defaultValue>#000000</defaultValue>
+        </input-field>
+
         <component name="sw-text-editor">
             <name>eventHeader</name>
             <label>Event Header</label>
@@ -96,6 +111,12 @@
             <placeholder>Was soll auf dem button stehen?</placeholder>
             <defaultValue>OK</defaultValue>
         </input-field>
+        <input-field>
+            <name>introModalCheckbox</name>
+            <label>Nicht Mehr Anzeigen - Text</label>
+            <placeholder>Was soll dem Kunden Angezeigt werden?</placeholder>
+            <defaultValue>Diese Nachricht nicht mehr Anzeigen</defaultValue>
+        </input-field>
         <component name="sw-text-editor">
             <name>introModal</name>
             <label>Intro Modal</label>
@@ -119,5 +140,88 @@
             <name>arrowImage</name>
             <label>Wird im Konfigurator am ende der Auswahl eingeblendet.</label>
         </component>
+    </card>
+
+    <card>
+        <title>Produktdaten</title>
+        <input-field>
+            <name>pdButtonText</name>
+            <label>Button Text für Produktdaten</label>
+            <defaultValue>Produktdaten</defaultValue>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>pdButtonType</name>
+            <options>
+                <option>
+                    <id>btn btn-primary btn-sm</id>
+                    <name>Button Primary</name>
+                </option>
+                <option>
+                    <id>btn btn-secondary btn-sm</id>
+                    <name>Button Secondary</name>
+                </option>
+                <option>
+                    <id>btn btn-outline-primary btn-sm</id>
+                    <name>Button Outline Primary</name>
+                </option>
+                <option>
+                    <id>btn btn-outline-secondary btn-sm</id>
+                    <name>Button Outline Secondary</name>
+                </option>
+                <option>
+                    <id>badge badge-primary</id>
+                    <name>Badge Primary</name>
+                </option>
+                <option>
+                    <id>badge badge-secondary</id>
+                    <name>Badge Secondary</name>
+                </option>
+                <option>
+                    <id>badge badge-light white-badge</id>
+                    <name>Badge White</name>
+                </option>
+            </options>
+            <defaultValue>btn btn-secondary btn-sm</defaultValue>
+            <label>Button Type</label>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>pdButtonTypeResult</name>
+            <options>
+                <option>
+                    <id>btn btn-primary btn-sm</id>
+                    <name>Button Primary</name>
+                </option>
+                <option>
+                    <id>btn btn-secondary btn-sm</id>
+                    <name>Button Secondary</name>
+                </option>
+                <option>
+                    <id>btn btn-outline-primary btn-sm</id>
+                    <name>Button Outline Primary</name>
+                </option>
+                <option>
+                    <id>btn btn-outline-secondary btn-sm</id>
+                    <name>Button Outline Secondary</name>
+                </option>
+                <option>
+                    <id>badge badge-primary</id>
+                    <name>Badge Primary</name>
+                </option>
+                <option>
+                    <id>badge badge-secondary</id>
+                    <name>Badge Secondary</name>
+                </option>
+                <option>
+                    <id>badge badge-light white-badge</id>
+                    <name>Badge White</name>
+                </option>
+            </options>
+            <defaultValue>btn btn-secondary btn-sm</defaultValue>
+            <label>Button Type Result</label>
+        </input-field>
+
+
     </card>
 </config>

@@ -6,10 +6,13 @@
         },
         "candyDetail": {
             "name": "Candy Name",
-            "active": "Active"
+            "active": "Active",
+            "productDataLabel": "Additional Product Data",
+            "productDataPlaceholder": "Add more info about the product, such as nutritional values, allergens, etc."
         },
         "eventDetail": {
             "name": "Event Name",
+            "alternativeName": "Second Row",
             "active": "Active"
         },
         "labelDetail": {
@@ -20,7 +23,9 @@
             "cssSize" : "CSS Size (Default: 100%)",
             "packageType": "Package Type",
             "name": "Package Name",
-            "milliliters": "Milliliter"
+            "milliliters": "Milliliter",
+            "productDataLabel": "Additional Product Data",
+            "productDataPlaceholder": "Add more info about the product..."
         }
     }
 }

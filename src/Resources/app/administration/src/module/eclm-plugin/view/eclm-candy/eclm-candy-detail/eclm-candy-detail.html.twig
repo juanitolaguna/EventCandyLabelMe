@@ -29,6 +29,13 @@
                     @media-id-change="onMediaSelect"
                     :mediaFolderName="'Event Candy'">
                 </eclm-media-field>
+
+                <sw-text-editor
+                        type="textarea"
+                        :label="$tc('eclm.candyDetail.productDataLabel')"
+                        :placeholder="$tc('eclm.candyDetail.productDataPlaceholder')"
+                        v-model="candy.productData">
+                </sw-text-editor>
             </sw-card>
 
             <sw-card v-if="candySaved && packageOptions" :large="false">

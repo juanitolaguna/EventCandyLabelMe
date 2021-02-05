@@ -17,6 +17,10 @@ class EventEntity extends Entity
      */
     protected $name;
 
+    /**
+     * @var string|null
+     */
+    protected $alternativeName;
 
     /**
      * @var bool
@@ -114,5 +118,21 @@ class EventEntity extends Entity
     public function setLabels(LabelCollection $labels): void
     {
         $this->labels = $labels;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAlternativeName(): ?string
+    {
+        return $this->alternativeName;
+    }
+
+    /**
+     * @param string|null $alternativeName
+     */
+    public function setAlternativeName(?string $alternativeName): void
+    {
+        $this->alternativeName = $alternativeName;
     }
 }

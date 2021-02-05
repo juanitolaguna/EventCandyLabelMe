@@ -17,10 +17,14 @@ class CandyEntity extends Entity {
     protected $name;
 
     /**
+     * @var string|null
+     */
+    protected $productData;
+
+    /**
      * @var bool
      */
     protected $active;
-
 
     /**
      * @var MediaEntity|null
@@ -37,11 +41,12 @@ class CandyEntity extends Entity {
      */
     protected $products;
 
-
     /**
      * @var int
      */
     protected $position;
+
+
 
     /**
      * @return int
@@ -136,10 +141,20 @@ class CandyEntity extends Entity {
         $this->media = $media;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getProductData(): ?string
+    {
+        return $this->productData;
+    }
 
-
-
-
-
+    /**
+     * @param string|null $productData
+     */
+    public function setProductData(?string $productData): void
+    {
+        $this->productData = $productData;
+    }
 
 }

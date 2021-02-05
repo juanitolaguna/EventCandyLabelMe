@@ -1,4 +1,4 @@
-<?php declare( strict_types=1 );
+<?php declare(strict_types=1);
 
 namespace EventCandy\LabelMe\Core\Content\Candy;
 
@@ -9,47 +9,57 @@ use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\AllowHtml;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FloatField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\PriceField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
-class CandyDefinition extends EntityDefinition {
+class CandyDefinition extends EntityDefinition
+{
     public const ENTITY_NAME = 'eclm_candy';
 
-    public function getEntityName(): string {
+    public function getEntityName(): string
+    {
         return self::ENTITY_NAME;
     }
 
-    public function getCollectionClass(): string {
+    public function getCollectionClass(): string
+    {
         return CandyCollection::class;
     }
 
-    public function getEntityClass(): string {
+    public function getEntityClass(): string
+    {
         return CandyEntity::class;
     }
 
-    protected function defineFields(): FieldCollection {
+    protected function defineFields(): FieldCollection
+    {
 
-        return new FieldCollection( [
-            ( new IdField( 'id', 'id' ) )
-                ->addFlags( new Required(), new PrimaryKey() ),
+        return new FieldCollection([
+            (new IdField('id', 'id'))
+                ->addFlags(new Required(), new PrimaryKey()),
 
-            ( new StringField( 'name', 'name' ) )
-                ->addFlags( new Required() ),
+            (new StringField('name', 'name'))
+                ->addFlags(new Required()),
+
+                (new LongTextField('product_data', 'productData'))
+                ->addFlags(new AllowHtml()),
 
             (new BoolField('active', 'active')),
 
-            ( new IntField( 'position', 'position' ) ),
+            (new IntField('position', 'position')),
 
 
-            new FkField( 'media_id', 'mediaId', MediaDefinition::class ),
+            new FkField('media_id', 'mediaId', MediaDefinition::class),
 
             new ManyToOneAssociationField(
                 'media',
@@ -72,6 +82,6 @@ class CandyDefinition extends EntityDefinition {
                 'candy_id',
                 'product_id'
             ),
-        ] );
+        ]);
     }
 }

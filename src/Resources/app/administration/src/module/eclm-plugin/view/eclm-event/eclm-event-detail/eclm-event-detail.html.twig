@@ -21,6 +21,7 @@
         <sw-card-view>
             <sw-card v-if="event" :large="false">
                 <sw-text-field :label="$t('eclm.eventDetail.name')" v-model="event.name"></sw-text-field>
+                <sw-text-field :label="$t('eclm.eventDetail.alternativeName')" v-model="event.alternativeName"></sw-text-field>
                 <sw-checkbox-field :label="$t('eclm.eventDetail.active')" v-model="event.active"></sw-checkbox-field>
                 <eclm-media-field
                     v-model="event.mediaId"

@@ -156,6 +156,7 @@ class LabelMeApiController extends AbstractController
                 return [
                     'id' => $event->getId(),
                     'name' => $event->getName(),
+                    'alternativeName' => $event->getAlternativeName(),
                     'thumbnails' => $event->getMedia()->getThumbnails()
                 ];
             }
@@ -187,11 +188,14 @@ class LabelMeApiController extends AbstractController
         );
 
         $filter = function (LabelEntity $label) {
-            return [
-                'id' => $label->getId(),
-                'name' => $label->getName(),
-                'thumbnails' => $label->getMedia()->getThumbnails()
-            ];
+            $media = $label->getMedia();
+            if (($media !== null) && ($media->getThumbnails() !== null)) {
+                return [
+                    'id' => $label->getId(),
+                    'name' => $label->getName(),
+                    'thumbnails' => $label->getMedia()->getThumbnails()
+                ];
+            }
         };
 
         $mapped = $entities->fmap($filter);
@@ -230,6 +234,12 @@ class LabelMeApiController extends AbstractController
             $candyActive = false;
             $packageAvailable = false;
             $stock = 0;
+            $hasMedia = false;
+
+            $media = $cp->getCandy()->getMedia();
+            if (($media !== null) && ($media->getThumbnails() !== null)) {
+                $hasMedia = true;
+            }
 
             if ($cp->getCandy() !== null) {
                 $candyActive = $cp->getCandy()->isActive();
@@ -257,10 +267,11 @@ class LabelMeApiController extends AbstractController
             }
 
 
-            if ($candyActive && $packageAvailable && $stock > 0) {
+            if ($hasMedia && $candyActive && $packageAvailable && $stock > 0) {
                 return [
                     'id' => $cp->getCandy()->getId(),
                     'name' => $cp->getCandy()->getName(),
+                    'productData' => $cp->getCandy()->getProductData(),
                     'thumbnails' => $cp->getCandy()->getMedia()->getThumbnails(),
                     'availableStock' => $stock
                 ];
@@ -313,6 +324,13 @@ class LabelMeApiController extends AbstractController
         $filter = function (CandyPackageEntity $cp) use ($context, $currencySymbol) {
             $packageActive = $cp->getPackage()->isActive();
             $productAvailable = 0;
+            $hasMedia = false;
+
+            $media = $cp->getMedia();
+            if (($media !== null) && ($media->getThumbnails() !== null)) {
+                $hasMedia = true;
+            }
+
             if (($cp->getProduct() !== null) && ($cp->getProduct()->getAvailableStock() !== null)) {
                 $keyIsTrue = array_key_exists('ec_is_set', $cp->getProduct()->getCustomFields())
                     && $cp->getProduct()->getCustomFields()['ec_is_set'];
@@ -325,7 +343,7 @@ class LabelMeApiController extends AbstractController
                 }
             }
 
-            if ($packageActive && $productAvailable > 0) {
+            if ($hasMedia && $packageActive && $productAvailable > 0) {
 
                 $product = $cp->getProduct();
                 $unit = $product->getUnit() ?? '';
@@ -337,6 +355,7 @@ class LabelMeApiController extends AbstractController
                     'cp_id' => $cp->getId(),
                     'id' => $cp->getPackage()->getId(),
                     'name' => $cp->getPackage()->getName(),
+                    'productData' => $cp->getPackage()->getProductData(),
                     'cssSize' => $cp->getPackage()->getCssSize(),
                     'packageType' => $cp->getPackage()->getPackageType(),
                     'gramm' => $cp->getGramm(),

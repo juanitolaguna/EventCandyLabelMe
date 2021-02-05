@@ -14,6 +14,13 @@
                                 {{ result.eclm_package.gramm }}<i>g</i>
             </span>
           </li>
+          <li class="list-group-item">
+            <template v-if="productDataAvailable" class="product-info">
+              <button v-on:click.stop="showProductModal" type="button" :class="[config.pdButtonTypeResult]">
+                {{ config.pdButtonText }}
+              </button>
+            </template>
+          </li>
         </ul>
 
         <a v-if="result.eclm_package.product.dataSheetUrl && config.utilsPlugin.turnOnDataSheet "
@@ -52,7 +59,6 @@
               </span>
             </p>
           </div>
-
         </div>
 
       </div>
@@ -78,6 +84,11 @@
       </div>
     </div>
 
+    <ProductDataModal
+        :modalActive="modalActive"
+        :data="modalData"
+        @close-product-modal="onModalClose"
+    />
 
   </div>
 </template>
@@ -86,21 +97,30 @@
 import StoreApiClient from 'src/service/store-api-client.service';
 import DomAccess from 'src/helper/dom-access.helper';
 import QuantitySelect from "./QuantitySelect.vue";
+import ProductDataModal from "./ProductDataModal.vue";
 import {bus} from "../../main";
 
 export default {
-  components: {QuantitySelect},
+  components: {QuantitySelect, ProductDataModal},
   data() {
     return {
       cartEl: null,
       selectedQuantity: this.result.eclm_package.minimalQuantity,
-      availableStock: 1
+      availableStock: 1,
+      modalActive: false,
+      modalData: []
     }
   },
 
   props: ['result', 'header', 'config'],
 
   computed: {
+
+    productDataAvailable() {
+      const candyData = this.result.candy.productData;
+      const packageData = this.result.eclm_package.productData;
+      return candyData || packageData;
+    },
 
     product() {
       return this.result.eclm_package.product;
@@ -146,6 +166,22 @@ export default {
   },
 
   methods: {
+
+    showProductModal() {
+      const candyData = this.result.candy.productData;
+      const packageData = this.result.eclm_package.productData;
+
+      this.modalData = [];
+      this.modalData.push(packageData);
+      this.modalData.push(candyData);
+      this.modalActive = true;
+    },
+
+    onModalClose() {
+      this.modalActive = false;
+      this.modalData = [];
+    },
+
     insertCart() {
 
       // this.httpClient.getBasicHeaders();

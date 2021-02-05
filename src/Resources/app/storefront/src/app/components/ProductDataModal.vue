@@ -1,10 +1,10 @@
 <template>
   <div
       class="modal fade"
-      v-bind:class="{show: showModal, 'eclm-show-front-modal': showModal}"
-      id="exampleModalCenter"
+      v-bind:class="{show: modalActive, 'eclm-show-front-modal': modalActive}"
+      id="productDataModal"
       tabindex="-1" role="dialog"
-      aria-labelledby="exampleModalCenterTitle"
+      aria-labelledby="productDataModalTitle"
       aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -14,27 +14,24 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body" v-html="introModal">
+        <div class="modal-body">
+          <div v-for="infoBlock in data">
+            <div v-html="infoBlock"></div>
+            <hr>
+          </div>
         </div>
         <div class="modal-footer" style="justify-content: center">
           <div>
-            <div v-if="introModalCheckbox">
-              <input type="checkbox" id="checkbox" v-model="checked">
-              <label for="checkbox">{{ introModalCheckbox }}</label>
-            </div>
-
             <!-- show only on mobile -->
             <button v-on:click.prevent="onOk" style="min-width: min-content" type="button"
                     class="btn btn-primary d-block d-sm-none">
-              <span v-if="introModalCTA">{{ introModalCTA }}</span>
-              <span v-else>Ok</span>
+              <span>Schließen</span>
             </button>
           </div>
 
           <button v-on:click.prevent="onOk" style="min-width: min-content" type="button"
                   class="btn btn-primary d-none d-sm-block">
-            <span v-if="introModalCTA">{{ introModalCTA }}</span>
-            <span v-else>Ok</span>
+            <span >Schließen</span>
           </button>
 
         </div>
@@ -46,33 +43,14 @@
 <script>
 import {bus} from "../../main";
 
-
 export default {
-  props: ['introModal', 'introModalActive', 'introModalCTA', 'introModalCheckbox'],
+  props: ['modalActive', 'data'],
 
-  data() {
-    return {
-      checked: false
-    }
-  },
 
   methods: {
     onOk() {
-      bus.$emit('close-modal');
-      if (this.checked) {
-        localStorage.labelMeModalClicked = true;
-      }
-    }
-  },
-
-  computed: {
-    showModal() {
-      const storageNull = localStorage['labelMeModalClicked'] === undefined;
-      return storageNull && this.introModalActive;
-      // return this.introModalActive;
+        this.$emit('close-product-modal');
     }
   }
-
-
 }
 </script>

@@ -42,6 +42,7 @@
                   :entities="eclmEvents"
                   :getEntityEvent="'getLabelsEvent'"
                   :selectedEntity="selectedEvent"
+                  :config="config"
                   :header="config.eventHeader"/>
       </transition>
 
@@ -50,6 +51,7 @@
                   :entities="eclmLabels"
                   :getEntityEvent="'getCandiesEvent'"
                   :selectedEntity="selectedLabel"
+                  :config="config"
                   :header="config.labelHeader"/>
       </transition>
 
@@ -58,6 +60,7 @@
                   :entities="eclmCandies"
                   :getEntityEvent="'getPackagesEvent'"
                   :selectedEntity="selectedCandy"
+                  :config="config"
                   :header="config.candyHeader"/>
       </transition>
 
@@ -66,6 +69,7 @@
                   :entities="eclmPackages"
                   :getEntityEvent="'getResultEvent'"
                   :selectedEntity="selectedPackage"
+                  :config="config"
                   :header="config.packageHeader"/>
       </transition>
       <transition name="slide-fade">
@@ -86,6 +90,7 @@
     <Modal :introModal="config.introModal"
            :introModalActive="config.introModalActive"
            :introModalCTA="config.introModalCTA"
+           :introModalCheckbox="config.introModalCheckbox"
     />
   </div>
 </template>
@@ -98,14 +103,14 @@ import Spinner from "./components/Spinner.vue";
 import Result from "./components/Result.vue";
 import Modal from "./components/Modal.vue"
 
-
 export default {
   components: {
     CardDeck,
     Spinner,
     Result,
-    Modal
+    Modal,
   },
+
   data() {
     return {
       currentComponent: '',
@@ -122,6 +127,7 @@ export default {
       selectedLabel: '',
       selectedPackage: '',
       selectedCandy: '',
+      selectedCandyData: '',
 
       config: [],
     }
@@ -256,13 +262,15 @@ export default {
         this.getCandies();
       })
 
-      bus.$on('getPackagesEvent', (id) => {
+      bus.$on('getPackagesEvent', (id, options) => {
         this.selectedCandy = id;
+        this.selectedCandyData = options;
         this.getPackages(id);
       });
 
-      bus.$on('getResultEvent', (id) => {
+      bus.$on('getResultEvent', (id, options) => {
         this.selectedPackage = id;
+        this.selectedPackageData = options;
         this.currentComponent = 'result';
       })
 
@@ -298,7 +306,9 @@ export default {
         this.labels = JSON.parse(response);
         this.selectedLabel = '';
         this.selectedCandy = '';
+        this.selectedCandyData = '';
         this.selectedPackage = '';
+        this.selectedPackageData = '';
       });
     },
 
@@ -309,7 +319,9 @@ export default {
         this.loading = false;
         this.candies = JSON.parse(response);
         this.selectedCandy = '';
+        this.selectedCandyData = '';
         this.selectedPackage = '';
+        this.selectedPackageData = '';
       });
     },
 
@@ -320,6 +332,7 @@ export default {
         this.loading = false;
         this.packages = JSON.parse(response);
         this.selectedPackage = '';
+        this.selectedPackageData = '';
       });
     },
 
@@ -351,6 +364,8 @@ export default {
         return {
           'id': e.id,
           'name': e.name,
+          'alternativeName': e.alternativeName ? e.alternativeName : undefined,
+          'productData': e.productData ? e.productData: undefined,
           'thumbnail': thumbnail[0],
           'gramm': e.gramm ? e.gramm : undefined,
           'product': e.product ? e.product : undefined,
@@ -359,7 +374,8 @@ export default {
           'minimalQuantity' : e.minimalQuantity ? e.minimalQuantity : undefined,
           'maximalQuantity' : e.maximalQuantity ? e.maximalQuantity : undefined,
           'cssSize': e.cssSize ? e.cssSize : undefined,
-          'packageType': e.packageType ? e.packageType : undefined
+          'packageType': e.packageType ? e.packageType : undefined,
+          'selectedCandyData' : this.selectedCandyData ? this.selectedCandyData :undefined
 
         }
       })

@@ -17,6 +17,11 @@ class PackageEntity extends Entity
      */
     protected $name;
 
+    /**
+     * @var string|null
+     */
+    protected $productData;
+
 
     /**
      * @var bool
@@ -205,6 +210,22 @@ class PackageEntity extends Entity
     public function setMedia(?MediaEntity $media): void
     {
         $this->media = $media;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProductData(): ?string
+    {
+        return $this->productData;
+    }
+
+    /**
+     * @param string|null $productData
+     */
+    public function setProductData(?string $productData): void
+    {
+        $this->productData = $productData;
     }
 
 }

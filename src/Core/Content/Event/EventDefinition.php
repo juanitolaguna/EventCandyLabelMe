@@ -46,6 +46,8 @@ class EventDefinition extends EntityDefinition
             (new StringField('name', 'name'))
                 ->addFlags(new Required()),
 
+            (new StringField('alternative_name', 'alternativeName')),
+
             (new BoolField('active', 'active')),
 
             ( new IntField( 'position', 'position' ) ),
