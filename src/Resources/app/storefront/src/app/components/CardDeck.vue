@@ -85,6 +85,7 @@ export default {
 
   methods: {
     onSelect(id, options) {
+      // window.scrollTo(0, 0);
       bus.$emit(this.getEntityEvent, id, options);
     },
 

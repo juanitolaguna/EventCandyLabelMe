@@ -1,5 +1,5 @@
 <template>
-  <div class="eclm-container">
+  <div ref="top" class="eclm-container">
     <ul class="nav nav-tabs" v-if="config">
       <li class="nav-item">
         <a
@@ -254,22 +254,26 @@ export default {
       // this.getEvents();
 
       bus.$on('getLabelsEvent', (id) => {
+        this.$refs.top.scrollIntoView();
         this.selectedEvent = id;
         this.getLabels(id);
       });
 
       bus.$on('getCandiesEvent', (id) => {
+        this.$refs.top.scrollIntoView();
         this.selectedLabel = id;
         this.getCandies();
       })
 
       bus.$on('getPackagesEvent', (id, options) => {
+        this.$refs.top.scrollIntoView();
         this.selectedCandy = id;
         this.selectedCandyData = options;
         this.getPackages(id);
       });
 
       bus.$on('getResultEvent', (id, options) => {
+        this.$refs.top.scrollIntoView();
         this.selectedPackage = id;
         this.selectedPackageData = options;
         this.currentComponent = 'result';

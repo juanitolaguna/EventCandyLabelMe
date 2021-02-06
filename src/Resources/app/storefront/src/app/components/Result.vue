@@ -34,8 +34,8 @@
         </a>
 
         <br>
-        <div style="display: flex">
-          <div style="display: inline-block; margin-right: 1em; z-index: 9999">
+        <div style="display: flex; margin-bottom: 2em; z-index: 1">
+          <div style="display: inline-block; margin-right: 1em;">
             <QuantitySelect
                 :availableStock="availableStock"
                 :minimalQuantity="minimalQuantity"
@@ -43,7 +43,7 @@
                 :purchaseSteps="purchaseSteps"
                 style="margin-bottom: 1em;"
             />
-            <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block;">
+            <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block; ">
               In den Warenkorb
             </button>
           </div>
@@ -62,7 +62,7 @@
 
       </div>
 
-      <div class="col-md-6" :class="[type + '-type']" @click="toggleAnimation">
+      <div class="col-md-6" :class="[type + '-type']" @click="toggleAnimation" style="z-index: 0">
 
         <div class="arrow-image" :class="[type + '-arrow-image']" v-if="config.arrowUrl && config.arrowText">
           <h5>{{ config.arrowText }}</h5>
