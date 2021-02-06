@@ -32,7 +32,8 @@ module.exports = ({config}) => {
         },
         resolve: {
             alias: {
-                'vue': resolve(join(__dirname, '..', 'node_modules', 'vue'))
+                'vue': resolve(join(__dirname, '..', 'node_modules', 'vue')),
+                'v-lazy-image': resolve(join(__dirname, '..', 'node_modules', 'v-lazy-image'))
             }
         }
     };

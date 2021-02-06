@@ -396,13 +396,11 @@ class LabelMeApiController extends AbstractController
         $utilsConfig = $this->systemConfigService->get('EventCandyUtils.config');
 
         if (key_exists('arrowImage', $config)) {
-            $id = $config['arrowImage'];
-            $criteria = new Criteria();
-            $criteria->addFilter(new EqualsFilter('id', $id));
+            $config['arrowUrl'] = $this->getImageUrl('arrowImage', $config, $context);
+        }
 
-            /** @var MediaEntity $arrowEntity */
-            $arrowEntity = $this->mediaRepository->search($criteria, $context)->first();
-            $config['arrowUrl'] = $arrowEntity ? $arrowEntity->getUrl() : 'noimage';
+        if (key_exists('placeholderImage', $config)) {
+            $config['placeholderImageUrl'] = $this->getImageUrl('placeholderImage', $config, $context);
         }
 
         // Get Data from Utils Plugin if exists
@@ -413,6 +411,18 @@ class LabelMeApiController extends AbstractController
 
         return new JsonResponse($config);
     }
+
+    private function getImageUrl(string $configMediaKey ,array $config, Context $context) {
+        $id = $config[$configMediaKey];
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('id', $id));
+
+        /** @var MediaEntity $mediaEntity */
+        $mediaEntity = $this->mediaRepository->search($criteria, $context)->first();
+        return $mediaEntity ? $mediaEntity->getUrl() : 'noimage';
+    }
+
+
 
     /**
      * @Route("/store-api/v{version}/eclm/add-line-item", name="api.action.add-line-item", methods={"POST"}, defaults={"XmlHttpRequest": true})

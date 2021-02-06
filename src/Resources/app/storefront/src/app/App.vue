@@ -92,6 +92,7 @@
            :introModalCTA="config.introModalCTA"
            :introModalCheckbox="config.introModalCheckbox"
     />
+    <img v-if="config.placeholderImageUrl" :src="config.placeholderImageUrl" style="display: none">
   </div>
 </template>
 

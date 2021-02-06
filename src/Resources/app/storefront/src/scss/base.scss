@@ -92,6 +92,14 @@
   transition: box-shadow 0.2s, -moz-box-shadow 0.2s, -webkit-box-shadow 0.2s;
 }
 
+.v-lazy-image {
+  filter: blur(10px);
+  transition: filter 0.7s;
+}
+.v-lazy-image-loaded {
+  filter: blur(0);
+}
+
 .product-info .badge {
   border-radius: 2px;
 }
@@ -199,7 +207,7 @@ span.badge.badge-pill.badge-info.eclm-badge {
   -webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.21);
   -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.21);
   box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.21);
-  min-height: 75vh;
+  min-height: 120vh;
 }
 
 .result-title {

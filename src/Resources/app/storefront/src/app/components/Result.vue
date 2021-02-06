@@ -14,8 +14,8 @@
                                 {{ result.eclm_package.gramm }}<i>g</i>
             </span>
           </li>
-          <li class="list-group-item">
-            <template v-if="productDataAvailable" class="product-info">
+          <li v-if="productDataAvailable" class="list-group-item">
+            <template class="product-info">
               <button v-on:click.stop="showProductModal" type="button" :class="[config.pdButtonTypeResult]">
                 {{ config.pdButtonText }}
               </button>
@@ -26,16 +26,16 @@
         <a v-if="result.eclm_package.product.dataSheetUrl && config.utilsPlugin.turnOnDataSheet "
            :href="result.eclm_package.product.dataSheetUrl" target="_blank">
           <div v-bind:style="{backgroundColor: config.utilsPlugin.badgeColor}"
-                class="badge badge-pill badge-secondary product-data-sheet"
+               class="badge badge-pill badge-secondary product-data-sheet"
           >
             {{ config.translations.dataSheet }}
-            <span class="tooltiptext" v-html="config.translations.dataSheetTooltip" />
+            <span class="tooltiptext" v-html="config.translations.dataSheetTooltip"/>
           </div>
         </a>
 
         <br>
         <div style="display: flex">
-          <div style="display: inline-block; margin-right: 1em;">
+          <div style="display: inline-block; margin-right: 1em; z-index: 9999">
             <QuantitySelect
                 :availableStock="availableStock"
                 :minimalQuantity="minimalQuantity"
@@ -43,9 +43,8 @@
                 :purchaseSteps="purchaseSteps"
                 style="margin-bottom: 1em;"
             />
-            <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block;">In
-              den
-              Warenkorb
+            <button @click.prevent="insertCart" type="button" class="btn btn-primary" style="display: inline-block;">
+              In den Warenkorb
             </button>
           </div>
 

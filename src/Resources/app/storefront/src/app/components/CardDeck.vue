@@ -9,8 +9,10 @@
              :id="entity.id"
         >
           <div class="card-image-top-wrapper" style="width: inherit">
-            <img :src="entity.thumbnail.url" class="card-img-top" :alt="entity.name"
-                 :style="{width: entity.cssSize + '%'}">
+            <v-lazy-image :src="entity.thumbnail.url" class="card-img-top"
+                          :srcPlaceholder="config.placeholderImageUrl"
+                          :alt="entity.name"
+                 :style="{width: entity.cssSize + '%'}"/>
           </div>
 
           <div class="card-body">
@@ -62,11 +64,14 @@
 import {bus} from "../../main";
 import TestComponent from "./TestComponent.vue";
 import ProductDataModal from "./ProductDataModal.vue";
+import VLazyImage from "v-lazy-image";
+
 
 export default {
   components: {
     TestComponent,
-    ProductDataModal
+    ProductDataModal,
+    VLazyImage
   },
 
   props: ['entities', 'getEntityEvent', 'selectedEntity', 'phrase', 'header', 'config'],
@@ -92,9 +97,6 @@ export default {
     },
 
     showProductModal(productData, candyData) {
-      console.log('show data')
-      console.log(candyData);
-      console.log(productData);
       this.modalData = [];
       this.modalData.push(productData);
       if (candyData && this.getEntityEvent !== 'getPackagesEvent') {
@@ -104,7 +106,6 @@ export default {
     },
 
     closeModal() {
-      console.log('closeModal');
       this.modalActive = false;
       this.modalData = [];
     }

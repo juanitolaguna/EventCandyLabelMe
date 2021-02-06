@@ -140,6 +140,11 @@
             <name>arrowImage</name>
             <label>Wird im Konfigurator am ende der Auswahl eingeblendet.</label>
         </component>
+
+        <component name="sw-media-field">
+            <name>placeholderImage</name>
+            <label>Zeigt diesen placeholder an bevor das eigentliche Bild geladen worden ist.</label>
+        </component>
     </card>
 
     <card>
