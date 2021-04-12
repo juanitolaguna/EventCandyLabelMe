@@ -23,7 +23,7 @@
           </li>
         </ul>
 
-        <a v-if="result.eclm_package.product.dataSheetUrl && config.utilsPlugin.turnOnDataSheet "
+        <a v-if="result.eclm_package.product.dataSheetUrl && config.utilsPlugin.turnOnDataSheet"
            :href="result.eclm_package.product.dataSheetUrl" target="_blank">
           <div v-bind:style="{backgroundColor: config.utilsPlugin.badgeColor}"
                class="badge badge-pill badge-secondary product-data-sheet"

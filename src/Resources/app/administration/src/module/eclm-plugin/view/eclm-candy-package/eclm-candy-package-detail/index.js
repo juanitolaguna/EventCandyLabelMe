@@ -27,15 +27,12 @@ Component.register('eclm-candy-package-detail', {
 
     computed: {
         productOptions() {
-
             return this.products.map((product) => {
                 return {
                     value: product.id,
                     label: product.name
                 }
             });
-
-
         },
         joinedCandyPackageRepository() {
             return this.repositoryFactory.create('eclm_candy_package');
@@ -90,10 +87,8 @@ Component.register('eclm-candy-package-detail', {
 
         getProducts() {
             if (this.joinedCandyPackage.productId !== null) {
-                console.log('getRelatedProductAndList')
                 this.getRelatedProductAndList();
             } else {
-                console.log('getProductList');
                 this.getProductList();
             }
         },

@@ -4,6 +4,12 @@
     "type": "shopware-platform-plugin",
     "license": "MIT",
     "version": "1.0.0",
+    "authors":[
+        {
+            "name":"Pawel Snatenkov",
+            "email": "pawel.snatenkov@protonmail.com"
+        }
+    ],
     "require": {
         "shopware/core": ">=6.3.4.1",
         "event-candy/sets-plugin": ">=v1.0.0"

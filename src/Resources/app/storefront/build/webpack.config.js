@@ -3,7 +3,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 
 // const dist = resolve(join(__dirname, '../../', 'storefront/dist/storefront/js'))
-console.log('custom webpack config');
+console.log('Custom LabelMe config');
 
 module.exports = ({config}) => {
     console.log(config);
@@ -13,11 +13,7 @@ module.exports = ({config}) => {
             rules: [
                 {
                     test: /\.vue$/,
-                    use: [
-                        {
-                            loader: 'vue-loader'
-                        }
-                    ]
+                    loader: 'vue-loader'
                 }
             ]
         },
@@ -25,6 +21,9 @@ module.exports = ({config}) => {
             new VueLoaderPlugin()
         ],
         resolveLoader: {
+            // alias: {
+            //     'vue-loader': resolve(join(__dirname, '..', 'node_modules', 'vue-loader'))
+            // }
             modules: [
                 resolve(join(__dirname, '../', 'node_modules')),
                 resolve(join(__dirname, '../../../../../../../../', 'vendor/shopware/storefront/Resources/app/storefront/node_modules')),
