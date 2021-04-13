@@ -16,7 +16,7 @@
         </div>
         <div class="modal-body" v-html="introModal">
         </div>
-        <div class="modal-footer" style="justify-content: center">
+        <div class="modal-footer" style="justify-content: space-between;  padding-right: 3em; padding-left: 3em;">
           <div>
             <div v-if="introModalCheckbox">
               <input type="checkbox" id="checkbox" v-model="checked">
@@ -60,14 +60,14 @@ export default {
     onOk() {
       bus.$emit('close-modal');
       if (this.checked) {
-        localStorage.labelMeModalClicked = true;
+        sessionStorage.labelMeModalClicked = true;
       }
     }
   },
 
   computed: {
     showModal() {
-      const storageNull = localStorage['labelMeModalClicked'] === undefined;
+      const storageNull = sessionStorage['labelMeModalClicked'] === undefined;
       return storageNull && this.introModalActive;
       // return this.introModalActive;
     }

@@ -389,6 +389,12 @@ export default {
 
   created() {
     this.componentCreated();
+  },
+
+  mounted() {
+    setTimeout(() => {
+      this.$refs.top.scrollIntoView({behavior: "smooth"});
+    }, 1000);
   }
 }
 </script>

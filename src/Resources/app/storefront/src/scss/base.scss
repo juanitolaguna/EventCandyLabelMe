@@ -259,12 +259,11 @@ span.badge.badge-pill.badge-info.eclm-badge {
 .sk-chase {
   width: 50px;
   height: 50px;
-  position: relative;
   animation: sk-chase 2.5s infinite linear both;
   position: absolute;
   left: 50%;
   margin-left: -50px;
-  top: 50%;
+  top: 65%;
   margin-top: -50px;
   z-index: 99;
 }
@@ -283,7 +282,7 @@ span.badge.badge-pill.badge-info.eclm-badge {
   display: block;
   width: 25%;
   height: 25%;
-  background-color: #2e5f5f;
+  background-color: $primary;
   border-radius: 100%;
   animation: sk-chase-dot-before 2.0s infinite ease-in-out both;
 }

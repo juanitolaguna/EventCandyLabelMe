@@ -8,14 +8,15 @@ window.PluginManager.register('EventCandyLabelMe', EventCandyLabelMe, '.main-nav
 
 export const bus = new Vue()
 
-if (window.location.pathname === '/label-me') {
+const eclm = document.getElementById('eclm_storefront_app');
+
+if (eclm !== null) {
     new Vue({
         el: '#eclm_storefront_app',
         template: '<App />',
         components: {App},
     });
 }
-
 
 
 
