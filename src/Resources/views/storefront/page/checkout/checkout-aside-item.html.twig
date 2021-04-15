@@ -1,0 +1,17 @@
+{% sw_extends '@Storefront/storefront/page/checkout/checkout-aside-item.html.twig' %}
+
+{% block page_checkout_aside_item_image_inner %}
+    {% if lineItem.payload.label %}
+        {% if lineItem.cover.url %}
+            <img class="img-fluid cart-item-img-source"
+                 src="{{ lineItem.payload.label.thumbnails[0].url }}"
+                 alt="{{ lineItem.payload.label.name }}"/>
+        {% else %}
+            {% sw_icon 'placeholder' style {
+                'size': 'fluid'
+            } %}
+        {% endif %}
+        </a>
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
