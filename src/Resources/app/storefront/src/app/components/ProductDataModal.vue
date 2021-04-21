@@ -60,8 +60,11 @@ export default {
     onPrint() {
 
       const styles = `
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap');
+
         body {
-          padding: 3rem;
+          padding: 1rem;
+          font-family: 'Comfortaa', cursive;
         }
         .noprint {
           padding: 5px 20px;
