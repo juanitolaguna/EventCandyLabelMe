@@ -53,7 +53,7 @@ class PackageDefinition extends EntityDefinition
                 ->addFlags(new AllowHtml()),
 
             (new IntField('milliliters', 'milliliters'))
-                ->addFlags(new Required()),
+                ->addFlags(),
 
             (new BoolField('active', 'active')),
 
