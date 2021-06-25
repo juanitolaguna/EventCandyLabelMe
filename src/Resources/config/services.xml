@@ -72,17 +72,22 @@
             <argument type="service" id="translator" on-invalid="null" />
         </service>
 
+        <service id="EventCandy\LabelMe\Core\Checkout\EclmSubProductCartReducer">
+            <tag name="ec.sets.cart_reducer"/>
+        </service>
+
         <service id="EventCandy\LabelMe\Core\Checkout\Cart\EclmCartProcessor" public="true">
-            <argument type="service" id="logger"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator"/>
-            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
             <argument type="service" id="media.repository"/>
             <argument type="service" id="product.repository"/>
+            <argument type="service" id="sales_channel.product.repository"/>
             <argument type="service"
                       id="Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface"/>
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber"/>
+            <argument type="service" id="event_dispatcher"/>
 
 
             <!-- inject before product processor (5000) -->

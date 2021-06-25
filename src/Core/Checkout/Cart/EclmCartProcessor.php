@@ -3,43 +3,35 @@
 namespace EventCandy\LabelMe\Core\Checkout\Cart;
 
 use Doctrine\DBAL\Connection;
-use ErrorException;
+use EventCandy\Sets\Core\Checkout\Cart\SetProductCartProcessor;
+use EventCandy\Sets\Core\SetProductLoadedEvent;
 use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
-use EventCandy\Sets\Utils;
-use OpenApi\Util;
-use Psr\Log\LoggerInterface;
+use EventCandyCandyBags\Core\Checkout\Cart\CandyBagsCartProcessor;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CartDataCollectorInterface;
 use Shopware\Core\Checkout\Cart\CartProcessorInterface;
+use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryInformation;
+use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryTime;
 use Shopware\Core\Checkout\Cart\LineItem\CartDataCollection;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\LineItem\QuantityInformation;
 use Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
-use Shopware\Core\Checkout\Cart\Price\Struct\CalculatedPrice;
 use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
-use Shopware\Core\Checkout\Cart\Tax\Struct\CalculatedTaxCollection;
-use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
 use Shopware\Core\Content\Media\MediaEntity;
-use Shopware\Core\Content\Product\Cart\ProductStockReachedError;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryInformation;
-use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryTime;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInterface
 {
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * @var QuantityPriceCalculator
@@ -64,12 +56,18 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
     /**
      * @var EntityRepositoryInterface
      */
-    private $productRepository;
+    private $repository;
+
+    /**
+     * @var SalesChannelRepository
+     */
+    private $salesChannelRepository;
 
     /**
      * @var ProductPriceDefinitionBuilderInterface
      */
     private $priceDefinitionBuilder;
+
 
     /** @var Connection */
     private $connection;
@@ -80,45 +78,40 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      */
     private $productListingSubscriber;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
 
     public const TYPE = 'event-candy-label-me';
     public const DATA_KEY = 'eclm-';
 
-
     /**
      * EclmCartProcessor constructor.
-     * @param LoggerInterface $logger
+     * @param QuantityPriceCalculator $quantityPriceCalculator
      * @param PercentagePriceCalculator $percentagePriceCalculator
      * @param AbsolutePriceCalculator $absolutePriceCalculator
-     * @param QuantityPriceCalculator $quantityPriceCalculator
      * @param EntityRepositoryInterface $mediaRepository
-     * @param EntityRepositoryInterface $productRepository
+     * @param EntityRepositoryInterface $repository
+     * @param SalesChannelRepository $salesChannelRepository
      * @param ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder
      * @param Connection $connection
      * @param ProductListingSubscriber $productListingSubscriber
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(
-        LoggerInterface $logger,
-        PercentagePriceCalculator $percentagePriceCalculator,
-        AbsolutePriceCalculator $absolutePriceCalculator,
-        QuantityPriceCalculator $quantityPriceCalculator,
-        EntityRepositoryInterface $mediaRepository,
-        EntityRepositoryInterface $productRepository,
-        ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder,
-        Connection $connection,
-        ProductListingSubscriber $productListingSubscriber
-
-    )
+    public function __construct(QuantityPriceCalculator $quantityPriceCalculator, PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, EntityRepositoryInterface $mediaRepository, EntityRepositoryInterface $repository, SalesChannelRepository $salesChannelRepository, ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder, Connection $connection, ProductListingSubscriber $productListingSubscriber, EventDispatcherInterface $eventDispatcher)
     {
-        $this->logger = $logger;
+        $this->quantityPriceCalculator = $quantityPriceCalculator;
         $this->percentagePriceCalculator = $percentagePriceCalculator;
         $this->absolutePriceCalculator = $absolutePriceCalculator;
-        $this->quantityPriceCalculator = $quantityPriceCalculator;
         $this->mediaRepository = $mediaRepository;
-        $this->productRepository = $productRepository;
+        $this->repository = $repository;
+        $this->salesChannelRepository = $salesChannelRepository;
         $this->priceDefinitionBuilder = $priceDefinitionBuilder;
         $this->connection = $connection;
         $this->productListingSubscriber = $productListingSubscriber;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
 
@@ -140,11 +133,19 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $item->setReferencedId($productId);
 
 
-            /** @var ProductEntity $product */
-            $product = $this->productRepository
-                ->search(new Criteria([$productId]), $context->getContext())->first();
+            $criteria = new Criteria([$productId]);
+
+            /** @var ProductEntity[] $result */
+            $result = $this->repository->search($criteria, $context->getContext())->getElements();
+
+            $context->addExtension('lineItem', $item);
+            $event = new SetProductLoadedEvent($context, $result);
+            $this->eventDispatcher->dispatch($event);
+            $context->removeExtension('lineItem');
+            $product = $result[$productId];
 
             $item->setPayload(['productNumber' => $product->getProductNumber()]);
+            $data->set(self::DATA_KEY . $productId, $product);
 
             $prices = $this->priceDefinitionBuilder->build($product, $context, $item->getQuantity());
             $item->setPriceDefinition($prices->getQuantityPrice());
@@ -173,24 +174,25 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 $deliveryTime = DeliveryTime::createFromEntity($deliveryTime);
             }
 
-            if (($product !== null) && ($product->getAvailableStock() !== null)) {
-
-                $keyIsTrue = array_key_exists('ec_is_set', $product->getCustomFields())
-                    && $product->getCustomFields()['ec_is_set'];
-
-                if ($keyIsTrue) {
-                    $stock = $this->productListingSubscriber->getAvailableStock($product->getId(), $context->getContext());
-                } else {
-                    $stock = $product->getAvailableStock();
-                }
-            }
+            // Product Subscriber should resolve
+//            if (($product !== null) && ($product->getAvailableStock() !== null)) {
+//
+//                $keyIsTrue = array_key_exists('ec_is_set', $product->getCustomFields())
+//                    && $product->getCustomFields()['ec_is_set'];
+//
+//                if ($keyIsTrue) {
+//                    $stock = $this->productListingSubscriber->getAvailableStock($product->getId(), $context);
+//                } else {
+//                    $stock = $product->getAvailableStock();
+//                }
+//            }
 
             $minPurchase = $product->getMinPurchase() ?? 1;
             $purchaseSteps = $product->getPurchaseSteps() ?? 1;
 
             $quantityInformation = new QuantityInformation();
             $quantityInformation
-                ->setMaxPurchase($stock)
+                ->setMaxPurchase($product->getAvailableStock())
                 ->setMinPurchase($minPurchase)
                 ->setPurchaseSteps($purchaseSteps);
 
@@ -212,6 +214,12 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
 
     }
 
+    /**
+     * #dup - @link SetProductCartProcessor
+     * #dup - @link CandyBagsCartProcessor
+     * @param LineItem $lineItem
+     * @param SalesChannelContext $context
+     */
     private function addRelatedProductsToPayload(LineItem $lineItem, SalesChannelContext $context)
     {
         $sqlSetProducts = 'select
@@ -252,7 +260,6 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         }
 
         $lineItem->setPayload([self::TYPE => $setProducts]);
-
         // format setProducts as a string
         $lineItem->setPayload(['line_item_sub_products' => $lineItemSubProducts]);
 
@@ -267,22 +274,25 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             return;
         }
 
-        $occurrences = [];
+        // ToDo: cleanup
+//        $occurrences = [];
         //count same candy package products
-        foreach ($eclmItems as $item) {
-            $id = $item->getId();
-            $productId = $item->getPayload()['eclm_package']['product']['id'];
-            if (array_key_exists($productId, $occurrences)) {
-                $occurrences[$productId][] = [$id, $item->getQuantity(), $item->isModified()];
-            } else {
-                $occurrences[$productId] = [[$id, $item->getQuantity(), $item->isModified()]];
-            }
-        }
+//        foreach ($eclmItems as $item) {
+//            $id = $item->getId();
+//            $productId = $item->getPayload()['eclm_package']['product']['id'];
+//            if (array_key_exists($productId, $occurrences)) {
+//                $occurrences[$productId][] = [$id, $item->getQuantity(), $item->isModified()];
+//            } else {
+//                $occurrences[$productId] = [[$id, $item->getQuantity(), $item->isModified()]];
+//            }
+//        }
 
         foreach ($eclmItems as $item) {
             $payload = $item->getPayload()['eclm_package'];
 
-            $availableStock = $this->productListingSubscriber->getAvailableStock($payload['product']['id'], $context->getContext());
+            /** @var ProductEntity $product */
+            $product = $data->get(self::DATA_KEY . $payload['product']['id']);
+            $availableStock = $product->getAvailableStock();
 
             if ($payload['maximalQuantity']) {
                 $availableStock = $availableStock > $payload['maximalQuantity'] ? $payload['maximalQuantity'] : $availableStock;
@@ -299,18 +309,18 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
                 $item->setQuantity($fixedQuantity);
             }
 
-            $sameProduct = count($occurrences[$payload['product']['id']]);
+//            $sameProduct = count($occurrences[$payload['product']['id']]);
 
 
-            $possibleQuantity = floor($availableStock / $sameProduct);
-            $item->getQuantityInformation()->setMaxPurchase((int)$possibleQuantity);
+//            $possibleQuantity = floor($availableStock / $sameProduct);
+//            $item->getQuantityInformation()->setMaxPurchase((int)$possibleQuantity);
 
-            if ($item->getQuantity() > $possibleQuantity) {
-                $item->setQuantity((int)$possibleQuantity);
-                $toCalculate->addErrors(
-                    new ProductStockReachedError($item->getId(), (string)$item->getLabel(), (int)$possibleQuantity)
-                );
-            }
+//            if ($item->getQuantity() > $possibleQuantity) {
+//                $item->setQuantity((int)$possibleQuantity);
+//                $toCalculate->addErrors(
+//                    new ProductStockReachedError($item->getId(), (string)$item->getLabel(), (int)$possibleQuantity)
+//                );
+//            }
 
             $priceDefinition = $item->getPriceDefinition();
             if ($priceDefinition === null || !$priceDefinition instanceof QuantityPriceDefinition) {

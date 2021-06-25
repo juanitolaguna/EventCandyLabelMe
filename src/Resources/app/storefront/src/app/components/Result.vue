@@ -182,7 +182,6 @@ export default {
     },
 
     insertCart() {
-
       // this.httpClient.getBasicHeaders();
       const thumbnail = this.result.eclm_package.thumbnails.filter((e) => e.width === 400)[0];
       const result = this.result;

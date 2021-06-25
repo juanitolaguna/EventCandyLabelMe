@@ -12,16 +12,15 @@
         {% else %}
             <div class="cart-item-label">
                 {{ label|u.truncate(60)|nl2br }}
-
             </div>
-        {% endif  %}
+        {% endif %}
     </div>
 {% endblock %}
 
 {% block component_offcanvas_product_image %}
     {% block component_offcanvas_product_image_inner %}
 
-        {% if lineItem.payload.label %}
+{% if lineItem.payload.label %}
 <div class="cart-item-img" style="border:none">
     {% else %}
     <div class="cart-item-img">
@@ -81,7 +80,7 @@
                 </a>
             {% endif %}
 
-        {% endif %}
     </div>
+        {% endif %}
     {% endblock %}
     {% endblock %}

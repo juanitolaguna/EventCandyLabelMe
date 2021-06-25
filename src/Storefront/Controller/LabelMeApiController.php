@@ -207,10 +207,10 @@ class LabelMeApiController extends AbstractController
     /**
      * @Route("/store-api/v{version}/eclm/get-candies", name="api.action.eclm.get-candies", methods={"GET"})
      * @param Request $request
-     * @param Context $context
+     * @param SalesChannelContext $context
      * @return JsonResponse
      */
-    public function getCandies(Request $request, Context $context): JsonResponse
+    public function getCandies(Request $request, SalesChannelContext $context): JsonResponse
     {
 
 
@@ -225,7 +225,7 @@ class LabelMeApiController extends AbstractController
 
         $entities = $this->candyPackageRepository->search(
             $criteria,
-            $context
+            $context->getContext()
         );
 
 
@@ -257,12 +257,11 @@ class LabelMeApiController extends AbstractController
                     && $cp->getProduct()->getCustomFields()['ec_is_set'];
 
                 if ($keyIsTrue) {
-                    $stock = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
+                    $stock = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context, false);
                 } else {
                     //turn off normal products
                     //$stock = $cp->getProduct()->getAvailableStock();
                     $stock = 0;
-
                 }
             }
 
@@ -279,7 +278,11 @@ class LabelMeApiController extends AbstractController
 
         };
 
+        \EventCandyCandyBags\Utils::log('getAvailableStock');
+        $now = microtime(true);
         $mapped = $entities->fmap($filter);
+        $timePassed = microtime(true) - $now;
+        \EventCandyCandyBags\Utils::log('timeElapsed: ' . $timePassed);
 
         $deduplicated = [];
         $candies = [];
@@ -300,7 +303,7 @@ class LabelMeApiController extends AbstractController
     /**
      * @Route("/store-api/v{version}/eclm/get-packages/{id}", name="api.action.eclm.get-packages", methods={"GET"})
      */
-    public function getPackages(string $id, Request $request, Context $context): JsonResponse
+    public function getPackages(string $id, Request $request, SalesChannelContext $context): JsonResponse
     {
         $criteria = new Criteria();
         $criteria
@@ -312,12 +315,12 @@ class LabelMeApiController extends AbstractController
 
         $entities = $this->candyPackageRepository->search(
             $criteria,
-            $context
+            $context->getContext()
         );
 
         /** @var CurrencyEntity $currency */
         $currency = $this->currencyRepository
-            ->search(new Criteria([$context->getCurrencyId()]), $context)
+            ->search(new Criteria([$context->getContext()->getCurrencyId()]), $context->getContext())
             ->first();
         $currencySymbol = $currency->getSymbol();
 
@@ -349,7 +352,7 @@ class LabelMeApiController extends AbstractController
                 $unit = $product->getUnit() ?? '';
                 $unitName = $unit ? $unit->getName() : '';
 
-                $dataSheetUrl = $this->getDataSheetUrl($cp->getProduct(), $context) ?? '';
+                $dataSheetUrl = $this->getDataSheetUrl($cp->getProduct(), $context->getContext()) ?? '';
 
                 return [
                     'cp_id' => $cp->getId(),
@@ -367,7 +370,7 @@ class LabelMeApiController extends AbstractController
                     'product' => [
                         'id' => $product->getId(),
                         'name' => $product->getName(),
-                        'price' => $product->getCurrencyPrice($context->getCurrencyId()),
+                        'price' => $product->getCurrencyPrice($context->getContext()->getCurrencyId()),
                         'currency' => $currencySymbol,
                         'purchaseUnit' => $product->getPurchaseUnit() ?? '',
                         'referenceUnit' => $product->getReferenceUnit() ?? '',
