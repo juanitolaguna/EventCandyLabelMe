@@ -20,10 +20,10 @@
 {% block component_offcanvas_product_image %}
     {% block component_offcanvas_product_image_inner %}
 
-{% if lineItem.payload.label %}
-<div class="cart-item-img" style="border:none">
-    {% else %}
-    <div class="cart-item-img">
+        {% if lineItem.payload.label %}
+            <div class="cart-item-img" style="border:none">
+        {% else %}
+            <div class="cart-item-img">
         {% endif %}
 
 
@@ -80,7 +80,7 @@
                 </a>
             {% endif %}
 
-    </div>
+            </div>
         {% endif %}
     {% endblock %}
-    {% endblock %}
+{% endblock %}
