@@ -46,7 +46,7 @@
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
             <argument type="service" id="EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber"/>
-            <argument type="service" id="translator" on-invalid="null" />
+            <argument type="service" id="translator" on-invalid="null"/>
         </service>
 
         <service id="EventCandy\LabelMe\Core\Checkout\EclmSubProductCartReducer">
@@ -75,6 +75,11 @@
         <service id="EventCandy\LabelMe\Core\Checkout\Cart\LineItemFactoryHandler\LabelMeLineItemFactory">
             <argument type="service" id="Shopware\Core\Checkout\Cart\PriceDefinitionFactory"/>
             <tag name="shopware.cart.line_item.factory"/>
+        </service>
+
+        <!-- LineItemFunctions -->
+        <service id="EventCandy\LabelMe\Core\LabelMeLineItemStockUpdaterFunctions">
+            <tag name="ec.sets.stock_updater_functions"/>
         </service>
 
         <!-- DemoDataService -->

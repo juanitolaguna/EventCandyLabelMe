@@ -41,7 +41,6 @@ class EclmSubProductCartReducer implements SubProductQuantityInCartReducerInterf
             }
         }
 
-        Utils::log($counter);
         return $counter;
     }
 }
