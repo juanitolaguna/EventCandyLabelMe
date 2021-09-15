@@ -1,6 +1,8 @@
 #!/bin/sh
 
-pluginName="EventCandyLabelMe"
+. .env
+
+pluginName=$PLUGINNAME
 
 #docker exec -it shopware /var/www/html/bin/build-js.sh
 
@@ -15,6 +17,7 @@ docker cp shopware:/var/www/html/custom/plugins/$pluginName/src/Resources/public
 ./src/Resources/public
 
 
+#commit build with new timestamp
 timestamp=$(date +%m-%d-%Y-%s)
 git add .
 git commit -m "build-${timestamp}"
