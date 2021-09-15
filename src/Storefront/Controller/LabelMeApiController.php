@@ -7,7 +7,6 @@ use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
 use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
-use EventCandy\Sets\Utils;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
@@ -278,11 +277,9 @@ class LabelMeApiController extends AbstractController
 
         };
 
-        \EventCandyCandyBags\Utils::log('getAvailableStock');
         $now = microtime(true);
         $mapped = $entities->fmap($filter);
         $timePassed = microtime(true) - $now;
-        \EventCandyCandyBags\Utils::log('timeElapsed: ' . $timePassed);
 
         $deduplicated = [];
         $candies = [];

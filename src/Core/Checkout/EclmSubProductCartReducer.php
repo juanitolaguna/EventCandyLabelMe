@@ -5,7 +5,7 @@ namespace EventCandy\LabelMe\Core\Checkout;
 use EventCandy\LabelMe\Core\Checkout\Cart\EclmCartProcessor;
 use EventCandy\Sets\Core\Checkout\Cart\SubProductQuantityInCartReducerInterface;
 use EventCandyCandyBags\Core\Checkout\Cart\CandyBagsCartProcessor;
-use EventCandyCandyBags\Utils;
+
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;

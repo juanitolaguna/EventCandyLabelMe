@@ -3,7 +3,7 @@
 namespace EventCandy\LabelMe\Core\Checkout\Cart\LineItemFactoryHandler;
 
 use ErrorException;
-use EventCandy\Sets\Utils;
+
 use Shopware\Core\Checkout\Cart\Exception\InsufficientPermissionException;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\LineItemFactoryHandler\LineItemFactoryInterface;

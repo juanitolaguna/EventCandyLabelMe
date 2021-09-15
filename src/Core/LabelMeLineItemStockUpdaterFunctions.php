@@ -4,7 +4,6 @@ namespace EventCandy\LabelMe\Core;
 
 use EventCandy\LabelMe\Core\Checkout\Cart\EclmCartProcessor;
 use EventCandy\Sets\Core\Content\Product\DataAbstractionLayer\LineItemStockUpdaterFunctionsInterface;
-use EventCandyCandyBags\Utils;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\Checkout\Order\Aggregate\OrderLineItem\OrderLineItemEntity;
 use Shopware\Core\Framework\Uuid\Uuid;
