@@ -3,6 +3,7 @@
 namespace EventCandy\LabelMe\Core\Checkout\Cart;
 
 use Doctrine\DBAL\Connection;
+use EventCandy\LabelMe\Core\Checkout\Cart\PriceDefinitionBuilder\PriceDefinitionBuilderInterface;
 use EventCandy\Sets\Core\Checkout\Cart\SetProductCartProcessor;
 use EventCandy\Sets\Core\SetProductLoadedEvent;
 use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
@@ -76,6 +77,8 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      */
     private $eventDispatcher;
 
+    private PriceDefinitionBuilderInterface $priceDefinitionBuilder;
+
 
     public const TYPE = 'event-candy-label-me';
     public const DATA_KEY = 'eclm-';
@@ -91,8 +94,20 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      * @param Connection $connection
      * @param ProductListingSubscriber $productListingSubscriber
      * @param EventDispatcherInterface $eventDispatcher
+     * @param PriceDefinitionBuilderInterface $priceDefinitionBuilder
      */
-    public function __construct(QuantityPriceCalculator $quantityPriceCalculator, PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, EntityRepositoryInterface $mediaRepository, EntityRepositoryInterface $repository, SalesChannelRepository $salesChannelRepository, Connection $connection, ProductListingSubscriber $productListingSubscriber, EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        QuantityPriceCalculator $quantityPriceCalculator,
+        PercentagePriceCalculator $percentagePriceCalculator,
+        AbsolutePriceCalculator $absolutePriceCalculator,
+        EntityRepositoryInterface $mediaRepository,
+        EntityRepositoryInterface $repository,
+        SalesChannelRepository $salesChannelRepository,
+        Connection $connection,
+        ProductListingSubscriber $productListingSubscriber,
+        EventDispatcherInterface $eventDispatcher,
+        PriceDefinitionBuilder\PriceDefinitionBuilderInterface $priceDefinitionBuilder
+    )
     {
         $this->quantityPriceCalculator = $quantityPriceCalculator;
         $this->percentagePriceCalculator = $percentagePriceCalculator;
@@ -103,10 +118,16 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         $this->connection = $connection;
         $this->productListingSubscriber = $productListingSubscriber;
         $this->eventDispatcher = $eventDispatcher;
+        $this->priceDefinitionBuilder = $priceDefinitionBuilder;
     }
 
 
-    public function collect(CartDataCollection $data, Cart $original, SalesChannelContext $context, CartBehavior $behavior): void
+    public function collect(
+        CartDataCollection $data,
+        Cart $original,
+        SalesChannelContext $context,
+        CartBehavior $behavior
+    ): void
     {
 
         $eclmItems = $original->getLineItems()->filterType(self::TYPE);
@@ -138,10 +159,9 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $item->setPayload(['productNumber' => $product->getProductNumber()]);
             $data->set(self::DATA_KEY . $productId, $product);
 
-            //ToDo: remove Price Definition Builder
-
-            //$prices = $this->priceDefinitionBuilder->build($product, $context, $item->getQuantity());
-            //ToDo: $item->setPriceDefinition($prices->getQuantityPrice());
+            $item->setPriceDefinition(
+                $this->priceDefinitionBuilder->getPriceDefinition($product, $context, $item->getQuantity())
+            );
 
             //setLabel
             if (!$item->getLabel()) {
@@ -208,10 +228,10 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
     }
 
     /**
-     * #dup - @link SetProductCartProcessor
-     * #dup - @link CandyBagsCartProcessor
-     * @param LineItem $lineItem
+     * #dup - @param LineItem $lineItem
      * @param SalesChannelContext $context
+     * @link SetProductCartProcessor
+     * #dup - @link CandyBagsCartProcessor
      */
     private function addRelatedProductsToPayload(LineItem $lineItem, SalesChannelContext $context)
     {
@@ -259,7 +279,13 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
     }
 
 
-    public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
+    public function process(
+        CartDataCollection $data,
+        Cart $original,
+        Cart $toCalculate,
+        SalesChannelContext $context,
+        CartBehavior $behavior
+    ): void
     {
         $eclmItems = $original->getLineItems()->filterType(self::TYPE);
 
@@ -351,5 +377,6 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
     {
         return (int)(floor(($current - $min) / $steps) * $steps + $min);
     }
+
 
 }

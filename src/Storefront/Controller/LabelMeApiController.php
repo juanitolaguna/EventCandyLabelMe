@@ -452,7 +452,7 @@ class LabelMeApiController extends AbstractController
             $this->cartPersister->save($cart, $salesChannelContext);
 
         } catch (Exception $exception) {
-            return new JsonResponse($exception->getMessage());
+            return new JsonResponse($exception->getMessage(), 500);
         }
         return $this->redirectToRoute('frontend.cart.offcanvas');
     }
