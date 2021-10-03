@@ -2,25 +2,17 @@
 
 namespace EventCandy\LabelMe\Storefront\Controller;
 
-use ErrorException;
 use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
 use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartPersister;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
-use Shopware\Core\Checkout\Cart\Price\PriceRounding;
-use Shopware\Core\Checkout\Cart\Price\ReferencePriceCalculator;
-use Shopware\Core\Checkout\Cart\Price\Struct\ReferencePrice;
-use Shopware\Core\Checkout\Cart\SalesChannel\CartResponse;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Content\Media\MediaEntity;
-use Shopware\Core\Content\Product\Aggregate\ProductPrice\ProductPriceEntity;
 use Shopware\Core\Content\Product\ProductEntity;
-use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilder;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -28,12 +20,10 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
-use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\Currency\CurrencyEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
-use Shopware\Storefront\Framework\Twig\Extension\SwSanitizeTwigFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -47,6 +47,10 @@
             <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
             <argument type="service" id="EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber"/>
             <argument type="service" id="translator" on-invalid="null"/>
+
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
 
         <service id="EventCandy\LabelMe\Core\Checkout\EclmSubProductCartReducer">
@@ -60,8 +64,6 @@
             <argument type="service" id="media.repository"/>
             <argument type="service" id="product.repository"/>
             <argument type="service" id="sales_channel.product.repository"/>
-            <argument type="service"
-                      id="Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface"/>
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber"/>
             <argument type="service" id="event_dispatcher"/>

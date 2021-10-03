@@ -22,7 +22,6 @@ use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
 use Shopware\Core\Content\Media\MediaEntity;
 use Shopware\Core\Content\Product\ProductEntity;
-use Shopware\Core\Content\Product\SalesChannel\Price\ProductPriceDefinitionBuilderInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -63,12 +62,6 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      */
     private $salesChannelRepository;
 
-    /**
-     * @var ProductPriceDefinitionBuilderInterface
-     */
-    private $priceDefinitionBuilder;
-
-
     /** @var Connection */
     private $connection;
 
@@ -95,12 +88,11 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
      * @param EntityRepositoryInterface $mediaRepository
      * @param EntityRepositoryInterface $repository
      * @param SalesChannelRepository $salesChannelRepository
-     * @param ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder
      * @param Connection $connection
      * @param ProductListingSubscriber $productListingSubscriber
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(QuantityPriceCalculator $quantityPriceCalculator, PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, EntityRepositoryInterface $mediaRepository, EntityRepositoryInterface $repository, SalesChannelRepository $salesChannelRepository, ProductPriceDefinitionBuilderInterface $priceDefinitionBuilder, Connection $connection, ProductListingSubscriber $productListingSubscriber, EventDispatcherInterface $eventDispatcher)
+    public function __construct(QuantityPriceCalculator $quantityPriceCalculator, PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, EntityRepositoryInterface $mediaRepository, EntityRepositoryInterface $repository, SalesChannelRepository $salesChannelRepository, Connection $connection, ProductListingSubscriber $productListingSubscriber, EventDispatcherInterface $eventDispatcher)
     {
         $this->quantityPriceCalculator = $quantityPriceCalculator;
         $this->percentagePriceCalculator = $percentagePriceCalculator;
@@ -108,7 +100,6 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
         $this->mediaRepository = $mediaRepository;
         $this->repository = $repository;
         $this->salesChannelRepository = $salesChannelRepository;
-        $this->priceDefinitionBuilder = $priceDefinitionBuilder;
         $this->connection = $connection;
         $this->productListingSubscriber = $productListingSubscriber;
         $this->eventDispatcher = $eventDispatcher;
@@ -147,8 +138,10 @@ class EclmCartProcessor implements CartProcessorInterface, CartDataCollectorInte
             $item->setPayload(['productNumber' => $product->getProductNumber()]);
             $data->set(self::DATA_KEY . $productId, $product);
 
-            $prices = $this->priceDefinitionBuilder->build($product, $context, $item->getQuantity());
-            $item->setPriceDefinition($prices->getQuantityPrice());
+            //ToDo: remove Price Definition Builder
+
+            //$prices = $this->priceDefinitionBuilder->build($product, $context, $item->getQuantity());
+            //ToDo: $item->setPriceDefinition($prices->getQuantityPrice());
 
             //setLabel
             if (!$item->getLabel()) {

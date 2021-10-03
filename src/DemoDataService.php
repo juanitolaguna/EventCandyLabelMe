@@ -49,7 +49,7 @@ class DemoDataService
                 ]
             ];
 
-            $response = $this->sync->sync(new Request([], [], [], [], [], [], json_encode($payload)), $context, PlatformRequest::API_VERSION);
+            $response = $this->sync->sync(new Request([], [], [], [], [], [], json_encode($payload)), $context);
             $result = json_decode($response->getContent(), true);
 
             if (isset($result['errors']) && count($result['errors']) > 0) {

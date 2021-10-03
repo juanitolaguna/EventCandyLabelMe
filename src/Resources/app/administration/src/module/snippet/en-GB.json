@@ -1,7 +1,8 @@
 {
     "eclm": {
+        "settings": "LabelMe Settings",
         "general": {
-            "mainMenuItemGeneral": "Event Candy Label Me",
+            "mainMenuItemGeneral": "LabelMe",
             "descriptionTextModule": "Configure the Plugin Here"
         },
         "candyDetail": {

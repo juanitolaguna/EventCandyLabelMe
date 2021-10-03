@@ -33,7 +33,7 @@ import enGB from '../snippet/en-GB.json';
 
 
 Shopware.Module.register('eclm-plugin', {
-    type: 'plugin',
+    type: 'core',
     name: 'eclm-plugin',
     color: '#ed1c24',
     // icon: 'default-object-puzzle-piece',
@@ -144,11 +144,22 @@ Shopware.Module.register('eclm-plugin', {
 
     // nav entry
     navigation: [{
-        id: 'eclm-cms',
+        id: 'ec-labelme',
         label: 'eclm.general.mainMenuItemGeneral',
         color: '#ed1c24',
         path: 'eclm.plugin.index',
         icon: 'default-object-puzzle-piece',
-        position: 100
-    }]
+        position: 70
+    },
+        {
+            id: 'ec-labelme-settings',
+            label: 'eclm.settings',
+            path: 'sw.extension.config',
+            params: {
+                namespace: "EventCandyLabelMe"
+            },
+            parent: 'ec-labelme'
+        }
+
+    ]
 });
