@@ -226,7 +226,41 @@
             <defaultValue>btn btn-secondary btn-sm</defaultValue>
             <label>Button Type Result</label>
         </input-field>
+    </card>
+
+
+    <card>
+        <title>SEO</title>
+
+        <input-field>
+            <name>lmSEOMetaTitle</name>
+            <label>SEO Metla Title</label>
+            <defaultValue>Label Me</defaultValue>
+        </input-field>
+
+
+        <input-field>
+            <name>lmSEOMetaDescription</name>
+            <label>SEO Meta Description</label>
+            <defaultValue>Mit "Label Me" wählst du die passende Message
+                auf dem Sticker deiner Candy-Packung.</defaultValue>
+        </input-field>
+
+        <input-field>
+            <name>lmSeoKeywords</name>
+            <label>SEO Keywords (max 1024 chars)</label>
+            <defaultValue>test, example</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>lmSeoRevisitAfter</name>
+            <label>Revisit After N Days</label>
+            <defaultValue>15</defaultValue>
+        </input-field>
+
 
 
     </card>
+
+
 </config>

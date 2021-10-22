@@ -29,6 +29,7 @@
 
         <service id="EventCandy\LabelMe\Storefront\Controller\LabelMeController" public="true">
             <argument type="service" id="Shopware\Storefront\Page\Navigation\NavigationPageLoader"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
 
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
