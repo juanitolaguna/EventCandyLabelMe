@@ -1,0 +1,8 @@
+{
+  "label-me": {
+    "eventNotAvailable": "Not Available",
+    "eventNotAvailableMessage": "This Event is currently, not available. Check it out later...",
+    "candyNotAvailable": "Not Available",
+    "candyNotAvailableMessage": "This Candy is currently, not available. Check it out later..."
+  }
+}

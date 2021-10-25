@@ -42,6 +42,13 @@ Component.register('eclm-event-list', {
                 inlineEdit: 'boolean',
                 align: 'center'
             }, {
+                property: 'notAvailable',
+                dataIndex: 'notAvailable',
+                label: 'Not Available',
+                allowResize: true,
+                inlineEdit: 'boolean',
+                align: 'center'
+            }, {
                 property: 'position',
                 dataIndex: 'position',
                 label: 'Position',

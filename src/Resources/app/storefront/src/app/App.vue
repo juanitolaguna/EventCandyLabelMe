@@ -43,6 +43,7 @@
                   :getEntityEvent="'getLabelsEvent'"
                   :selectedEntity="selectedEvent"
                   :config="config"
+                  :component="currentComponent"
                   :header="config.eventHeader"/>
       </transition>
 
@@ -52,6 +53,7 @@
                   :getEntityEvent="'getCandiesEvent'"
                   :selectedEntity="selectedLabel"
                   :config="config"
+                  :component="currentComponent"
                   :header="config.labelHeader"/>
       </transition>
 
@@ -61,6 +63,7 @@
                   :getEntityEvent="'getPackagesEvent'"
                   :selectedEntity="selectedCandy"
                   :config="config"
+                  :component="currentComponent"
                   :header="config.candyHeader"/>
       </transition>
 
@@ -70,6 +73,7 @@
                   :getEntityEvent="'getResultEvent'"
                   :selectedEntity="selectedPackage"
                   :config="config"
+                  :component="currentComponent"
                   :header="config.packageHeader"/>
       </transition>
       <transition name="slide-fade">
@@ -79,7 +83,7 @@
             :result="eclmResult"
             :header="config.comboHeader"
             :config="config"
-
+            :component="currentComponent"
         />
         />
       </transition>
@@ -283,9 +287,20 @@ export default {
         this.config.introModalActive = false;
       });
 
+      bus.$on('showNotAvailableBadge', (id, entityType) => {
+        this.showNotAvailableBadge(id, entityType)
+      });
+
       this.getStock();
+    },
 
 
+    showNotAvailableBadge(id, entityType) {
+      const delay = this.config.showNotAvailableBadgeDelay ? this.config.showNotAvailableBadgeDelay : 2000;
+      this[entityType][id]['showNotAvailableBadge'] = true;
+      setTimeout(() => {
+        this[entityType][id]['showNotAvailableBadge'] = false;
+      }, delay);
     },
 
     selectComponent(component) {
@@ -370,18 +385,19 @@ export default {
           'id': e.id,
           'name': e.name,
           'alternativeName': e.alternativeName ? e.alternativeName : undefined,
-          'productData': e.productData ? e.productData: undefined,
+          'productData': e.productData ? e.productData : undefined,
           'thumbnail': thumbnail[0],
           'gramm': e.gramm ? e.gramm : undefined,
           'product': e.product ? e.product : undefined,
           'availableStock': e.availableStock ? e.availableStock : undefined,
-          'purchaseSteps' : e.purchaseSteps ? e.purchaseSteps : 1,
-          'minimalQuantity' : e.minimalQuantity ? e.minimalQuantity : undefined,
-          'maximalQuantity' : e.maximalQuantity ? e.maximalQuantity : undefined,
+          'purchaseSteps': e.purchaseSteps ? e.purchaseSteps : 1,
+          'minimalQuantity': e.minimalQuantity ? e.minimalQuantity : undefined,
+          'maximalQuantity': e.maximalQuantity ? e.maximalQuantity : undefined,
           'cssSize': e.cssSize ? e.cssSize : undefined,
           'packageType': e.packageType ? e.packageType : undefined,
-          'selectedCandyData' : this.selectedCandyData ? this.selectedCandyData :undefined
-
+          'notAvailable': e.notAvailable ? e.notAvailable : undefined,
+          'showNotAvailableBadge': e.showNotAvailableBadge,
+          'selectedCandyData': this.selectedCandyData ? this.selectedCandyData : undefined
         }
       })
     },

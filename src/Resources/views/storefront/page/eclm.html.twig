@@ -2,7 +2,13 @@
 
 {% block base_head %}
     {{ parent() }}
-{#    <meta name="viewport" content="width=1000">#}
+    <script>
+        window.Snippets = {};
+        Snippets.eventNotAvailable = '{{ 'label-me.eventNotAvailable'|trans|raw }}';
+        Snippets.eventNotAvailableMessage = '{{ 'label-me.eventNotAvailableMessage'|trans|raw }}';
+        Snippets.candyNotAvailable = '{{ 'label-me.candyNotAvailable'|trans|raw }}';
+        Snippets.candyNotAvailableMessage = '{{ 'label-me.candyNotAvailableMessage'|trans|raw }}';
+    </script>
 {% endblock %}
 
 {% block base_content %}

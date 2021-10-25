@@ -27,6 +27,11 @@ class CandyEntity extends Entity {
     protected $active;
 
     /**
+     * @var bool
+     */
+    protected $notAvailable;
+
+    /**
      * @var MediaEntity|null
      */
     protected $media;
@@ -114,7 +119,7 @@ class CandyEntity extends Entity {
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function getActive(): bool
     {
         return $this->active;
     }
@@ -155,6 +160,22 @@ class CandyEntity extends Entity {
     public function setProductData(?string $productData): void
     {
         $this->productData = $productData;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNotAvailable(): bool
+    {
+        return $this->notAvailable;
+    }
+
+    /**
+     * @param bool $notAvailable
+     */
+    public function setNotAvailable(bool $notAvailable): void
+    {
+        $this->notAvailable = $notAvailable;
     }
 
 }

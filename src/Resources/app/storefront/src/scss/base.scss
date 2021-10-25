@@ -6,8 +6,8 @@
   .container {
     padding-left: 0px;
     padding-right: 0px;
-    width:100%;
-    overflow-x:hidden;
+    width: 100%;
+    overflow-x: hidden;
   }
 }
 
@@ -85,6 +85,7 @@
   border-radius: 6px;
   border: none;
   max-width: 300px;
+  overflow: hidden;
 
   -webkit-box-shadow: 1px 1px 8px 0px rgba(161, 161, 161, 1);
   -moz-box-shadow: 1px 1px 8px 0px rgba(161, 161, 161, 1);
@@ -96,6 +97,7 @@
   filter: blur(10px);
   transition: filter 0.7s;
 }
+
 .v-lazy-image-loaded {
   filter: blur(0);
 }
@@ -120,6 +122,46 @@
   align-items: flex-end;
   justify-content: center;
 }
+
+.eclm-card .card-image-top-wrapper.not-available {
+  filter: grayscale(100%);
+}
+
+.eclm-card {
+  .not-available-badge {
+    width: 100%;
+    position: absolute;
+    top: -100px;
+    transition: top 500ms;
+    //display: none;
+
+    .inner {
+      width: 90%;
+      margin: auto;
+      background-color: white;
+      border: 2px solid $primary;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  }
+
+  .show {
+    top: 50px;
+  }
+
+  .not-available-text {
+    width: 100%;
+    position: absolute;
+    top: 15px;
+    font-size: small;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: right;
+  }
+}
+
+
+
 
 .eclm-card .card-img-top {
   border-radius: 5px;
@@ -185,7 +227,6 @@
 }
 
 //bag-type-start
-
 
 
 //bag-type-end

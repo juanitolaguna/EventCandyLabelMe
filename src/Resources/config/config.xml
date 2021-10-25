@@ -257,10 +257,41 @@
             <label>Revisit After N Days</label>
             <defaultValue>15</defaultValue>
         </input-field>
-
-
-
     </card>
 
+
+    <card>
+        <title>Snippets (double escape quotes \\' for the js part)</title>
+
+        <input-field type="int">
+            <name>showNotAvailableBadgeDelay</name>
+            <label>Show "not available" Badge on click delay in Milliseconds</label>
+            <defaultValue>3000</defaultValue>
+        </input-field>
+
+        <component name="sw-snippet-field">
+            <name>snippetField</name>
+            <label>Event Not Available</label>
+            <snippet>label-me.eventNotAvailable</snippet>
+        </component>
+
+        <component name="sw-snippet-field">
+            <name>snippetField</name>
+            <label>Event Not Available - Popup Message</label>
+            <snippet>label-me.eventNotAvailableMessage</snippet>
+        </component>
+
+        <component name="sw-snippet-field">
+            <name>snippetField</name>
+            <label>Candy Not Available</label>
+            <snippet>label-me.candyNotAvailable</snippet>
+        </component>
+
+        <component name="sw-snippet-field">
+            <name>snippetField</name>
+            <label>Event Not Available - Popup Message</label>
+            <snippet>label-me.candyNotAvailableMessage</snippet>
+        </component>
+    </card>
 
 </config>

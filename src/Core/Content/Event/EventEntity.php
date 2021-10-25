@@ -28,6 +28,11 @@ class EventEntity extends Entity
     protected $active;
 
     /**
+     * @var bool
+     */
+    protected $notAvailable;
+
+    /**
      *
      * @var MediaEntity|null
      */
@@ -79,7 +84,7 @@ class EventEntity extends Entity
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function getActive(): bool
     {
         return $this->active;
     }
@@ -134,5 +139,21 @@ class EventEntity extends Entity
     public function setAlternativeName(?string $alternativeName): void
     {
         $this->alternativeName = $alternativeName;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNotAvailable(): bool
+    {
+        return $this->notAvailable;
+    }
+
+    /**
+     * @param bool $notAvailable
+     */
+    public function setNotAvailable(bool $notAvailable): void
+    {
+        $this->notAvailable = $notAvailable;
     }
 }

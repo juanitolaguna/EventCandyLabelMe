@@ -50,6 +50,8 @@ class EventDefinition extends EntityDefinition
 
             (new BoolField('active', 'active')),
 
+            (new BoolField('not_available', 'notAvailable')),
+
             ( new IntField( 'position', 'position' ) ),
 
             new FkField('media_id', 'mediaId', MediaDefinition::class),

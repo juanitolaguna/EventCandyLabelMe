@@ -56,6 +56,8 @@ class CandyDefinition extends EntityDefinition
 
             (new BoolField('active', 'active')),
 
+            (new BoolField('not_available', 'notAvailable')),
+
             (new IntField('position', 'position')),
 
 

@@ -146,7 +146,9 @@ class LabelMeApiController extends AbstractController
                     'id' => $event->getId(),
                     'name' => $event->getName(),
                     'alternativeName' => $event->getAlternativeName(),
-                    'thumbnails' => $event->getMedia()->getThumbnails()
+                    'thumbnails' => $event->getMedia()->getThumbnails(),
+                    'notAvailable' => $event->getNotAvailable(),
+                    'showNotAvailableBadge' => false
                 ];
             }
 
@@ -231,7 +233,7 @@ class LabelMeApiController extends AbstractController
             }
 
             if ($cp->getCandy() !== null) {
-                $candyActive = $cp->getCandy()->isActive();
+                $candyActive = $cp->getCandy()->getActive();
             }
 
 
@@ -261,7 +263,9 @@ class LabelMeApiController extends AbstractController
                     'name' => $cp->getCandy()->getName(),
                     'productData' => $cp->getCandy()->getProductData(),
                     'thumbnails' => $cp->getCandy()->getMedia()->getThumbnails(),
-                    'availableStock' => $stock
+                    'availableStock' => $stock,
+                    'notAvailable' => $cp->getCandy()->getNotAvailable(),
+                    'showNotAvailableBadge' => false
                 ];
             }
 
@@ -276,7 +280,7 @@ class LabelMeApiController extends AbstractController
         foreach ($mapped as $key => $candy) {
             if (!in_array($candy['name'], $candies)) {
                 $candies[] = $candy['name'];
-                $deduplicated[$key] = $candy;
+                $deduplicated[$candy['id']] = $candy;
             }
         }
 
