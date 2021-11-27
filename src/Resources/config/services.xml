@@ -39,15 +39,14 @@
         <service id="EventCandy\LabelMe\Storefront\Controller\LabelMeApiController" public="true">
             <argument type="service" id="eclm_event.repository"/>
             <argument type="service" id="eclm_label.repository"/>
-            <argument type="service" id="eclm_candy.repository"/>
             <argument type="service" id="eclm_candy_package.repository"/>
             <argument type="service" id="currency.repository"/>
             <argument type="service" id="media.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
-            <argument type="service" id="EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber"/>
             <argument type="service" id="translator" on-invalid="null"/>
+            <argument type="service" id="event_dispatcher"/>
 
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
@@ -58,23 +57,30 @@
             <tag name="ec.sets.cart_reducer"/>
         </service>
 
-        <service id="EventCandy\LabelMe\Core\Checkout\Cart\EclmCartProcessor" public="true">
-            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
-            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator"/>
-            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator"/>
+        <service id="EventCandy\LabelMe\Core\Checkout\Cart\LabelMeCartCollector" public="true">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
+            <argument type="service" id="EventCandy\Sets\Core\Content\DynamicProduct\Cart\DynamicProductService"/>
+            <argument type="service" id="EventCandy\Sets\Core\Checkout\Cart\CartProduct\CartProductService"/>
+            <argument type="service" id="EventCandy\Sets\Core\Content\DynamicProduct\Cart\DynamicProductGateway"/>
+            <argument type="service" id="EventCandy\Sets\Core\Checkout\Cart\LineItemPriceService"/>
+            <argument type="service" id="EventCandy\Sets\Core\Checkout\Cart\Payload\PayloadService"/>
             <argument type="service" id="media.repository"/>
-            <argument type="service" id="product.repository"/>
-            <argument type="service" id="sales_channel.product.repository"/>
             <argument type="service" id="Doctrine\DBAL\Connection"/>
-            <argument type="service" id="EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="EventCandy\LabelMe\Core\Checkout\Cart\PriceDefinitionBuilder\QuantityPriceDefinitionBuilder"/>
-
-
             <!-- inject before product processor (5000) -->
-            <tag name="shopware.cart.processor" priority="6000"/>
-            <tag name="shopware.cart.collector" priority="6000"/>
+            <tag name="shopware.cart.collector" priority="7000"/>
         </service>
+
+        <service id="EventCandy\LabelMe\Core\Checkout\Cart\LabelMeCollectorOptimizer">
+            <argument type="service" id="EventCandy\Sets\Core\Content\DynamicProduct\Cart\DynamicProductService"/>
+            <tag name="ec.sets.cart-optimizer"/>
+        </service>
+
+        <service id="EventCandy\LabelMe\Core\Checkout\Cart\LabelMeCartProcessor">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
+            <tag name="shopware.cart.processor" priority="7000"/>
+        </service>
+
+
 
         <service id="EventCandy\LabelMe\Core\Checkout\Cart\PriceDefinitionBuilder\QuantityPriceDefinitionBuilder">
             <argument type="service" id="unit.repository"/>

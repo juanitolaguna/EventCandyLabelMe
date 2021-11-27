@@ -1,24 +1,28 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace EventCandy\LabelMe\Storefront\Controller;
 
+use EventCandy\LabelMe\Core\Checkout\Cart\LabelMeCartCollector;
 use EventCandy\LabelMe\Core\Content\CandyPackage\CandyPackageEntity;
 use EventCandy\LabelMe\Core\Content\Event\EventEntity;
 use EventCandy\LabelMe\Core\Content\Label\LabelEntity;
-use EventCandy\Sets\Storefront\Page\Product\Subscriber\ProductListingSubscriber;
+use EventCandy\Sets\Core\Event\BeforeLineItemAddToCartEvent;
+use EventCandy\Sets\Core\Event\ProductLoadedEvent;
 use Exception;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartPersister;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Content\Media\MediaEntity;
+use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\Currency\CurrencyEntity;
@@ -28,8 +32,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @RouteScope(scopes={"store-api"})
@@ -47,10 +53,6 @@ class LabelMeApiController extends AbstractController
      */
     private $labelRepository;
 
-    /**
-     * @var EntityRepositoryInterface
-     */
-    private $candyRepository;
 
     /**
      * @var EntityRepositoryInterface
@@ -83,42 +85,49 @@ class LabelMeApiController extends AbstractController
     private $cartPersister;
 
     /**
-     * Contains available Stock Calculation method.
-     * @var ProductListingSubscriber
-     */
-    private $productListingSubscriber;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
+    /**
+     * @param EntityRepositoryInterface $eventRepository
+     * @param EntityRepositoryInterface $labelRepository
+     * @param EntityRepositoryInterface $candyPackageRepository
+     * @param EntityRepositoryInterface $currencyRepository
+     * @param EntityRepositoryInterface $mediaRepository
+     * @param SystemConfigService $systemConfigService
+     * @param CartService $cartService
+     * @param CartPersister $cartPersister
+     * @param TranslatorInterface $translator
+     * @param EventDispatcherInterface $eventDispatcher
+     */
     public function __construct(
         EntityRepositoryInterface $eventRepository,
         EntityRepositoryInterface $labelRepository,
-        EntityRepositoryInterface $candyRepository,
         EntityRepositoryInterface $candyPackageRepository,
         EntityRepositoryInterface $currencyRepository,
         EntityRepositoryInterface $mediaRepository,
         SystemConfigService $systemConfigService,
         CartService $cartService,
         CartPersister $cartPersister,
-        ProductListingSubscriber $productListingSubscriber,
-        TranslatorInterface $translator
-    )
-    {
+        TranslatorInterface $translator,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->eventRepository = $eventRepository;
         $this->labelRepository = $labelRepository;
-        $this->candyRepository = $candyRepository;
         $this->candyPackageRepository = $candyPackageRepository;
         $this->currencyRepository = $currencyRepository;
         $this->mediaRepository = $mediaRepository;
         $this->systemConfigService = $systemConfigService;
         $this->cartService = $cartService;
         $this->cartPersister = $cartPersister;
-        $this->productListingSubscriber = $productListingSubscriber;
         $this->translator = $translator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
 
@@ -151,8 +160,6 @@ class LabelMeApiController extends AbstractController
                     'showNotAvailableBadge' => false
                 ];
             }
-
-
         };
 
         $mapped = $entities->fmap($filter);
@@ -203,8 +210,6 @@ class LabelMeApiController extends AbstractController
      */
     public function getCandies(Request $request, SalesChannelContext $context): JsonResponse
     {
-
-
         $criteria = new Criteria();
         $criteria
             ->addAssociation('candy')
@@ -221,7 +226,6 @@ class LabelMeApiController extends AbstractController
 
 
         $filter = function (CandyPackageEntity $cp) use ($context) {
-
             $candyActive = false;
             $packageAvailable = false;
             $stock = 0;
@@ -243,16 +247,18 @@ class LabelMeApiController extends AbstractController
 
 
             if (($cp->getProduct() !== null) && ($cp->getProduct()->getAvailableStock() !== null)) {
-
                 $keyIsTrue = array_key_exists('ec_is_set', $cp->getProduct()->getCustomFields())
                     && $cp->getProduct()->getCustomFields()['ec_is_set'];
 
                 if ($keyIsTrue) {
-                    $stock = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context, false);
+                    //ToDo: ...
+                    $this->eventDispatcher->dispatch(new ProductLoadedEvent($context, new ProductCollection([$cp->getProduct()]), true));
+                    //$stock = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context, false);
+                    $stock = $cp->getProduct()->getAvailableStock();
                 } else {
                     //turn off normal products
                     //$stock = $cp->getProduct()->getAvailableStock();
-                    $stock = 0;
+                    $stock = 10;
                 }
             }
 
@@ -268,7 +274,6 @@ class LabelMeApiController extends AbstractController
                     'showNotAvailableBadge' => false
                 ];
             }
-
         };
 
         $now = microtime(true);
@@ -329,16 +334,16 @@ class LabelMeApiController extends AbstractController
                 $keyIsTrue = array_key_exists('ec_is_set', $cp->getProduct()->getCustomFields())
                     && $cp->getProduct()->getCustomFields()['ec_is_set'];
                 if ($keyIsTrue) {
-                    $productAvailable = $this->productListingSubscriber->getAvailableStock($cp->getProduct()->getId(), $context);
+                    $this->eventDispatcher->dispatch(new ProductLoadedEvent($context, new ProductCollection([$cp->getProduct()]), true));
+                    $productAvailable = $cp->getProduct()->getAvailableStock();
                 } else {
                     //turn off normal products
                     $productAvailable = $cp->getProduct()->getAvailableStock();
-                    $productAvailable = 0;
+
                 }
             }
 
             if ($hasMedia && $packageActive && $productAvailable > 0) {
-
                 $product = $cp->getProduct();
                 $unit = $product->getUnit() ?? '';
                 $unitName = $unit ? $unit->getName() : '';
@@ -385,7 +390,6 @@ class LabelMeApiController extends AbstractController
      */
     public function getPluginConfig(Request $request, Context $context): JsonResponse
     {
-
         $config = $this->systemConfigService->get('EventCandyLabelMe.config');
         $utilsConfig = $this->systemConfigService->get('EventCandyUtils.config');
 
@@ -406,7 +410,8 @@ class LabelMeApiController extends AbstractController
         return new JsonResponse($config);
     }
 
-    private function getImageUrl(string $configMediaKey ,array $config, Context $context) {
+    private function getImageUrl(string $configMediaKey, array $config, Context $context)
+    {
         $id = $config[$configMediaKey];
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('id', $id));
@@ -417,16 +422,18 @@ class LabelMeApiController extends AbstractController
     }
 
 
-
     /**
      * @Route("/store-api/v{version}/eclm/add-line-item", name="api.action.add-line-item", methods={"POST"}, defaults={"XmlHttpRequest": true})
      * @param Request $request
-     * @param Context $context
+     * @param SalesChannelContext $context
      * @return JsonResponse
      */
-    public function addLineItems(Cart $cart, RequestDataBag $requestDataBag, Request $request, SalesChannelContext $salesChannelContext): Response
-    {
-
+    public function addLineItems(
+        Cart $cart,
+        RequestDataBag $requestDataBag,
+        Request $request,
+        SalesChannelContext $salesChannelContext
+    ): Response {
         $lineItemData = $requestDataBag->all();
 
         if (!$lineItemData['eclm_package']) {
@@ -435,26 +442,25 @@ class LabelMeApiController extends AbstractController
 
         try {
             $productId = $lineItemData['eclm_package']['product']['id'];
+            $packageId = $lineItemData['eclm_package']['id'];
             $labelId = $lineItemData['label']['id'];
 
-            $mid1 = preg_replace('/...(.*).../', '$1', $productId);
-            $mid2 = preg_replace('/...(.*).../', '$1', $labelId);
-
-            $id = $mid1 . $mid2;
+            $id = $this->getUuid([$productId, $packageId, $labelId]);
 
             $lineItem = new LineItem(
                 $id,
-                'event-candy-label-me',
-                $id,
+                LabelMeCartCollector::TYPE,
+                $productId,
                 intval($lineItemData['selectedQuantity'])
             );
 
-            $lineItem->setPayload($lineItemData);
-            $lineItem->setStackable(true);
+            $lineItem->setPayload($lineItemData)
+                ->setStackable(true)
+                ->setRemovable(true);
 
+            $this->eventDispatcher->dispatch(new BeforeLineItemAddToCartEvent($salesChannelContext, [$lineItem]));
             $this->cartService->add($cart, $lineItem, $salesChannelContext);
             $this->cartPersister->save($cart, $salesChannelContext);
-
         } catch (Exception $exception) {
             return new JsonResponse($exception->getMessage(), 500);
         }
@@ -462,6 +468,8 @@ class LabelMeApiController extends AbstractController
     }
 
     /**
+     *
+     * ToDo:wird das noch benutzt?
      * @Route("/store-api/v{version}/eclm/get-available-stock/{id}", name="api.action.eclm.get-available-stock", methods={"GET"})
      * @param string $id
      * @param Request $request
@@ -470,7 +478,9 @@ class LabelMeApiController extends AbstractController
      */
     public function getStock(string $id, Request $request, Context $context): JsonResponse
     {
-        $availableStock = $this->productListingSubscriber->getAvailableStock($id, $context);
+        //$this->candyPackageRepository
+        //$availableStock = $this->productListingSubscriber->getAvailableStock($id, $context);
+        $availableStock = 0;
         return new JsonResponse($availableStock);
     }
 
@@ -488,6 +498,18 @@ class LabelMeApiController extends AbstractController
 
             return $result->getUrl();
         }
+        return '';
+    }
+
+    /**
+     * @param array $selected
+     * @return false|string
+     */
+    private function getUuid(array $selected): string
+    {
+        $id = implode('', $selected);
+        $uuid = hash('md5', $id);
+        return $uuid;
     }
 
 }
