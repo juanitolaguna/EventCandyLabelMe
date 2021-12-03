@@ -116,6 +116,8 @@ class LabelMeCartCollector implements CartDataCollectorInterface
         //Utils::log('collectLM');
 
         $lineItems = $original->getLineItems()->filterFlatByType(self::TYPE);
+
+
         $this->createCartIfNotExists($context, $original);
 
         foreach ($lineItems as $lineItem) {
@@ -126,7 +128,7 @@ class LabelMeCartCollector implements CartDataCollectorInterface
         $this->cartProductService->removeCartProductsByTokenAndType($context->getToken(), self::TYPE);
         $data->clear();
 
-        $dynamicProducts = $this->dynamicProductService->createDynamicProductCollection($lineItems, $context->getToken());
+        $dynamicProducts = $this->dynamicProductService->createDynamicProductCollection($lineItems, $original->getToken());
         $this->dynamicProductService->saveDynamicProductsToDb($dynamicProducts);
 
         $dynamicProductIds = $this->dynamicProductService->getDynamicProductIdsFromCollection($dynamicProducts);
@@ -277,7 +279,7 @@ class LabelMeCartCollector implements CartDataCollectorInterface
     private function createCartIfNotExists(SalesChannelContext $context, Cart $original): void
     {
         try {
-            $this->cartPersister->load($context->getToken(), $context);
+            $this->cartPersister->load($original->getToken(), $context);
         } catch (CartTokenNotFoundException $exception) {
             $this->cartPersister->save($original, $context);
         }
