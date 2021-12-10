@@ -495,8 +495,9 @@ class LabelMeApiController extends AbstractController
 
             /** @var MediaEntity $result */
             $result = $this->mediaRepository->search($criteria, $context)->first();
-
-            return $result->getUrl();
+            if ($result != null) {
+                return $result->getUrl();
+            }
         }
         return '';
     }
