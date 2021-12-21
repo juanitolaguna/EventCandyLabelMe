@@ -51,14 +51,20 @@
                         'size': 'fluid'
                     } %}
                 {% endif %}
-                </a>
             {% endif %}
 
             {% if not lineItem.payload.label %}
-                <a href="{{ seoUrl('frontend.detail.page', {'productId': referencedId}) }}"
+                {% if not referencedId %}
+                    {% set url = '#' %}
+                {% else %}
+                    {% set url = seoUrl('frontend.detail.page', {'productId': referencedId}) %}
+                {% endif %}
+
+                <a href="{{ url }}"
                 class="cart-item-img-link"
                 title="{{ label }}">
             {% endif %}
+
             {% if lineItem.cover.url %}
                 {% sw_thumbnails 'cart-item-img-thumbnails' with {
                     media: lineItem.cover,
