@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace EventCandy\LabelMe\Core\Content\Candy;
 
@@ -8,13 +9,19 @@ use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
-class CandyEntity extends Entity {
+class CandyEntity extends Entity
+{
     use EntityIdTrait;
 
     /**
      * @var string
      */
     protected $name;
+
+    /**
+     * @var string|null
+     */
+    protected $infoBadge;
 
     /**
      * @var string|null
@@ -50,7 +57,6 @@ class CandyEntity extends Entity {
      * @var int
      */
     protected $position;
-
 
 
     /**
@@ -101,17 +107,20 @@ class CandyEntity extends Entity {
     {
         $this->packages = $packages;
     }
+
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
     /**
      * @param string $name
      */
-    public function setName( string $name ): void {
+    public function setName(string $name): void
+    {
         $this->name = $name;
     }
 
@@ -135,14 +144,16 @@ class CandyEntity extends Entity {
     /**
      * @return MediaEntity|null
      */
-    public function getMedia(): ?MediaEntity {
+    public function getMedia(): ?MediaEntity
+    {
         return $this->media;
     }
 
     /**
      * @param MediaEntity|null $media
      */
-    public function setMedia( ?MediaEntity $media ): void {
+    public function setMedia(?MediaEntity $media): void
+    {
         $this->media = $media;
     }
 
@@ -176,6 +187,22 @@ class CandyEntity extends Entity {
     public function setNotAvailable(bool $notAvailable): void
     {
         $this->notAvailable = $notAvailable;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getInfoBadge(): ?string
+    {
+        return $this->infoBadge;
+    }
+
+    /**
+     * @param string|null $infoBadge
+     */
+    public function setInfoBadge(?string $infoBadge): void
+    {
+        $this->infoBadge = $infoBadge;
     }
 
 }

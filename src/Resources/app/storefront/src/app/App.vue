@@ -384,6 +384,7 @@ export default {
         return {
           'id': e.id,
           'name': e.name,
+          'infoBadge': e.infoBadge ? e.infoBadge: undefined,
           'alternativeName': e.alternativeName ? e.alternativeName : undefined,
           'productData': e.productData ? e.productData : undefined,
           'thumbnail': thumbnail[0],

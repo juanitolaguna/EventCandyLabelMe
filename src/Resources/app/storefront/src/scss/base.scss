@@ -158,6 +158,19 @@
     padding-right: 15px;
     text-align: right;
   }
+
+  .info-badge {
+    position: absolute;
+    top: 0.9375rem;
+    left: 1rem;
+    font-size: small;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+    text-align: left;
+    background-color: orange;
+    color: white;
+    border-radius: 0.6rem;
+  }
 }
 
 

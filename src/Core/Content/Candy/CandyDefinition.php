@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace EventCandy\LabelMe\Core\Content\Candy;
 
@@ -43,7 +44,6 @@ class CandyDefinition extends EntityDefinition
 
     protected function defineFields(): FieldCollection
     {
-
         return new FieldCollection([
             (new IdField('id', 'id'))
                 ->addFlags(new Required(), new PrimaryKey()),
@@ -51,7 +51,9 @@ class CandyDefinition extends EntityDefinition
             (new StringField('name', 'name'))
                 ->addFlags(new Required()),
 
-                (new LongTextField('product_data', 'productData'))
+            (new StringField('info_badge', 'infoBadge')),
+
+            (new LongTextField('product_data', 'productData'))
                 ->addFlags(new AllowHtml()),
 
             (new BoolField('active', 'active')),

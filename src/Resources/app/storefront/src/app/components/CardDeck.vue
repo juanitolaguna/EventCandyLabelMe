@@ -21,10 +21,15 @@
             {{ snippet.notAvailable }}
           </div>
 
+
           <div v-if="entity.notAvailable" :class="['not-available-badge', showBadge(entity)]">
             <div class="inner">
               {{ snippet.notAvailableMessage }}
             </div>
+          </div>
+
+          <div v-if="entity.infoBadge" :class="['info-badge']">
+            {{ entity.infoBadge }}
           </div>
 
           <div class="card-body">

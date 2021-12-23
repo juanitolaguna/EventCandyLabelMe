@@ -267,6 +267,7 @@ class LabelMeApiController extends AbstractController
                 return [
                     'id' => $cp->getCandy()->getId(),
                     'name' => $cp->getCandy()->getName(),
+                    'infoBadge' => $cp->getCandy()->getInfoBadge(),
                     'productData' => $cp->getCandy()->getProductData(),
                     'thumbnails' => $cp->getCandy()->getMedia()->getThumbnails(),
                     'availableStock' => $stock,
