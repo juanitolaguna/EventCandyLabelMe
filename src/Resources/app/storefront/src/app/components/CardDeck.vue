@@ -28,7 +28,8 @@
             </div>
           </div>
 
-          <div v-if="entity.infoBadge" :class="['info-badge']">
+          <div v-if="entity.infoBadge" :class="['info-badge']"
+               :style="[entity.infoBadgeColor ? {backgroundColor: entity.infoBadgeColor}: {}]">
             {{ entity.infoBadge }}
           </div>
 

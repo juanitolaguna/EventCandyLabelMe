@@ -53,6 +53,8 @@ class CandyDefinition extends EntityDefinition
 
             (new StringField('info_badge', 'infoBadge')),
 
+            (new StringField('info_badge_color', 'infoBadgeColor')),
+
             (new LongTextField('product_data', 'productData'))
                 ->addFlags(new AllowHtml()),
 

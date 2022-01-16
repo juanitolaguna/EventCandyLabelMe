@@ -385,6 +385,7 @@ export default {
           'id': e.id,
           'name': e.name,
           'infoBadge': e.infoBadge ? e.infoBadge: undefined,
+          'infoBadgeColor': e.infoBadgeColor ? e.infoBadgeColor: undefined,
           'alternativeName': e.alternativeName ? e.alternativeName : undefined,
           'productData': e.productData ? e.productData : undefined,
           'thumbnail': thumbnail[0],

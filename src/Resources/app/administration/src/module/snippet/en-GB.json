@@ -8,6 +8,7 @@
         "candyDetail": {
             "name": "Candy Name",
             "infoBadge": "Info Badge",
+            "infoBadgeColor": "Info Badge Color",
             "active": "Active",
             "productDataLabel": "Additional Product Data",
             "productDataPlaceholder": "Add more info about the product, such as nutritional values, allergens, etc."

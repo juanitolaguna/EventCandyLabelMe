@@ -18,6 +18,11 @@ class Migration1640215091AddInfoBadgeColumnToCandyTable extends MigrationStep
             ALTER TABLE `eclm_candy`
             ADD COLUMN `info_badge` VARCHAR(255) NULL AFTER `name`
         ');
+
+        $connection->executeStatement('
+            ALTER TABLE `eclm_candy`
+            ADD COLUMN `info_badge_color` VARCHAR(255) NULL AFTER `info_badge`
+        ');
     }
 
     public function updateDestructive(Connection $connection): void

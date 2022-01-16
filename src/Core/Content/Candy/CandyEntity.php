@@ -26,6 +26,11 @@ class CandyEntity extends Entity
     /**
      * @var string|null
      */
+    protected $infoBadgeColor;
+
+    /**
+     * @var string|null
+     */
     protected $productData;
 
     /**
@@ -203,6 +208,22 @@ class CandyEntity extends Entity
     public function setInfoBadge(?string $infoBadge): void
     {
         $this->infoBadge = $infoBadge;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getInfoBadgeColor(): ?string
+    {
+        return $this->infoBadgeColor;
+    }
+
+    /**
+     * @param string|null $infoBadgeColor
+     */
+    public function setInfoBadgeColor(?string $infoBadgeColor): void
+    {
+        $this->infoBadgeColor = $infoBadgeColor;
     }
 
 }

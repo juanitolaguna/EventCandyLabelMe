@@ -21,16 +21,24 @@
         <sw-card-view>
             <sw-card v-if="candy" :large="false">
                 <sw-text-field :label="$t('eclm.candyDetail.name')" v-model="candy.name"></sw-text-field>
-                <sw-text-field :label="$t('eclm.candyDetail.infoBadge')" v-model="candy.infoBadge"></sw-text-field>
-                <sw-checkbox-field :label="$t('eclm.candyDetail.active')" v-model="candy.active"></sw-checkbox-field>
-                <eclm-media-field
-                    v-model="candy.mediaId"
-                    :showUploadField="false"
-                    :showControls="false"
-                    @media-id-change="onMediaSelect"
-                    :mediaFolderName="'Event Candy'">
-                </eclm-media-field>
 
+                <sw-checkbox-field :label="$t('eclm.candyDetail.active')" v-model="candy.active"></sw-checkbox-field>
+
+                <sw-text-field :label="$t('eclm.candyDetail.infoBadge')" v-model="candy.infoBadge"></sw-text-field>
+
+                <sw-colorpicker  zIndex="1055" :label="$t('eclm.candyDetail.infoBadgeColor')" v-model="candy.infoBadgeColor"></sw-colorpicker>
+
+                <eclm-media-field
+                        v-model="candy.mediaId"
+                        :showUploadField="false"
+                        :showControls="false"
+                        @media-id-change="onMediaSelect"
+                        :mediaFolderName="'Event Candy'">
+                </eclm-media-field>
+            </sw-card>
+
+
+            <sw-card v-if="candy" :large="false">
                 <sw-text-editor
                         type="textarea"
                         :label="$tc('eclm.candyDetail.productDataLabel')"
@@ -38,6 +46,8 @@
                         v-model="candy.productData">
                 </sw-text-editor>
             </sw-card>
+
+
 
             <sw-card v-if="candySaved && packageOptions" :large="false">
                 <sw-multi-select
