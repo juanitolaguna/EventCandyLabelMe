@@ -15,3 +15,9 @@
     {% endif %}
     {{ parent() }}
 {% endblock %}
+
+{% block page_checkout_aside_item_title %}
+    <div class="checkout-aside-item-title">
+        {{ lineItem.label|u.truncate(180) }}
+    </div>
+{% endblock %}
