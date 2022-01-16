@@ -10,8 +10,8 @@
           <li class="list-group-item"><strong>{{ config.candyName }}: </strong>{{ result.candy.name }}</li>
           <li class="list-group-item"><strong>{{ config.packageName }}: </strong>
             {{ result.eclm_package.name }}
-            <span class="badge badge-pill badge-info eclm-badge" v-if="result.eclm_package.gramm">
-                                {{ result.eclm_package.gramm }}<i>g</i>
+            <span class="badge badge-pill badge-info eclm-badge" v-if="result.eclm_package.product.purchaseUnit">
+                                {{ result.eclm_package.product.purchaseUnit }}<i>g</i>
             </span>
           </li>
           <li v-if="productDataAvailable" class="list-group-item">

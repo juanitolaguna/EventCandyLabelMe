@@ -43,9 +43,9 @@
               {{ entity.alternativeName }}
             </h5>
             <div class="eclm-badges-container">
-              <template v-if="entity.gramm">
+              <template v-if="entity.product && entity.product.purchaseUnit">
                             <span class="badge badge-pill badge-info eclm-badge">
-                                {{ entity.gramm }}<i>g</i>
+                                {{ entity.product.purchaseUnit }}<i>g</i>
                             </span>
               </template>
               <template v-if="entity.product">
