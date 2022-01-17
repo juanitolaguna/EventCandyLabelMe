@@ -292,6 +292,12 @@
             <label>Event Not Available - Popup Message</label>
             <snippet>label-me.candyNotAvailableMessage</snippet>
         </component>
+
+        <component name="sw-snippet-field">
+            <name>snippetField</name>
+            <label>Cancelation Policy</label>
+            <snippet>label-me.cancelPolicy</snippet>
+        </component>
     </card>
 
 </config>

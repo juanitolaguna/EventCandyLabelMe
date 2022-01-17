@@ -3,6 +3,7 @@
     "eventNotAvailable": "Not Available",
     "eventNotAvailableMessage": "This Event is currently, not available. Check it out later...",
     "candyNotAvailable": "Not Available",
-    "candyNotAvailableMessage": "This Candy is currently, not available. Check it out later..."
+    "candyNotAvailableMessage": "This Candy is currently, not available. Check it out later...",
+    "cancelPolicy": "If you decide to purchase this item, it will be manufactured based on your order in the combination you choose. Please note our cancellation policy."
   }
 }

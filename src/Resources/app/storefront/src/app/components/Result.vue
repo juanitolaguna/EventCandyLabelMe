@@ -23,15 +23,23 @@
           </li>
         </ul>
 
+
+        <div v-if="snippets.cancelPolicy" v-html="snippets.cancelPolicy" class="cancel-policy">
+        </div>
+
         <a v-if="result.eclm_package.product.dataSheetUrl && config.utilsPlugin.turnOnDataSheet"
            :href="result.eclm_package.product.dataSheetUrl" target="_blank">
           <div v-bind:style="{backgroundColor: config.utilsPlugin.badgeColor}"
                class="badge badge-pill badge-secondary product-data-sheet"
           >
             {{ config.translations.dataSheet }}
-            <span class="tooltiptext" v-html="config.translations.dataSheetTooltip"/>
+            <span
+                v-if="config.translations.dataSheetTooltip !== ''"
+                class="tooltiptext"
+                v-html="config.translations.dataSheetTooltip"/>
           </div>
         </a>
+
 
         <br>
         <div style="display: flex; margin-bottom: 2em; z-index: 1">
@@ -161,6 +169,10 @@ export default {
 
     type() {
       return this.result.eclm_package.packageType;
+    },
+
+    snippets() {
+      return window.Snippets;
     }
   },
 

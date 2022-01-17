@@ -58,20 +58,15 @@
 
     @keyframes bag-animation {
       0% {
-        width: 40%;
+        width: 50%;
         transform: translateY(0%);
-        mix-blend-mode: normal;
         opacity: 0;
       }
 
-      50% {
-        mix-blend-mode: normal;
-      }
 
       100% {
-        transform: translateY(180%);
-        mix-blend-mode: lighten;
-        width: 30%;
+        transform: translateY(153%);
+        width: 40%;
         opacity: 1;
       }
     }
