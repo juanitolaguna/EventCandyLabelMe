@@ -1,4 +1,4 @@
-.bag-type {
+.handypack-type {
 
   transform: translateY(-40px);
 
@@ -16,12 +16,12 @@
     z-index: 99;
   }
 
-  .bag-js-animation {
-    animation: bag-animation 1s ease forwards;
+  .handypack-js-animation {
+    animation: handypack-animation 1s ease forwards;
     animation-delay: 3s;
   }
 
-  @keyframes bag-animation {
+  @keyframes handypack-animation {
     0% {
       width: 40%;
       transform: translateY(0%);
@@ -33,14 +33,14 @@
     }
 
     100% {
-      transform: translateY(150%);
+      transform: translateY(160%);
       mix-blend-mode: normal;
-      width: 38%;
+      width: 45%;
     }
   }
 
   @media (max-width: 980px) {
-    .bag-arrow-image {
+    .handypack-arrow-image {
       margin-top: 3em;
       width: 200px;
       max-width: 200px;
@@ -56,17 +56,17 @@
       opacity: 0;
     }
 
-    @keyframes bag-animation {
+    @keyframes handypack-animation {
       0% {
-        width: 50%;
+        width: 45%;
         transform: translateY(0%);
         opacity: 0;
       }
 
 
       100% {
-        transform: translateY(145%);
-        width: 39%;
+        transform: translateY(160%);
+        width: 45%;
         opacity: 1;
       }
     }
