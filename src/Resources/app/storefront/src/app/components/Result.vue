@@ -229,7 +229,7 @@ export default {
     },
 
     addRefClass() {
-      if (this.type === 'bag') {
+      if (this.type === 'bag' || this.type === 'handypack') {
         this.$refs.imageFirst.classList.add(this.type + "-js-animation");
       }
 
