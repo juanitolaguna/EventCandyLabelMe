@@ -253,8 +253,8 @@ export default {
   },
 
   methods: {
-    componentCreated() {
-      this.getConfig();
+    async componentCreated() {
+      await this.getConfig();
       // this.getEvents();
 
       bus.$on('getLabelsEvent', (id) => {
@@ -291,7 +291,8 @@ export default {
         this.showNotAvailableBadge(id, entityType)
       });
 
-      this.getStock();
+      await this.getStock();
+      await this.getEventFromParameter();
     },
 
 
@@ -318,7 +319,7 @@ export default {
       });
     },
 
-    getLabels(id) {
+    getLabels(id, callback = null) {
       this.currentComponent = 'labels';
       this.loading = true;
       this.httpClient.get(`store-api/v{version}/eclm/get-labels/${id}`, (response) => {
@@ -329,6 +330,9 @@ export default {
         this.selectedCandyData = '';
         this.selectedPackage = '';
         this.selectedPackageData = '';
+        if (callback) {
+          callback();
+        }
       });
     },
 
@@ -373,6 +377,16 @@ export default {
       });
     },
 
+    async getEventFromParameter() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('event');
+      if (id) {
+        this.$refs.top.scrollIntoView();
+        this.selectedEvent = id;
+        let cb = () => this.selectComponent('labels');
+        this.getLabels(id, cb);
+      }
+    },
 
     //#helpers
     computeCard(entities) {
