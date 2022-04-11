@@ -258,6 +258,8 @@ export default {
       // this.getEvents();
 
       bus.$on('getLabelsEvent', (id) => {
+        let eventParam = "?event=" + id;
+        window.history.pushState(null, null, eventParam);
         this.$refs.top.scrollIntoView();
         this.selectedEvent = id;
         this.getLabels(id);
