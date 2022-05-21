@@ -17,55 +17,14 @@
     </div>
 {% endblock %}
 
-{% block component_offcanvas_product_image %}
-    {% block component_offcanvas_product_image_inner %}
-
-        {% if lineItem.payload.label %}
-            <div class="cart-item-img" style="border:none">
-        {% else %}
-            <div class="cart-item-img">
-        {% endif %}
-
-
-        {% if isDiscount %}
-            <div class="cart-item-discount-icon">
-                {% sw_icon 'marketing' style {
-                    'color': 'success'
-                } %}
-            </div>
-        {% elseif isNested %}
-            <div class="cart-item-nested-icon">
-                {% sw_icon 'bag-product' style {
-                    'color': 'light'
-                } %}
-            </div>
-        {% else %}
-
-            {% if lineItem.payload.label %}
-                {% if lineItem.cover.url %}
-                    <img class="img-fluid cart-item-img-source"
-                         src="{{ lineItem.payload.label.thumbnails[0].url }}"
-                         alt="{{ lineItem.payload.label.name }}"/>
-                {% else %}
-                    {% sw_icon 'placeholder' style {
-                        'size': 'fluid'
-                    } %}
-                {% endif %}
-            {% endif %}
-
-            {% if not lineItem.payload.label %}
-                {% if not referencedId %}
-                    {% set url = '#' %}
-                {% else %}
-                    {% set url = seoUrl('frontend.detail.page', {'productId': referencedId}) %}
-                {% endif %}
-
-                <a href="{{ url }}"
-                class="cart-item-img-link"
-                title="{{ label }}">
-            {% endif %}
-
+{% block component_offcanvas_product_image_inner %}
+    {% if lineItem.payload.label %}
+        <div class="cart-item-img" style="border:none">
             {% if lineItem.cover.url %}
+                <img class="img-fluid cart-item-img-source"
+                     src="{{ lineItem.payload.label.thumbnails[0].url }}"
+                     alt="{{ lineItem.payload.label.name }}"/>
+
                 {% sw_thumbnails 'cart-item-img-thumbnails' with {
                     media: lineItem.cover,
                     sizes: {
@@ -82,11 +41,8 @@
                     'size': 'fluid'
                 } %}
             {% endif %}
-            {% if not lineItem.payload.label %}
-                </a>
-            {% endif %}
-
-            </div>
-        {% endif %}
-    {% endblock %}
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
 {% endblock %}
