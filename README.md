@@ -1,3 +1,5 @@
+**This project is no longer active, so I’ve open-sourced it for learning and educational use.**
+
 ## Vagrant worflow
 
 build storefront
